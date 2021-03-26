@@ -1,0 +1,13 @@
+.thirdWidth {
+    width: 30%;
+    margin: 0 auto;
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.fullWidth {
+    width: 100%;
+}

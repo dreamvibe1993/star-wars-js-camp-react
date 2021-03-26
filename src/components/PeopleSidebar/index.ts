@@ -1,0 +1,1 @@
+export { PeopleSidebar } from './PeopleSidebar';
