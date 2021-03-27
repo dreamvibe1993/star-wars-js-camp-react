@@ -18,10 +18,10 @@ import { Planet } from '../../models/planet';
 import { Params } from '../../models/query-params'
 
 import { loadMovieItemData } from '../../api/services/load-movies-data';
-import * as actionCreators from '../../store/action-creators/action-creators'
 import { MovieItemDisplayComponent } from '../MovieItemDisplayComponent';
 import { RootState } from '../../store/store';
 import { UserSignInStatus } from '../../store/reducer';
+import { setCommonBackdropOff } from '../../store/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -70,7 +70,7 @@ export const MovieItemScreen: React.FC = () => {
     
     /** Hook that triggers movie's loading if one exists */
     useEffect(() => {
-        dispatch(actionCreators.setCommonBackdropOff())
+        dispatch(setCommonBackdropOff())
         return loadMovieItemData(queryParam.id, () => { history.push('/not-found') });
     }, [queryParam.id])
 

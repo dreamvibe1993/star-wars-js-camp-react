@@ -15,9 +15,9 @@ import {
 
 import { Params } from '../../models/query-params';
 
-import * as actionCreators from '../../store/action-creators/action-creators'
 import { loadPlanetItemData } from '../../api/services/load-planets-data';
 import { RootState } from '../../store/store';
+import { setCommonBackdropOff } from '../../store/reducer';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -40,7 +40,7 @@ export const PlanetsItemScreen: React.FC = () => {
 
     /** Hook that triggers planet's entry loading. */
     useEffect(() => {
-        dispatch(actionCreators.setCommonBackdropOff())
+        dispatch(setCommonBackdropOff())
         return loadPlanetItemData(queryParam.id, () => { history.push('/not-found') });
     }, [queryParam.id])
 

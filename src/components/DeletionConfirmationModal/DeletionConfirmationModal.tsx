@@ -14,9 +14,9 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './DeletionConfirmationModal.module.css'
-import * as actionCreators from '../../store/action-creators/action-creators'
 import { DBRef } from '../../api/firebase';
 import { RootState } from '../../store/store';
+import { setDeletionModalClose, setCommonBackdropOn, flushMovieItem, setCommonBackdropOff } from '../../store/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,13 +49,13 @@ export const DeletionConfirmationModal: React.FC<DelConfModProps> = ({ movieID }
      */
     function deleteMovieEntry(entryID: string) {
         history.push("/films")
-        dispatch(actionCreators.setDeletionModalClose())
-        dispatch(actionCreators.setCommonBackdropOn())
-        dispatch(actionCreators.flushMovieItem())
+        dispatch(setDeletionModalClose())
+        dispatch(setCommonBackdropOn())
+        dispatch(flushMovieItem())
         DBRef.collection('films').doc(entryID)
             .delete()
             .then(() => {
-                dispatch(actionCreators.setCommonBackdropOff())
+                dispatch(setCommonBackdropOff())
                 console.log('Document successfully deleted!');
             }).catch((error) => {
                 console.error(error)
@@ -73,7 +73,7 @@ export const DeletionConfirmationModal: React.FC<DelConfModProps> = ({ movieID }
                     timeout: 500,
                 }}
                 className={styles.modal}
-                onClose={() => dispatch(actionCreators.setDeletionModalClose())}
+                onClose={() => dispatch(setDeletionModalClose())}
                 open={open}
                 closeAfterTransition
             >
@@ -82,7 +82,7 @@ export const DeletionConfirmationModal: React.FC<DelConfModProps> = ({ movieID }
                         <h2 id="transition-modal-title">Are you sure you want to delete this entry?</h2>
                         <div className={styles.buttons}>
                             <Button color="primary" onClick={() => deleteMovieEntry(movieID)} type="button" variant="contained">YES</Button>
-                            <Button color="primary" onClick={() => dispatch(actionCreators.setDeletionModalClose())} type="button" variant="contained">NO</Button>
+                            <Button color="primary" onClick={() => dispatch(setDeletionModalClose())} type="button" variant="contained">NO</Button>
                         </div>
                     </div>
                 </Fade>

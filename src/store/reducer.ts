@@ -1,152 +1,219 @@
-/* eslint-disable no-param-reassign */
-import { combineReducers, createReducer } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, combineReducers, createAsyncThunk } from '@reduxjs/toolkit'
+import { CharacterDTO } from '../api/dtos/CharacterDTO';
+import { DBRef } from '../api/firebase';
+import { mapCharacter } from '../api/mappers/mapper';
+// import { loadCharactersData, loadMoreCharactersItems } from '../api/services/load-characters-data';
+import { Character } from '../models/character';
+import { Movie } from '../models/movie';
+import { Planet } from '../models/planet';
+import { AuthStateRootState, CharactersStore, ComponentsRootState, MoviesStore, PlanetsStore } from './redux-store-state';
+import { store } from './store';
+import { lazyloadMoreCharacters } from './thunks';
 
-import { 
-    AuthStateRootState, 
-    ComponentsRootState, 
-    MoviesStore, 
-    CharactersStore, 
-    PlanetsStore 
-} from './redux-store-state';
+const moviesStoreReducer = createSlice({
+    name: 'moviesStore',
+    initialState: {
+        movies: [],
+        relevantCharacters: [],
+        relevantPlanets: [],
+        movieItem: null,
+    } as MoviesStore,
+    reducers: {
+        setMovies: (state, action: PayloadAction<Movie[]>) => {
+            state.movies = action.payload;
+        },
+        setRelevChars: (state, action: PayloadAction<Character[]>) => {
+            state.relevantCharacters = action.payload;
+        },
+        setRelevPlanets: (state, action: PayloadAction<Planet[]>) => {
+            state.relevantPlanets = action.payload;
+        },
+        setMovieItem: (state, action: PayloadAction<Movie>) => {
+            state.movieItem = action.payload
+        },
+        flushMovieItem: state => {
+            state.movieItem = null
+        },
+    },
 
-import * as actionCreators from './action-creators/action-creators';
 
-const moviesStoreInitialState: MoviesStore = {
-    movies: [],
-    relevantCharacters: [],
-    relevantPlanets: [],
-    movieItem: null,
-}
+})
 
-const planetsStoreInitialState: PlanetsStore = {
-    planets: [],
-    planetItem: null,
-    numberOfItemsDisplayPlanets: 1,
-    itemsToDispPlanets: 1,
-}
+export const { setMovies, setRelevChars, setRelevPlanets, setMovieItem, flushMovieItem } = moviesStoreReducer.actions
 
-const charactersStoreInitialState: CharactersStore = {
-    characters: [],
-    characterItem: null,
-    numberOfItemsDisplayCharacters: 1,
-    itemsToDispCharacters: 1,
-}
 
-const componentsInitialState: ComponentsRootState = {
-    isDeletionConfirmationOpen: false,
-    isSidebarLoading: false,
-    isCommonLoadingBckDropOn: false,
-}
+// .then((limitedQuerySnapshot) => {
+//     if (!limitedQuerySnapshot.empty) {
+//         const characters = limitedQuerySnapshot.docs.map(character => mapCharacter(character.data() as CharacterDTO, character.id));
+//         store.dispatch(setCharacters(characters));
+//     }
+// });
+// }
+// )
+// loadMoreCharactersItems(last, numberOfItemsToDisplay)
+// .then(() => dispatch(setSidebarLoadingOff()))
+
+const charactersStoreReducer = createSlice({
+    name: 'charactersStore',
+    initialState: {
+        characters: [],
+        characterItem: null,
+        numberOfItemsDisplayCharacters: 1,
+        itemsToDispCharacters: 1,
+    } as CharactersStore,
+    reducers: {
+        setCharacters: (state, action: PayloadAction<Character[]>) => {
+            state.characters = action.payload;
+        },
+        setCharacterItem: (state, action: PayloadAction<Character>) => {
+            state.characterItem = action.payload
+        },
+        setNumberOfItemsDisplayCharacters: (state, action: PayloadAction<number>) => {
+            state.numberOfItemsDisplayCharacters = action.payload
+        },
+        discardCharactersItemsAmmount: (state) => {
+            state.itemsToDispCharacters = 1
+        },
+        addItemsToDisplayCharacters: (state) => {
+            state.itemsToDispCharacters += state.numberOfItemsDisplayCharacters
+        },
+    },
+    extraReducers: builder => {
+        builder
+            .addCase(lazyloadMoreCharacters.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.characters = action.payload;
+                }
+            })        
+    }
+    // thunkAPI.dispatch(setCharacters(characters));
+
+})
+
+export const {
+    setCharacters,
+    setCharacterItem,
+    setNumberOfItemsDisplayCharacters,
+    discardCharactersItemsAmmount,
+    addItemsToDisplayCharacters
+} = charactersStoreReducer.actions
+
+const planetsStoreReducer = createSlice({
+    name: 'planetsStore',
+    initialState: {
+        planets: [],
+        planetItem: null,
+        numberOfItemsDisplayPlanets: 1,
+        itemsToDispPlanets: 1,
+    } as PlanetsStore,
+    reducers: {
+        setPlanets: (state, action: PayloadAction<Planet[]>) => {
+            state.planets = action.payload;
+        },
+        setPlanetItem: (state, action: PayloadAction<Planet>) => {
+            state.planetItem = action.payload
+        },
+        setNumberOfItemsDisplayPlanets: (state, action: PayloadAction<number>) => {
+            state.numberOfItemsDisplayPlanets = action.payload
+        },
+        discardPlanetsItemsAmmount: (state) => {
+            state.itemsToDispPlanets = 1
+        },
+        addItemsToDisplayPlanets: (state) => {
+            state.itemsToDispPlanets += state.numberOfItemsDisplayPlanets
+        },
+    },
+})
+
+export const {
+    setPlanets,
+    setPlanetItem,
+    setNumberOfItemsDisplayPlanets,
+    discardPlanetsItemsAmmount,
+    addItemsToDisplayPlanets
+} = planetsStoreReducer.actions;
+
+const componentsStateReducer = createSlice({
+    name: 'componentsState',
+    initialState: {
+        isDeletionConfirmationOpen: false,
+        isSidebarLoading: false,
+        isCommonLoadingBckDropOn: false,
+    } as ComponentsRootState,
+    reducers: {
+        setDeletionModalOpen: (state) => {
+            state.isDeletionConfirmationOpen = true
+        },
+        setDeletionModalClose: (state) => {
+            state.isDeletionConfirmationOpen = false
+        },
+        setSidebarLoadingOn: (state) => {
+            state.isSidebarLoading = true
+        },
+        setSidebarLoadingOff: (state) => {
+            state.isSidebarLoading = false
+        },
+        setCommonBackdropOn: (state) => {
+            state.isCommonLoadingBckDropOn = true
+        },
+        setCommonBackdropOff: (state) => {
+            state.isCommonLoadingBckDropOn = false
+        },
+    },
+    extraReducers: builder => {
+        builder
+            .addCase(lazyloadMoreCharacters.pending, (state, action) => {
+                state.isSidebarLoading = true
+            })
+            .addCase(lazyloadMoreCharacters.rejected, (state, action) => {
+                state.isSidebarLoading = false
+            })
+            .addCase(lazyloadMoreCharacters.fulfilled, (state, action) => {
+                state.isSidebarLoading = false
+            })
+    }
+})
+
+export const {
+    setDeletionModalOpen,
+    setDeletionModalClose,
+    setSidebarLoadingOn,
+    setSidebarLoadingOff,
+    setCommonBackdropOn,
+    setCommonBackdropOff
+} = componentsStateReducer.actions;
 
 export enum UserSignInStatus {
-    Unauthorised = 0,
     Pending = 2,
-    Authorised = 1
+    Authorised = 1,
+    Unauthorised = 0,
 }
 
-const authState: AuthStateRootState = {
-    isUserSignedIn: UserSignInStatus.Pending,
-}
-
-/** Movies store reducer */
-export const moviesStoreReducer = createReducer(moviesStoreInitialState, builder => {
-    builder
-        .addCase(actionCreators.setMovies, (state, action) => {
-            state.movies = action.payload;
-        })
-        .addCase(actionCreators.setRelevChars, (state, action) => {
-            state.relevantCharacters = action.payload;
-        })
-        .addCase(actionCreators.setRelevPlanets, (state, action) => {
-            state.relevantPlanets = action.payload;
-        })
-        .addCase(actionCreators.setMovieItem, (state, action) => {
-            state.movieItem = action.payload
-        })
-        .addCase(actionCreators.flushMovieItem, (state) => {
-            state.movieItem = null
-        })
-})
-
-/** People store reducer */
-export const charactersStoreReducer = createReducer(charactersStoreInitialState, builder => {
-    builder
-        .addCase(actionCreators.setCharacters, (state, action) => {
-            state.characters = action.payload;
-        })
-        .addCase(actionCreators.setPersonItem, (state, action) => {
-            state.characterItem = action.payload
-        })
-        .addCase(actionCreators.setNumberOfItemsDisplayCharacters, (state, action) => {
-            state.numberOfItemsDisplayCharacters = action.payload
-        })
-        .addCase(actionCreators.discardCharactersItemsAmmount, (state) => {
-            state.itemsToDispCharacters = 1
-        })
-        .addCase(actionCreators.addItemsToDisplayCharacters, (state) => {
-            state.itemsToDispCharacters += state.numberOfItemsDisplayCharacters
-        })
-})
-
-/** Planets store reducer */
-export const planetsStoreReducer = createReducer(planetsStoreInitialState, builder => {
-    builder
-        .addCase(actionCreators.setPlanets, (state, action) => {
-            state.planets = action.payload;
-        })
-        .addCase(actionCreators.setPlanetItem, (state, action) => {
-            state.planetItem = action.payload
-        })
-        .addCase(actionCreators.setNumberOfItemsDisplayPlanets, (state, action) => {
-            state.numberOfItemsDisplayPlanets = action.payload
-        })
-        .addCase(actionCreators.discardPlanetsItemsAmmount, (state) => {
-            state.itemsToDispPlanets = 1
-        })
-        .addCase(actionCreators.addItemsToDisplayPlanets, (state) => {
-            state.itemsToDispPlanets += state.numberOfItemsDisplayPlanets
-        })
-})
-
-/** Misc component's state store */
-export const componentsStateReducer = createReducer(componentsInitialState, builder => {
-    builder
-        .addCase(actionCreators.setDeletionModalOpen, (state) => {
-            state.isDeletionConfirmationOpen = true
-        })
-        .addCase(actionCreators.setDeletionModalClose, (state) => {
-            state.isDeletionConfirmationOpen = false
-        })
-        .addCase(actionCreators.setSidebarLoadingOn, (state) => {
-            state.isSidebarLoading = true
-        })
-        .addCase(actionCreators.setSidebarLoadingOff, (state) => {
-            state.isSidebarLoading = false
-        })
-        .addCase(actionCreators.setCommonBackdropOn, (state) => {
-            state.isCommonLoadingBckDropOn = true
-        })
-        .addCase(actionCreators.setCommonBackdropOff, (state) => {
-            state.isCommonLoadingBckDropOn = false
-        })
-})
-
-/** User's authorization state */
-export const authStateReducer = createReducer(authState, builder => {
-    builder
-        .addCase(actionCreators.signUserIn, (state) => {
+const authStateReducer = createSlice({
+    name: 'authState',
+    initialState: {
+        isUserSignedIn: UserSignInStatus.Pending,
+    } as AuthStateRootState,
+    reducers: {
+        signUserIn: (state) => {
             state.isUserSignedIn = UserSignInStatus.Authorised
-        })
-        .addCase(actionCreators.signUserOut, (state) => {
+        },
+        signUserOut: (state) => {
             state.isUserSignedIn = UserSignInStatus.Unauthorised
-        })
+        },
+    },
 })
+
+export const {
+    signUserIn,
+    signUserOut,
+} = authStateReducer.actions;
 
 export const reducer = combineReducers({
-    componentsState: componentsStateReducer,
-    moviesStore: moviesStoreReducer,
-    planetsStore: planetsStoreReducer,
-    charactersStore: charactersStoreReducer,
-    authState: authStateReducer,
+    componentsState: componentsStateReducer.reducer,
+    moviesStore: moviesStoreReducer.reducer,
+    planetsStore: planetsStoreReducer.reducer,
+    charactersStore: charactersStoreReducer.reducer,
+    authState: authStateReducer.reducer,
 })
 

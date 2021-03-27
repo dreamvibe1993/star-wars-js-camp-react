@@ -21,9 +21,15 @@ import { Params } from '../../models/query-params'
 import styles from './CharactersSidebar.module.css'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../constants/sizing-constants';
 
-import * as actionCreators from '../../store/action-creators/action-creators';
-import { loadCharactersData, loadMoreCharactersItems } from '../../api/services/load-characters-data';
 import { RootState } from '../../store/store';
+import {
+    setCommonBackdropOn,
+    setCommonBackdropOff,
+    setNumberOfItemsDisplayCharacters,
+    addItemsToDisplayCharacters,
+    discardCharactersItemsAmmount,
+} from '../../store/reducer';
+import { lazyloadMoreCharacters } from '../../store/thunks'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -61,22 +67,15 @@ export const CharactersSidebar: React.FC = () => {
 
     /** Hook that loads people items if a number of the items is changed */
     useEffect(() => {
-        loadCharactersData().then((querySnapshot) => {
-            const last = querySnapshot.docs[numberOfItemsToDisplay]
-            if (last) {
-                dispatch(actionCreators.setSidebarLoadingOn())
-                loadMoreCharactersItems(last, numberOfItemsToDisplay)
-                    .then(() => dispatch(actionCreators.setSidebarLoadingOff()))
-            }
-        })
+        dispatch(lazyloadMoreCharacters(numberOfItemsToDisplay))
     }, [numberOfItemsToDisplay])
 
     /** Hook that triggers the common backdrop to appear */
     useEffect(() => {
         if (characters.length < 1) {
-            dispatch(actionCreators.setCommonBackdropOn())
+            dispatch(setCommonBackdropOn())
         } else {
-            dispatch(actionCreators.setCommonBackdropOff())
+            dispatch(setCommonBackdropOff())
         }
     }, [characters.length])
 
@@ -84,19 +83,19 @@ export const CharactersSidebar: React.FC = () => {
     /** If a window size was changed rerenders people items into the sidebar */
     function getAmountOfItemsPerWindowSize() {
         const ammount = Math.ceil((window.innerHeight - NAVBAR_HEIGHT) / ITEM_HEIGHT)
-        dispatch(actionCreators.setNumberOfItemsDisplayCharacters(ammount))
+        dispatch(setNumberOfItemsDisplayCharacters(ammount))
     }
 
     /** When the component's loaded loads first batch of people items and does so if the num of the items' changed */
     useEffect(() => {
         getAmountOfItemsPerWindowSize()
         if (numberOfItemsToDisplay === 1) {
-            dispatch(actionCreators.addItemsToDisplayCharacters())
+            dispatch(addItemsToDisplayCharacters())
         }
     }, [numberOfItemsToDisplay])
 
     /** Triggers recalculating of ammounts of people items to display if the size of the window's changed */
-    window.addEventListener('resize', () => dispatch(actionCreators.discardCharactersItemsAmmount()));
+    window.addEventListener('resize', () => dispatch(discardCharactersItemsAmmount()));
 
     /** Reference to get scroll event */
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -110,7 +109,7 @@ export const CharactersSidebar: React.FC = () => {
         divListContainer.addEventListener('scroll', () => {
             const scrollBottom = divListContainer.scrollHeight - divListContainer.scrollTop - divListContainer.clientHeight;
             if (!scrollBottom) {
-                dispatch(actionCreators.addItemsToDisplayCharacters())
+                dispatch(addItemsToDisplayCharacters())
             }
         })
     }, [dispatch])

@@ -14,10 +14,10 @@ import {
 
 import { signIn } from '../../api/services/auth';
 
-import * as actionCreators from '../../store/action-creators/action-creators'
 import styles from './LoginPage.module.css'
 import { loginPageYupValScheme } from '../../models/yup-validation-schemas';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
+import { setCommonBackdropOff } from '../../store/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -67,11 +67,11 @@ export const LoginPage: React.FC = () => {
         onSubmit: (values) => {
             signIn(values.email, values.password)
                 .then(() => {
-                    dispatch(actionCreators.setCommonBackdropOff());
+                    dispatch(setCommonBackdropOff());
                     history.push('/');
                 })
                 .catch((error) => {
-                    dispatch(actionCreators.setCommonBackdropOff());
+                    dispatch(setCommonBackdropOff());
                     if (error.code === 'auth/user-not-found') {
                         formik.setFieldError('email', error.message)
                     } else if (error.code === 'auth/wrong-password') {

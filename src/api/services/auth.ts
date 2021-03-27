@@ -2,16 +2,16 @@ import firebase from "firebase/app";
 import { firebaseApp } from '../firebase';
 
 import { store } from '../../store/store';
-import * as actionCreators from '../../store/action-creators/action-creators'
+import { signUserIn, signUserOut, setCommonBackdropOn } from "../../store/reducer";
 
 /** Checking if user is signed in or out. */
 export const getSignInStatus = (): void => {
   firebaseApp.auth().onAuthStateChanged((user) => {
     // the observer is only triggered on sign-in or sign-out.
     if (user) {
-      store.dispatch(actionCreators.signUserIn());
+      store.dispatch(signUserIn());
     } else {
-      store.dispatch(actionCreators.signUserOut());
+      store.dispatch(signUserOut());
     }
   })
 };
@@ -22,7 +22,7 @@ export const getSignInStatus = (): void => {
  * @param password User's password
  */
 export const signIn = (email: string, password: string): Promise<firebase.auth.UserCredential> => {
-  store.dispatch(actionCreators.setCommonBackdropOn());
+  store.dispatch(setCommonBackdropOn());
   return firebaseApp
     .auth()
     .signInWithEmailAndPassword(email, password)

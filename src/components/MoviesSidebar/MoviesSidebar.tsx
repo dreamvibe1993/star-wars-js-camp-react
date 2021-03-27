@@ -19,9 +19,9 @@ import { Sidebar } from '../Sidebar';
 
 import { loadMoviesData } from '../../api/services/load-movies-data';
 import styles from './MoviesSidebar.module.css'
-import * as actionCreators from '../../store/action-creators/action-creators'
 import { RootState } from '../../store/store';
-import { UserSignInStatus } from '../../store/reducer';
+import { UserSignInStatus , setCommonBackdropOn, setCommonBackdropOff } from '../../store/reducer';
+
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -59,9 +59,9 @@ export const MoviesSidebar: React.FC = () => {
     /** Hooks that triggers the backdrop on */
     useEffect(() => {
         if (movies.length < 1) {
-            dispatch(actionCreators.setCommonBackdropOn())
+            dispatch(setCommonBackdropOn())
         } else {
-            dispatch(actionCreators.setCommonBackdropOff())
+            dispatch(setCommonBackdropOff())
         }
     }, [movies.length])
 

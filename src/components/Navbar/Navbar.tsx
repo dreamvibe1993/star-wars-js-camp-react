@@ -19,15 +19,15 @@ import InputBase from '@material-ui/core/InputBase';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import * as actionCreators from '../../store/action-creators/action-creators'
 import { signOut } from '../../api/services/auth';
 import { searchMovieEntity } from '../../api/services/load-movies-data';
 
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 import styles from './Navbar.module.css'
 import { RootState } from '../../store/store';
-import { UserSignInStatus } from '../../store/reducer';
+import { UserSignInStatus , setCommonBackdropOn, setCommonBackdropOff } from '../../store/reducer';
 import { logo } from '../../imgs/logo';
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -104,7 +104,7 @@ export const Navbar: React.FC<Props> = ({
         },
         validationSchema,
         onSubmit: (values) => {
-            dispatch(actionCreators.setCommonBackdropOn())
+            dispatch(setCommonBackdropOn())
             searchMovieEntity(values.title).then((querySnapshot) => {
                     if (!querySnapshot.empty) {
                         querySnapshot.forEach((querySnapshotItem) => {
@@ -113,7 +113,7 @@ export const Navbar: React.FC<Props> = ({
                     } else {
                         history.push('/not-found')
                     }
-                    dispatch(actionCreators.setCommonBackdropOff())
+                    dispatch(setCommonBackdropOff())
                 })
         }
     })

@@ -8,8 +8,8 @@ import { CharacterDTO } from "../dtos/CharacterDTO";
 import { PlanetDTO } from "../dtos/PlanetDTO";
 
 import { mapMovie, mapCharacter, mapPlanet } from "../mappers/mapper";
-import * as actionCreators from '../../store/action-creators/action-creators'
 import { getCollection } from "./get-collection";
+import { setCharacters, setMovieItem, setMovies, setPlanets, setRelevChars, setRelevPlanets } from "../../store/reducer";
 
 
 /** Loads whole movies' collection */
@@ -18,7 +18,7 @@ export const loadMoviesData = (): (() => void) => DBRef
     .onSnapshot((querySnapshot) => {
         const movies = querySnapshot.docs
             .map(movie => mapMovie(movie.data() as MoviesDTO, movie.id))
-        store.dispatch(actionCreators.setMovies(movies))
+        store.dispatch(setMovies(movies))
     })
 
 /** 
@@ -35,10 +35,10 @@ const loadRelevantCharactersData = (charactersPKs: number[]): void => {
             .then((querySnapshot) => {
                 const relevantCharacters = querySnapshot.docs
                     .map(character => mapCharacter(character.data() as CharacterDTO, character.id))
-                store.dispatch(actionCreators.setRelevChars(relevantCharacters))
+                store.dispatch(setRelevChars(relevantCharacters))
             })
     }
-    store.dispatch(actionCreators.setRelevChars([]))
+    store.dispatch(setRelevChars([]))
 }
 
 /** 
@@ -55,10 +55,10 @@ const loadRelevantPlanetsData = (planetsPKs: number[]): void => {
             .then((querySnapshot) => {
                 const relevantPlanets = querySnapshot.docs
                     .map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id))
-                store.dispatch(actionCreators.setRelevPlanets(relevantPlanets))
+                store.dispatch(setRelevPlanets(relevantPlanets))
             })
     }
-    store.dispatch(actionCreators.setRelevPlanets([]))
+    store.dispatch(setRelevPlanets([]))
 }
 
 /**
@@ -76,7 +76,7 @@ export const loadMovieItemData = (docID: string, onNotFound?: () => void): (() =
             const movie: Movie = mapMovie(querySnapshot.data() as MoviesDTO, querySnapshot.id)
             loadRelevantCharactersData(movie.charactersPKs)
             loadRelevantPlanetsData(movie.planetsPKs)
-            store.dispatch(actionCreators.setMovieItem(movie))
+            store.dispatch(setMovieItem(movie))
         }
     })
 
@@ -86,13 +86,13 @@ export const loadCharsAndPlanetsToMovieCreate = (): void => {
         .then((collection) => {
             const characters = collection.docs
                 .map(character => mapCharacter(character.data() as CharacterDTO, character.id))
-            store.dispatch(actionCreators.setCharacters(characters))
+            store.dispatch(setCharacters(characters))
         });
     getCollection('planets')
         .then((collection) => {
             const planets = collection.docs
                 .map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id))
-            store.dispatch(actionCreators.setPlanets(planets))
+            store.dispatch(setPlanets(planets))
         });
 }
 

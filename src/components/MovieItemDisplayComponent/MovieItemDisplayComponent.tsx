@@ -20,8 +20,7 @@ import { DeletionConfirmationModal } from '../DeletionConfirmationModal';
 import styles from '../MovieItemScreen/MovieItemScreen.module.css'
 import { RootState } from '../../store/store';
 
-import * as actionCreators from '../../store/action-creators/action-creators'
-import { UserSignInStatus } from '../../store/reducer';
+import { UserSignInStatus, setDeletionModalOpen } from '../../store/reducer';
 
 
 interface Props {
@@ -99,7 +98,7 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
                         <Button
                             className={materialUIStyles.deleteButton}
                             color="primary"
-                            onClick={() => dispatch(actionCreators.setDeletionModalOpen())}
+                            onClick={() => dispatch(setDeletionModalOpen())}
                             type="button"
                             variant="contained"
                         >

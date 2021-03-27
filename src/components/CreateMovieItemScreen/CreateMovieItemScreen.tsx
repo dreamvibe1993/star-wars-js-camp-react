@@ -25,7 +25,6 @@ import {
 import Paper from '@material-ui/core/Paper';
 
 import { loadCharsAndPlanetsToMovieCreate } from '../../api/services/load-movies-data';
-import * as actionCreators from '../../store/action-creators/action-creators'
 
 import { Character } from '../../models/character';
 import { Planet } from '../../models/planet';
@@ -35,6 +34,7 @@ import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../constants/sizing-constants'
 import { addMovieEntry } from '../../api/services/edit-movie-data';
 import { MovieTransferValueCreateForm } from '../../models/movies-transfer-value-create-form';
 import { RootState } from '../../store/store';
+import { setCommonBackdropOff, setCommonBackdropOn } from '../../store/reducer';
 // import classes from "../../index.css"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -125,9 +125,9 @@ export const CreateMovieItemScreen: React.FC = () => {
         initialValues,
         validationSchema,
         onSubmit: (values) => {
-            dispatch(actionCreators.setCommonBackdropOn())
+            dispatch(setCommonBackdropOn())
             addMovieEntry(values).then((res) => {
-                dispatch(actionCreators.setCommonBackdropOff())
+                dispatch(setCommonBackdropOff())
                 console.log('Document written with ID: ', res.id);
                 history.push("/films")
             }).catch(error => {

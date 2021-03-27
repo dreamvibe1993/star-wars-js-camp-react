@@ -15,9 +15,9 @@ import Paper from '@material-ui/core/Paper';
 
 import { Params } from '../../models/query-params'
 
-import * as actionCreators from '../../store/action-creators/action-creators'
-import { loadCharacterItemData } from '../../api/services/load-characters-data';
+// import { loadCharacterItemData } from '../../api/services/load-characters-data-api';
 import { RootState } from '../../store/store';
+import { setCommonBackdropOff } from '../../store/reducer';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -40,10 +40,10 @@ export const CharacterItemScreen: React.FC = () => {
     /** 
      * Hook that triggers person's entry loading if there's one existing.
     */
-    useEffect(() => {
-        dispatch(actionCreators.setCommonBackdropOff())
-        return loadCharacterItemData(queryParam.id, () => { history.push('/not-found') })
-    }, [queryParam.id])
+    // useEffect(() => {
+    //     dispatch(setCommonBackdropOff())
+    //     return loadCharacterItemData(queryParam.id, () => { history.push('/not-found') })
+    // }, [queryParam.id])
 
     
     /** Variable to check if there's any person item loaded in the store */

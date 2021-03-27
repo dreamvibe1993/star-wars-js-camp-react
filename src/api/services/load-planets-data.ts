@@ -4,9 +4,9 @@ import { store } from '../../store/store';
 import { DBRef } from '../firebase';
 import { Planet } from '../../models/planet';
 import { PlanetDTO } from '../dtos/PlanetDTO';
-import * as actionCreators from '../../store/action-creators/action-creators'
 
 import { mapPlanet } from '../mappers/mapper';
+import { setPlanets, setPlanetItem } from "../../store/reducer";
 
 /**
  * Lazyloads parts of planets items and provides the destructor function
@@ -21,7 +21,7 @@ export const loadMorePlanetsItems = (last: firebase.firestore.QueryDocumentSnaps
     .then((querySnapshot) => {
         if (!querySnapshot.empty) {
             const planets = querySnapshot.docs.map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id));
-            store.dispatch(actionCreators.setPlanets(planets));
+            store.dispatch(setPlanets(planets));
         }
     })
 
@@ -47,6 +47,6 @@ export const loadPlanetItemData = (docID: string, onNotFound?:() => void): (() =
             onNotFound()
         } else {
         const planet: Planet = mapPlanet(querySnapshot.data() as PlanetDTO, querySnapshot.id)
-        store.dispatch(actionCreators.setPlanetItem(planet))
+        store.dispatch(setPlanetItem(planet))
         }
     })

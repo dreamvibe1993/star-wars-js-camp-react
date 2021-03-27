@@ -22,9 +22,9 @@ import styles from './PlanetsSidebar.module.css'
 import { NAVBAR_HEIGHT } from '../../constants/sizing-constants';
 import { ITEM_HEIGHT } from '../../constants/sizing-constants';
 
-import * as actionCreators from '../../store/action-creators/action-creators';
 import { loadMorePlanetsItems, loadPlanetsData } from '../../api/services/load-planets-data';
 import { RootState } from '../../store/store';
+import { setSidebarLoadingOn, setSidebarLoadingOff, setCommonBackdropOn, setCommonBackdropOff, setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../store/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -64,8 +64,8 @@ export const PlanetsSidebar: React.FC = () => {
             .then((querySnapshot) => {
             const last = querySnapshot.docs[numberOfItemsToDisplay]
             if (last) {
-                dispatch(actionCreators.setSidebarLoadingOn())
-                loadMorePlanetsItems(last, numberOfItemsToDisplay).then(() => dispatch(actionCreators.setSidebarLoadingOff()))
+                dispatch(setSidebarLoadingOn())
+                loadMorePlanetsItems(last, numberOfItemsToDisplay).then(() => dispatch(setSidebarLoadingOff()))
             }
         });
     }, [numberOfItemsToDisplay])
@@ -73,29 +73,29 @@ export const PlanetsSidebar: React.FC = () => {
     /** Hook that triggers the common backdrop to appear */
     useEffect(() => {
         if (planets.length < 1) {
-            dispatch(actionCreators.setCommonBackdropOn())
+            dispatch(setCommonBackdropOn())
         } else {
-            dispatch(actionCreators.setCommonBackdropOff())
+            dispatch(setCommonBackdropOff())
         }
     }, [planets.length])
 
     /** If a window size was changed rerenders planets items into the sidebar */
     function getAmountOfItemsPerWindowSize() {
         const ammount = Math.ceil((window.innerHeight - NAVBAR_HEIGHT) / ITEM_HEIGHT)
-        dispatch(actionCreators.setNumberOfItemsDisplayPlanets(ammount))
+        dispatch(setNumberOfItemsDisplayPlanets(ammount))
     }
 
     /** When the component's loaded loads first batch of planets items and does so if the num of the items' changed */
     useEffect(() => {
         getAmountOfItemsPerWindowSize()
         if (numberOfItemsToDisplay === 1) {
-            dispatch(actionCreators.addItemsToDisplayPlanets())
-            dispatch(actionCreators.setCommonBackdropOn())
+            dispatch(addItemsToDisplayPlanets())
+            dispatch(setCommonBackdropOn())
         }
     }, [numberOfItemsToDisplay])
 
     /** Triggers recalculating of ammounts of planets items to display if the size of the window's changed */
-    window.addEventListener('resize', () => dispatch(actionCreators.discardPlanetsItemsAmmount()));
+    window.addEventListener('resize', () => dispatch(discardPlanetsItemsAmmount()));
 
     /** Reference to get scroll event */
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -109,7 +109,7 @@ export const PlanetsSidebar: React.FC = () => {
         divListContainer.addEventListener('scroll', () => {
             const scrollBottom = divListContainer.scrollHeight - divListContainer.scrollTop - divListContainer.clientHeight;
             if (!scrollBottom) {
-                dispatch(actionCreators.addItemsToDisplayPlanets())
+                dispatch(addItemsToDisplayPlanets())
             }
         })
     }, [dispatch])
