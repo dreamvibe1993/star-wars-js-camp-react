@@ -1,7 +1,7 @@
 /** Camelcase is disabled because It's needed to return the data back to d_base intact */
 /* eslint-disable camelcase */
 /** Person DTO */
-export interface PersonDTO {
+export interface CharacterDTO {
   fields: {
     /** Person's birth year */
     birth_year: string;
@@ -16,13 +16,13 @@ export interface PersonDTO {
     /** Person's haircolor */
     hair_color: string;
     /** Person's height */
-    height: string;
+    height: number;
     /** Person's homeworld */
     homeworld: number;
     /** Person's image */
     image: string;
     /** Person's weight */
-    mass: string;
+    mass: number;
     /** Person's name */
     name: string;
     /** Person's skin color */

@@ -39,10 +39,10 @@ export const MoviesSidebar: React.FC = () => {
     const queryParams = useParams<Params>()
 
     /** Variable to check if there's any movies */
-    const movies: Movie[] = useSelector((state: RootState) => state.dataStore.films)
+    const movies: Movie[] = useSelector((state: RootState) => state.moviesStore.movies)
 
     /** Variable to check if there's a movie item */
-    const movieItem = useSelector((state: RootState) => state.dataStore.movieItem)
+    const movieItem = useSelector((state: RootState) => state.moviesStore.movieItem)
 
     /** Variable to check if a user's logged in */
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
@@ -53,13 +53,17 @@ export const MoviesSidebar: React.FC = () => {
         </ListItem>
     ))
 
-    /** Hook that drops a Backdrop while movies are loading */
+    /** Hook that triggers movies loading */
+    useEffect(() => loadMoviesData(), [])
+    
+    /** Hooks that triggers the backdrop on */
     useEffect(() => {
-        if (movies.length === 0) {
+        if (movies.length < 1) {
             dispatch(actionCreators.setCommonBackdropOn())
+        } else {
+            dispatch(actionCreators.setCommonBackdropOff())
         }
-        return loadMoviesData();
-    }, [])
+    }, [movies.length])
 
     const createEntryButton = (
         < >

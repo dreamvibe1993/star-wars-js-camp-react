@@ -1,5 +1,5 @@
 /** Person's domain model */
-export interface Person {
+export interface Character {
   /** Person's birth year */
   birthYear: string;
   /** Timestamp when the entry was created */
@@ -12,20 +12,18 @@ export interface Person {
   gender: string;
   /** Person's haircolor */
   hairColor: string;
-  /** Person's height */
-  height: string;
+  /** Person's height. Measured in centimeters */
+  height: number;
   /** Person's homeworld */
   homeworld: number;
   /** Person's image */
   image: string;
-  /** Person's weight */
-  mass: string;
+  /** Person's weight. Measured in kilograms*/
+  mass: number;
   /** Person's name */
   name: string;
   /** Person's skin color */
   skinColor: string;
-  /** Person's model prototype */
-  model: string;
   /** Person's  personal key*/
   pk: number;
     /** 

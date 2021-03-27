@@ -1,10 +1,10 @@
 import { Movie } from '../../models/movie';
 import { MovieTransderValueForUpdate, MovieTransferValueEditForm } from '../../models/movie-transfer-value-edit-form';
 import { MovieTransferValueCreateForm } from '../../models/movies-transfer-value-create-form';
-import { Person } from '../../models/person';
+import { Character } from '../../models/character';
 import { Planet } from '../../models/planet';
 import { MoviesDTO } from '../dtos/MovieDTO';
-import { PersonDTO } from '../dtos/PersonDTO';
+import { CharacterDTO } from '../dtos/CharacterDTO';
 import { PlanetDTO } from '../dtos/PlanetDTO';
 
 /**
@@ -73,7 +73,7 @@ export const mapPlanet = (payload: PlanetDTO, docID: string): Planet => ({
  * @param payload Data to map from DB
  * @param docID Document ID of the collection
  */
-export const mapPerson = (payload: PersonDTO, docID: string): Person => ({
+export const mapCharacter = (payload: CharacterDTO, docID: string): Character => ({
   birthYear: payload.fields.birth_year,
   created: payload.fields.created,
   edited: payload.fields.edited,
@@ -89,7 +89,7 @@ export const mapPerson = (payload: PersonDTO, docID: string): Person => ({
   pk: payload.pk,
   model: payload.model,
   docId: docID,
-} as Person);
+} as Character);
 
 /**
  * Returns DTO to send it back to DB.

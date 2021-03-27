@@ -27,7 +27,7 @@ import Paper from '@material-ui/core/Paper';
 import { loadCharsAndPlanetsToMovieCreate } from '../../api/services/load-movies-data';
 import * as actionCreators from '../../store/action-creators/action-creators'
 
-import { Person } from '../../models/person';
+import { Character } from '../../models/character';
 import { Planet } from '../../models/planet';
 import styles from './CreateMovieItemScreen.module.css';
 import { createMovieItemYupValScheme } from '../../models/yup-validation-schemas';
@@ -35,6 +35,7 @@ import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../constants/sizing-constants'
 import { addMovieEntry } from '../../api/services/edit-movie-data';
 import { MovieTransferValueCreateForm } from '../../models/movies-transfer-value-create-form';
 import { RootState } from '../../store/store';
+// import classes from "../../index.css"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -75,10 +76,10 @@ const MenuProps = {
     },
 };
 
-function getStyles(name: string, personNames: string[], theme: Theme) {
+function getStyles(name: string, characterNames: string[], theme: Theme) {
     return {
         fontWeight:
-            personNames.indexOf(name) === -1
+            characterNames.indexOf(name) === -1
                 ? theme.typography.fontWeightRegular
                 : theme.typography.fontWeightMedium,
     };
@@ -92,11 +93,11 @@ export const CreateMovieItemScreen: React.FC = () => {
     /** Styles that are more superior than module.css */
     const materialUIStyles = useStyles();
     /** Characters to choose to add into a new movie entry */
-    const people = useSelector((state: RootState) => state.dataStore.people);
+    const characters = useSelector((state: RootState) => state.charactersStore.characters);
     /** Planets to choose to add into a new movie entry */
-    const planets = useSelector((state: RootState) => state.dataStore.planets);
+    const planets = useSelector((state: RootState) => state.planetsStore.planets);
     /** State for chosen characters to be added */
-    const [personNames, setPersonNames] = React.useState<string[]>([]);
+    const [characterNames, setCharacterNames] = React.useState<string[]>([]);
     /** State for chosen planets to be added */
     const [planetNames, setPlanetNames] = React.useState<string[]>([]);
     /**
@@ -104,7 +105,7 @@ export const CreateMovieItemScreen: React.FC = () => {
      * @param event Change event of a node
      */
     const handleChangeCharacters = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setPersonNames(event.target.value as string[]);
+        setCharacterNames(event.target.value as string[]);
     };
     /**
      * Adds names of chosen planets to state
@@ -118,7 +119,7 @@ export const CreateMovieItemScreen: React.FC = () => {
         loadCharsAndPlanetsToMovieCreate()
     }, [])
 
-     
+
 
     const formik = useFormik({
         initialValues,
@@ -138,10 +139,10 @@ export const CreateMovieItemScreen: React.FC = () => {
 
     /** Refreshes personal keys array when a new character is chosen */
     useEffect(() => {
-        const characters = people.filter((person: Person) => personNames.find((name: string) => name === person.name))
-        const charactersPersonalKeys = characters.map((person: Person) => person.pk)
+        const charactersCollection = characters.filter((character: Character) => characterNames.find((name: string) => name === character.name))
+        const charactersPersonalKeys = charactersCollection.map((character: Character) => character.pk)
         formik.setFieldValue('charactersPKs', charactersPersonalKeys)
-    }, [personNames])
+    }, [characterNames])
 
     /** Refreshes personal keys array when a new planet is chosen */
     useEffect(() => {
@@ -153,150 +154,151 @@ export const CreateMovieItemScreen: React.FC = () => {
     return (
         <>
             <div className={materialUIStyles.root}>
-            <form onSubmit={formik.handleSubmit}>
-                <TableContainer component={Paper}>
-                    <Table className={styles.table} size="medium">
-                        <TableBody>
-                            <TableRow >
-                                <TableCell align="left" className={styles.tenthWidth} ><strong>Title: </strong></TableCell>
-                                <TableCell>
-                                    <TextField error={formik.touched.title && Boolean(formik.errors.title)}
-                                        helperText={formik.touched.title && formik.errors.title}
-                                        name="title"
-                                        onChange={formik.handleChange}
-                                        value={formik.values.title}
-                                        variant="outlined"
-                                        fullWidth />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left" className={styles.tenthWidth} ><strong>Producer: </strong></TableCell>
-                                <TableCell>
-                                    <TextField error={formik.touched.producer && Boolean(formik.errors.producer)}
-                                        helperText={formik.touched.producer && formik.errors.producer}
-                                        name="producer"
-                                        onChange={formik.handleChange}
-                                        value={formik.values.producer}
-                                        variant="outlined"
-                                        fullWidth />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left" className={styles.tenthWidth} ><strong>Release date: </strong></TableCell>
-                                <TableCell>
-                                    <TextField error={formik.touched.releaseDate && Boolean(formik.errors.releaseDate)}
-                                        helperText={formik.touched.releaseDate && formik.errors.releaseDate}
-                                        name="releaseDate"
-                                        onChange={formik.handleChange}
-                                        type="date"
-                                        value={formik.values.releaseDate}
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left" className={styles.tenthWidth}><strong>Director: </strong></TableCell>
-                                <TableCell>
-                                    <TextField error={formik.touched.director && Boolean(formik.errors.director)}
-                                        helperText={formik.touched.director && formik.errors.director}
-                                        name="director"
-                                        onChange={formik.handleChange}
-                                        value={formik.values.director}
-                                        variant="outlined"
-                                        fullWidth />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left" className={styles.tenthWidth}><strong>Opening crawl: </strong></TableCell>
-                                <TableCell>
-                                    <TextField error={formik.touched.openingCrawl && Boolean(formik.errors.openingCrawl)}
-                                        helperText={formik.touched.openingCrawl && formik.errors.openingCrawl}
-                                        name="openingCrawl"
-                                        onChange={formik.handleChange} value={formik.values.openingCrawl}
-                                        variant="outlined"
-                                        fullWidth
-                                        multiline />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left" className={styles.tenthWidth}><strong>Relevant characters and planets: </strong></TableCell>
-                                <TableCell>
-                                    <FormControl className={materialUIStyles.formControl} >
-                                        <InputLabel id="mutiple-chip-label">Characters to add</InputLabel>
+                <form onSubmit={formik.handleSubmit}>
+                    <TableContainer component={Paper}>
+                        <Table className={styles.table} size="medium">
+                            <TableBody>
+                                <TableRow >
+                                    <TableCell align="left" className={styles.tenthWidth} ><strong>Title: </strong></TableCell>
+                                    <TableCell>
+                                        <TextField error={formik.touched.title && Boolean(formik.errors.title)}
+                                            helperText={formik.touched.title && formik.errors.title}
+                                            name="title"
+                                            onChange={formik.handleChange}
+                                            value={formik.values.title}
+                                            variant="outlined"
+                                            fullWidth />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth} ><strong>Producer: </strong></TableCell>
+                                    <TableCell>
+                                        <TextField error={formik.touched.producer && Boolean(formik.errors.producer)}
+                                            helperText={formik.touched.producer && formik.errors.producer}
+                                            name="producer"
+                                            onChange={formik.handleChange}
+                                            value={formik.values.producer}
+                                            variant="outlined"
+                                            fullWidth />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth} ><strong>Release date: </strong></TableCell>
+                                    <TableCell>
+                                        <TextField error={formik.touched.releaseDate && Boolean(formik.errors.releaseDate)}
+                                            helperText={formik.touched.releaseDate && formik.errors.releaseDate}
+                                            name="releaseDate"
+                                            onChange={formik.handleChange}
+                                            type="date"
+                                            value={formik.values.releaseDate}
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth}><strong>Director: </strong></TableCell>
+                                    <TableCell>
+                                        <TextField error={formik.touched.director && Boolean(formik.errors.director)}
+                                            helperText={formik.touched.director && formik.errors.director}
+                                            name="director"
+                                            onChange={formik.handleChange}
+                                            value={formik.values.director}
+                                            variant="outlined"
+                                            fullWidth />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth}><strong>Opening crawl: </strong></TableCell>
+                                    <TableCell>
+                                        <TextField error={formik.touched.openingCrawl && Boolean(formik.errors.openingCrawl)}
+                                            helperText={formik.touched.openingCrawl && formik.errors.openingCrawl}
+                                            name="openingCrawl"
+                                            onChange={formik.handleChange} value={formik.values.openingCrawl}
+                                            variant="outlined"
+                                            fullWidth
+                                            multiline />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth}><strong>Relevant characters and planets: </strong></TableCell>
+                                    <TableCell>
+                                        <FormControl className={materialUIStyles.formControl} >
+                                            <InputLabel id="mutiple-chip-label">Characters to add</InputLabel>
 
-                                        <Select
-                                            id="mutiple-chip"
-                                            input={<Input id="select-multiple-chip" />}
-                                            labelId="mutiple-chip-label"
-                                            MenuProps={MenuProps}
-                                            onChange={handleChangeCharacters}
-                                            renderValue={(selected) => (
-                                                <div className={styles.chips}>
-                                                    {(selected as string[]).map((value) => (
-                                                        <Chip key={value} className={styles.chip} label={value} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            value={personNames}
-                                            multiple
-                                        >
-                                            {people.map((person: Person) => (
-                                                <MenuItem
-                                                    key={person.name}
-                                                    style={getStyles(person.name, personNames, theme)}
-                                                    value={person.name}>
-                                                    {person.name}
+                                            <Select
+                                                id="mutiple-chip"
+                                                input={<Input id="select-multiple-chip" />}
+                                                labelId="mutiple-chip-label"
+                                                MenuProps={MenuProps}
+                                                onChange={handleChangeCharacters}
+                                                renderValue={(selected) => (
+                                                    <div className={styles.chips}>
+                                                        {(selected as string[]).map((value) => (
+                                                            <Chip key={value} className={styles.chip} label={value} />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                value={characterNames}
+                                                multiple
+                                            >
+                                                {characters.map((character: Character) => (
+                                                    <MenuItem
+                                                        key={character.name}
+                                                        style={getStyles(character.name, characterNames, theme)}
+                                                        value={character.name}>
+                                                        {character.name}
+                                                    </MenuItem>))}
+                                            </Select>
+                                        </FormControl>
+                                        <FormControl className={materialUIStyles.formControl} >
+                                            <InputLabel id="mutiple-chip-label">Planets to add</InputLabel>
+
+                                            <Select
+                                                id="mutiple-chip"
+                                                input={<Input id="select-multiple-chip" />}
+                                                labelId="mutiple-chip-label"
+                                                MenuProps={MenuProps}
+                                                onChange={handleChangePlanets}
+                                                renderValue={(selected) => (
+                                                    <div className={styles.chips}>
+                                                        {(selected as string[]).map((value) => (
+                                                            <Chip key={value} className={styles.chip} label={value} />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                value={planetNames}
+                                                multiple
+                                            >
+                                                {planets.map((planet: Planet) => (<MenuItem key={planet.name} style={getStyles(planet.name, planetNames, theme)} value={planet.name}>
+                                                    {planet.name}
                                                 </MenuItem>))}
-                                        </Select>
-                                    </FormControl>
-                                    <FormControl className={materialUIStyles.formControl} >
-                                        <InputLabel id="mutiple-chip-label">Planets to add</InputLabel>
-
-                                        <Select
-                                            id="mutiple-chip"
-                                            input={<Input id="select-multiple-chip" />}
-                                            labelId="mutiple-chip-label"
-                                            MenuProps={MenuProps}
-                                            onChange={handleChangePlanets}
-                                            renderValue={(selected) => (
-                                                <div className={styles.chips}>
-                                                    {(selected as string[]).map((value) => (
-                                                        <Chip key={value} className={styles.chip} label={value} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            value={planetNames}
-                                            multiple
-                                        >
-                                            {planets.map((planet: Planet) => (<MenuItem key={planet.name} style={getStyles(planet.name, planetNames, theme)} value={planet.name}>
-                                                {planet.name}
-                                            </MenuItem>))}
-                                        </Select>
-                                    </FormControl>
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <div className={styles.buttonContainer}>
-                    <Link className={styles.link} to="/films">
-                        <Button
-                            className={materialUIStyles.cancelButton}
-                            color="primary"
-                            type="button"
-                            variant="contained">
-                            CANCEL
+                                            </Select>
+                                        </FormControl>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <div className={styles.buttonContainer}>
+                        <Link className={styles.link} to="/films">
+                            <Button
+                                className={materialUIStyles.cancelButton}
+                                color="primary"
+                                type="button"
+                                variant="contained">
+                                CANCEL
                         </Button>
-                    </Link>
-                    <Button color="primary"
-                        type="submit"
-                        variant="contained">
-                        SAVE
+                        </Link>
+                        <Button
+                            color="primary"
+                            type="submit"
+                            variant="contained">
+                            SAVE
                     </Button>
-                </div>
-            </form>
-        </div>
+                    </div>
+                </form>
+            </div>
         </>
     )
 }

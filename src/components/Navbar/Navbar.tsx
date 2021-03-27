@@ -27,6 +27,7 @@ import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 import styles from './Navbar.module.css'
 import { RootState } from '../../store/store';
 import { UserSignInStatus } from '../../store/reducer';
+import { logo } from '../../imgs/logo';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 duration: theme.transitions.duration.leavingScreen,
             }),
             zIndex: theme.zIndex.drawer + 1,
+            backgroundColor: 'black',
         },
 
         searchIcon: {
@@ -166,7 +168,6 @@ export const Navbar: React.FC<Props> = ({
     return (
         <AppBar
             className={clsx(materialUIStyles.appBar)}
-            color="primary"
             position="fixed"
         >
             <Toolbar>
@@ -176,7 +177,7 @@ export const Navbar: React.FC<Props> = ({
                     <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
                 </Tabs>
                 <Typography className={styles.title} variant="h6">
-                    <Link className={styles.cancelLinkStyles} to="/">STAR WARS GEEK LAIR</Link>
+                    <Link className={styles.cancelLinkStyles} to="/">{logo}</Link>
                 </Typography>
                 <form onSubmit={formik.handleSubmit}>
                     <div className={materialUIStyles.search}>

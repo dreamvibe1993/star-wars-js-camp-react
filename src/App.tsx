@@ -9,7 +9,7 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import './App.css';
 import { Navbar } from './components/Navbar/Navbar';
 import { MoviesSidebar } from './components/MoviesSidebar';
-import { PeopleSidebar } from './components/PeopleSidebar';
+import { CharactersSidebar } from './components/CharactersSidebar';
 import { PlanetsSidebar } from './components/PlanetsSidebar';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { LoginPage } from './components/LoginPage';
@@ -106,7 +106,7 @@ export const App: React.FC = () => {
               <MoviesSidebar />
             </Route>
             <Route path="/people/:id?">
-              <PeopleSidebar />
+              <CharactersSidebar />
             </Route>
             <Route path="/planets/:id?">
               <PlanetsSidebar />

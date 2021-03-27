@@ -4,19 +4,19 @@ export interface Planet {
   /** Timestamp when the entry was created */
   created: string;
   /** Planet's diameter */
-  diameter: string;
+  diameter: number;
   /** Timestamp when the entry was edited */
   edited: string;
-  /** Planet's gravity */
+  /** Standard gravity is equivalent of 9.82 m/s^2. */
   gravity: string;
   /** Planet's name */
   name: string;
-  /** Planet's orbital period */
-  orbitalPeriod: string;
+  /** Planet's orbital period. Measured in standard days. */
+  orbitalPeriod: number;
   /** Planet's population */
-  population: string;
-  /** Planet's name rotation period */
-  rotationPeriod: string;
+  population: number;
+  /** Planet's name rotation period. Measured in standard hours */
+  rotationPeriod: number;
   /** Planet's water existence  */
   surfaceWater: string;
   /** Planet's terrain type  */

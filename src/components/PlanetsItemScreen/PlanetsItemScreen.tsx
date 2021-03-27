@@ -35,7 +35,7 @@ export const PlanetsItemScreen: React.FC = () => {
     const history = useHistory();
     const materialUIStyles = useStyles();
     const queryParam = useParams<Params>();
-    const planet = useSelector((state: RootState) => state.dataStore.planetItem);
+    const planet = useSelector((state: RootState) => state.planetsStore.planetItem);
     const dispatch = useDispatch()
 
     /** Hook that triggers planet's entry loading. */

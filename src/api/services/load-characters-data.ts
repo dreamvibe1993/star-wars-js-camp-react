@@ -2,29 +2,26 @@ import firebase from "firebase/app";
 
 import { store } from "../../store/store";
 import { DBRef } from "../firebase";
-import { Person } from "../../models/person";
-import { PersonDTO } from "../dtos/PersonDTO";
+import { Character } from "../../models/character";
+import { CharacterDTO } from "../dtos/CharacterDTO";
 import * as actionCreators from '../../store/action-creators/action-creators'
 
-import { mapPerson } from "../mappers/mapper";
+import { mapCharacter } from "../mappers/mapper";
 
 /**
  * Lazyloads parts of people items and provides the destructor function
  * @param last Last document to restrict the batch
  * @param numItemsToDisp General number of people items to display
  */
-const loadMoreCharactersItems = (last: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>, numItemsToDisp: number) => DBRef
+export const loadMoreCharactersItems = (last: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>, numItemsToDisp: number): Promise<void> => DBRef
     .collection('people')
     .endAt(last)
     .limit(numItemsToDisp)
     .get()
     .then((limitedQuerySnapshot) => {
         if (!limitedQuerySnapshot.empty) {
-            const people: Person[] = [];
-            limitedQuerySnapshot.forEach(doc => {
-                people.push(mapPerson(doc.data() as PersonDTO, doc.id));
-            });
-            store.dispatch(actionCreators.setPeople(people));
+            const characters = limitedQuerySnapshot.docs.map(character => mapCharacter(character.data() as CharacterDTO, character.id));
+            store.dispatch(actionCreators.setCharacters(characters));
         }
     });
 
@@ -32,19 +29,10 @@ const loadMoreCharactersItems = (last: firebase.firestore.QueryDocumentSnapshot<
  * Loads partial collection of people items 
  * @param numItemsToDisp Number of people items to display in the sidebar
  */
-export const loadCharacterData = (numItemsToDisp: number): Promise<void> => DBRef
+export const loadCharactersData = (): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> => DBRef
     .collection('people')
     .get()
-    .then((querySnapshot) => {
-        if (numItemsToDisp === 1) {
-            store.dispatch(actionCreators.setCommonBackdropOff())
-        }
-        const last = querySnapshot.docs[numItemsToDisp]
-        store.dispatch(actionCreators.setSidebarLoadingOff());
-        if (last) {
-            loadMoreCharactersItems(last, numItemsToDisp);
-        }
-    })
+
 /**
  * Loads a particular person's entry
  * @param docID Id of the person's entry
@@ -57,7 +45,7 @@ export const loadCharacterItemData = (docID: string, onNotFound?:() => void): ((
         if (!querySnapshot.exists && onNotFound) {
             onNotFound()
         } else {
-            const person: Person = mapPerson(querySnapshot.data() as PersonDTO, querySnapshot.id)
-            store.dispatch(actionCreators.setPersonItem(person))
+            const character = mapCharacter(querySnapshot.data() as CharacterDTO, querySnapshot.id)
+            store.dispatch(actionCreators.setPersonItem(character))
         }
     })

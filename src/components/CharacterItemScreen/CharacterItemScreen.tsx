@@ -47,17 +47,17 @@ export const CharacterItemScreen: React.FC = () => {
 
     
     /** Variable to check if there's any person item loaded in the store */
-    const person = useSelector((state: RootState) => state.dataStore.personItem);
+    const character = useSelector((state: RootState) => state.charactersStore.characterItem);
 
     /** If a user got back from another tab pastes an ID of a current entry */
     useEffect(() => {
-        if (person && !queryParam.id) {
-            history.replace(`/people/${person.docId}`)
+        if (character && !queryParam.id) {
+            history.replace(`/people/${character.docId}`)
         }
     }, [queryParam.id])
 
-    /** If there's no person item show nothing */
-    if (!person) {
+    /** If there's no character item show nothing */
+    if (!character) {
         return null
     }
 
@@ -68,35 +68,35 @@ export const CharacterItemScreen: React.FC = () => {
                     <TableBody>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Name: </strong></TableCell>
-                            <TableCell align="center"><h1>{person.name}</h1></TableCell>
+                            <TableCell align="center"><h1>{character.name}</h1></TableCell>
                         </TableRow>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Date of the birth: </strong></TableCell>
-                            <TableCell align="center">{person.birthYear}</TableCell>
+                            <TableCell align="center">{character.birthYear}</TableCell>
                         </TableRow>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Color of the eyes: </strong></TableCell>
-                            <TableCell align="center">{person.eyeColor}</TableCell>
+                            <TableCell align="center">{character.eyeColor}</TableCell>
                         </TableRow>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Sex: </strong></TableCell>
-                            <TableCell align="center">{person.gender}</TableCell>
+                            <TableCell align="center">{character.gender}</TableCell>
                         </TableRow>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Hair color: </strong></TableCell>
-                            <TableCell align="center">{person.hairColor}</TableCell>
+                            <TableCell align="center">{character.hairColor}</TableCell>
                         </TableRow>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Homeworld: </strong></TableCell>
-                            <TableCell align="center">{person.homeworld}</TableCell>
+                            <TableCell align="center">{character.homeworld}</TableCell>
                         </TableRow>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Weight: </strong></TableCell>
-                            <TableCell align="center">{person.mass}</TableCell>
+                            <TableCell align="center">{character.mass}</TableCell>
                         </TableRow>
                         <TableRow >
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Skincolor: </strong></TableCell>
-                            <TableCell align="center">{person.skinColor}</TableCell>
+                            <TableCell align="center">{character.skinColor}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

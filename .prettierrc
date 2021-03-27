@@ -1,0 +1,18 @@
+printWidth: 120
+tabWidth: 2
+semi: true
+trailingComma: all
+bracketSpacing: true
+jsxBracketSameLine: false
+singleQuote: true
+parser: typescript
+overrides:
+  - files: "*.css"
+    options:
+      parser: postcss
+  - files: "*.md"
+    options:
+      parser: markdown
+  - files: "*.json"
+    options:
+      parser: json

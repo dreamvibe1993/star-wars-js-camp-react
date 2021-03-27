@@ -13,16 +13,16 @@ import {
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { Person } from '../../models/person';
+import { Character } from '../../models/character';
 import { WelcomeScreen } from '../WelcomeScreen';
 import { Sidebar } from '../Sidebar';
 import { CharacterItemScreen } from '../CharacterItemScreen';
 import { Params } from '../../models/query-params'
-import styles from './PeopleSidebar.module.css'
+import styles from './CharactersSidebar.module.css'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../constants/sizing-constants';
 
 import * as actionCreators from '../../store/action-creators/action-creators';
-import { loadCharacterData } from '../../api/services/load-characters-data';
+import { loadCharactersData, loadMoreCharactersItems } from '../../api/services/load-characters-data';
 import { RootState } from '../../store/store';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,49 +39,64 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 /** Sidebar (or drawer) where the people items are displayed */
-export const PeopleSidebar: React.FC = () => {
+export const CharactersSidebar: React.FC = () => {
     const materialUIStyles = useStyles();
 
     /** Variable to check if there's a person item */
-    const person = useSelector((state: RootState) => state.dataStore.personItem)
+    const character = useSelector((state: RootState) => state.charactersStore.characterItem)
 
     /** Variable to check if there's any people loaded */
-    const people: Person[] = useSelector((state: RootState) => state.dataStore.people)
+    const characters: Character[] = useSelector((state: RootState) => state.charactersStore.characters)
     const isSidebarLoading = useSelector((state: RootState) => state.componentsState.isSidebarLoading)
-    const numberOfItemsToDisplay = useSelector((state: RootState) => state.dataStore.itemsToDispPeople);
+    const numberOfItemsToDisplay = useSelector((state: RootState) => state.charactersStore.itemsToDispCharacters);
     const queryParams = useParams<Params>();
 
     const dispatch = useDispatch();
 
-    const listItems = useMemo(() => people.map((personItem: Person) => (
-        <ListItem key={personItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/people/${personItem.docId}`} button >
-            <ListItemText primary={personItem.name} />
+    const listItems = useMemo(() => characters.map((characterItem: Character) => (
+        <ListItem key={characterItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/people/${characterItem.docId}`} button >
+            <ListItemText primary={characterItem.name} />
         </ListItem>
-    )), [people])
+    )), [characters])
 
     /** Hook that loads people items if a number of the items is changed */
     useEffect(() => {
-        dispatch(actionCreators.setSidebarLoadingOn())
-        loadCharacterData(numberOfItemsToDisplay)
+        loadCharactersData().then((querySnapshot) => {
+            const last = querySnapshot.docs[numberOfItemsToDisplay]
+            if (last) {
+                dispatch(actionCreators.setSidebarLoadingOn())
+                loadMoreCharactersItems(last, numberOfItemsToDisplay)
+                    .then(() => dispatch(actionCreators.setSidebarLoadingOff()))
+            }
+        })
     }, [numberOfItemsToDisplay])
+
+    /** Hook that triggers the common backdrop to appear */
+    useEffect(() => {
+        if (characters.length < 1) {
+            dispatch(actionCreators.setCommonBackdropOn())
+        } else {
+            dispatch(actionCreators.setCommonBackdropOff())
+        }
+    }, [characters.length])
+
 
     /** If a window size was changed rerenders people items into the sidebar */
     function getAmountOfItemsPerWindowSize() {
         const ammount = Math.ceil((window.innerHeight - NAVBAR_HEIGHT) / ITEM_HEIGHT)
-        dispatch(actionCreators.setNumberOfItemsDisplayPeople(ammount))
+        dispatch(actionCreators.setNumberOfItemsDisplayCharacters(ammount))
     }
 
     /** When the component's loaded loads first batch of people items and does so if the num of the items' changed */
     useEffect(() => {
         getAmountOfItemsPerWindowSize()
         if (numberOfItemsToDisplay === 1) {
-            dispatch(actionCreators.setCommonBackdropOn())
-            dispatch(actionCreators.addItemsToDisplayPeople())
+            dispatch(actionCreators.addItemsToDisplayCharacters())
         }
     }, [numberOfItemsToDisplay])
 
     /** Triggers recalculating of ammounts of people items to display if the size of the window's changed */
-    window.addEventListener('resize', () => dispatch(actionCreators.discardPeopleItemsAmmount()));
+    window.addEventListener('resize', () => dispatch(actionCreators.discardCharactersItemsAmmount()));
 
     /** Reference to get scroll event */
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -95,7 +110,7 @@ export const PeopleSidebar: React.FC = () => {
         divListContainer.addEventListener('scroll', () => {
             const scrollBottom = divListContainer.scrollHeight - divListContainer.scrollTop - divListContainer.clientHeight;
             if (!scrollBottom) {
-                dispatch(actionCreators.addItemsToDisplayPeople())
+                dispatch(actionCreators.addItemsToDisplayCharacters())
             }
         })
     }, [dispatch])
@@ -113,7 +128,7 @@ export const PeopleSidebar: React.FC = () => {
                     </Backdrop>
                 </div>
             </Sidebar>
-            {(queryParams.id || person) ? <CharacterItemScreen /> : <WelcomeScreen />}
+            {(queryParams.id || character) ? <CharacterItemScreen /> : <WelcomeScreen />}
         </>
     )
 }

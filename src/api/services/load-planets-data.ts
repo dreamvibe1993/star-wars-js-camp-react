@@ -13,17 +13,14 @@ import { mapPlanet } from '../mappers/mapper';
  * @param last Last document to restrict the batch
  * @param numItemsToDisp General number of planets items to display
  */
-const loadMorePlanetsItems = (last: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>, numItemsToDisp: number) => DBRef
+export const loadMorePlanetsItems = (last: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>, numItemsToDisp: number): Promise<void> => DBRef
     .collection('planets')
     .endAt(last)
     .limit(numItemsToDisp)
     .get()
     .then((querySnapshot) => {
         if (!querySnapshot.empty) {
-            const planets: Planet[] = [];
-            querySnapshot.forEach(doc => {
-                planets.push(mapPlanet(doc.data() as PlanetDTO, doc.id));
-            })
+            const planets = querySnapshot.docs.map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id));
             store.dispatch(actionCreators.setPlanets(planets));
         }
     })
@@ -32,19 +29,10 @@ const loadMorePlanetsItems = (last: firebase.firestore.QueryDocumentSnapshot<fir
  * Loads partial collection of planets items 
  * @param numItemsToDisp Number of planets items to display in the sidebar
  */
-export const loadPlanetsData = (numItemsToDisp: number): Promise<void> => DBRef
+export const loadPlanetsData = (): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> => DBRef
     .collection('planets')
     .get()
-    .then((querySnapshot) => {
-        if (numItemsToDisp === 1) {
-            store.dispatch(actionCreators.setCommonBackdropOff())
-        }
-        const last = querySnapshot.docs[numItemsToDisp]
-        store.dispatch(actionCreators.setSidebarLoadingOff());
-        if (last) {
-            loadMorePlanetsItems(last, numItemsToDisp)
-        }
-    });
+
 
 /**
  * Loads a particular planet's entry

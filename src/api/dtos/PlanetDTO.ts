@@ -7,7 +7,7 @@ export interface PlanetDTO {
     /** Timestamp when the entry was created */
     created: string;
     /** Planet's diameter */
-    diameter: string;
+    diameter: number;
     /** Timestamp when the entry was edited */
     edited: string;
     /** Planet's gravity */
@@ -15,11 +15,11 @@ export interface PlanetDTO {
     /** Planet's name */
     name: string;
     /** Planet's orbital period */
-    orbital_period: string;
+    orbital_period: number;
     /** Planet's population */
-    population: string;
+    population: number;
     /** Planet's name rotation period */
-    rotation_period: string;
+    rotation_period: number;
     /** Planet's water existence  */
     surface_water: string;
     /** Planet's terrain type  */

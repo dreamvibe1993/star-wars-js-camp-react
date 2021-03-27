@@ -23,7 +23,7 @@ import { NAVBAR_HEIGHT } from '../../constants/sizing-constants';
 import { ITEM_HEIGHT } from '../../constants/sizing-constants';
 
 import * as actionCreators from '../../store/action-creators/action-creators';
-import { loadPlanetsData } from '../../api/services/load-planets-data';
+import { loadMorePlanetsItems, loadPlanetsData } from '../../api/services/load-planets-data';
 import { RootState } from '../../store/store';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,11 +46,11 @@ export const PlanetsSidebar: React.FC = () => {
     const queryParams = useParams<Params>();
 
     /** Variable to check if there's a planet item */
-    const planet = useSelector((state: RootState) => state.dataStore.planetItem)
+    const planet = useSelector((state: RootState) => state.planetsStore.planetItem)
     /** Variable to check if there's any planets loaded */
-    const planets: Planet[] = useSelector((state: RootState) => state.dataStore.planets)
+    const planets: Planet[] = useSelector((state: RootState) => state.planetsStore.planets)
     const isSidebarLoading = useSelector((state: RootState) => state.componentsState.isSidebarLoading)
-    const numberOfItemsToDisplay = useSelector((state: RootState) => state.dataStore.itemsToDispPlanets);
+    const numberOfItemsToDisplay = useSelector((state: RootState) => state.planetsStore.itemsToDispPlanets);
 
     const listItems = planets.map((planetItem: Planet) => (
         <ListItem key={planetItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/planets/${planetItem.docId}`} button>
@@ -60,9 +60,24 @@ export const PlanetsSidebar: React.FC = () => {
 
     /** Hook that loads planets items if a number of the items is changed */
     useEffect(() => {
-        dispatch(actionCreators.setSidebarLoadingOn())
-        loadPlanetsData(numberOfItemsToDisplay)
+        loadPlanetsData()
+            .then((querySnapshot) => {
+            const last = querySnapshot.docs[numberOfItemsToDisplay]
+            if (last) {
+                dispatch(actionCreators.setSidebarLoadingOn())
+                loadMorePlanetsItems(last, numberOfItemsToDisplay).then(() => dispatch(actionCreators.setSidebarLoadingOff()))
+            }
+        });
     }, [numberOfItemsToDisplay])
+
+    /** Hook that triggers the common backdrop to appear */
+    useEffect(() => {
+        if (planets.length < 1) {
+            dispatch(actionCreators.setCommonBackdropOn())
+        } else {
+            dispatch(actionCreators.setCommonBackdropOff())
+        }
+    }, [planets.length])
 
     /** If a window size was changed rerenders planets items into the sidebar */
     function getAmountOfItemsPerWindowSize() {

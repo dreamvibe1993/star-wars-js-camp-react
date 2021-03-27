@@ -4,12 +4,10 @@ import { DBRef } from "../firebase";
 import { store } from "../../store/store";
 import { Movie } from "../../models/movie";
 import { MoviesDTO } from "../dtos/MovieDTO";
-import { Person } from "../../models/person";
-import { PersonDTO } from "../dtos/PersonDTO";
-import { Planet } from "../../models/planet";
+import { CharacterDTO } from "../dtos/CharacterDTO";
 import { PlanetDTO } from "../dtos/PlanetDTO";
 
-import { mapMovie, mapPerson, mapPlanet } from "../mappers/mapper";
+import { mapMovie, mapCharacter, mapPlanet } from "../mappers/mapper";
 import * as actionCreators from '../../store/action-creators/action-creators'
 import { getCollection } from "./get-collection";
 
@@ -18,11 +16,8 @@ import { getCollection } from "./get-collection";
 export const loadMoviesData = (): (() => void) => DBRef
     .collection('films')
     .onSnapshot((querySnapshot) => {
-        const movies: Movie[] = [];
-        querySnapshot.forEach(doc => {
-            movies.push(mapMovie(doc.data() as MoviesDTO, doc.id));
-        })
-        store.dispatch(actionCreators.setCommonBackdropOff())
+        const movies = querySnapshot.docs
+            .map(movie => mapMovie(movie.data() as MoviesDTO, movie.id))
         store.dispatch(actionCreators.setMovies(movies))
     })
 
@@ -38,10 +33,8 @@ const loadRelevantCharactersData = (charactersPKs: number[]): void => {
             .where('pk', 'in', charactersPKsTen)
             .get()
             .then((querySnapshot) => {
-                const relevantCharacters: Person[] = [];
-                querySnapshot.forEach((doc) => {
-                    relevantCharacters.push(mapPerson(doc.data() as PersonDTO, doc.id));
-                })
+                const relevantCharacters = querySnapshot.docs
+                    .map(character => mapCharacter(character.data() as CharacterDTO, character.id))
                 store.dispatch(actionCreators.setRelevChars(relevantCharacters))
             })
     }
@@ -60,10 +53,8 @@ const loadRelevantPlanetsData = (planetsPKs: number[]): void => {
             .where('pk', 'in', planetsPKsTen)
             .get()
             .then((querySnapshot) => {
-                const relevantPlanets: Planet[] = [];
-                querySnapshot.forEach((doc) => {
-                    relevantPlanets.push(mapPlanet(doc.data() as PlanetDTO, doc.id));
-                })
+                const relevantPlanets = querySnapshot.docs
+                    .map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id))
                 store.dispatch(actionCreators.setRelevPlanets(relevantPlanets))
             })
     }
@@ -83,7 +74,6 @@ export const loadMovieItemData = (docID: string, onNotFound?: () => void): (() =
             onNotFound()
         } else {
             const movie: Movie = mapMovie(querySnapshot.data() as MoviesDTO, querySnapshot.id)
-
             loadRelevantCharactersData(movie.charactersPKs)
             loadRelevantPlanetsData(movie.planetsPKs)
             store.dispatch(actionCreators.setMovieItem(movie))
@@ -92,20 +82,18 @@ export const loadMovieItemData = (docID: string, onNotFound?: () => void): (() =
 
 /** If a user creates an entry that func loads whole set of characters and planets to add into entry. */
 export const loadCharsAndPlanetsToMovieCreate = (): void => {
-    getCollection('people').then((collection) => {
-        const people: Person[] = []
-        collection.forEach(person => {
-            people.push(mapPerson(person.data() as PersonDTO, person.id))
-        })
-        store.dispatch(actionCreators.setPeople(people as Person[]))
-    });
-    getCollection('planets').then((collection) => {
-        const planets: Planet[] = []
-        collection.forEach(planet => {
-            planets.push(mapPlanet(planet.data() as PlanetDTO, planet.id))
-        })
-        store.dispatch(actionCreators.setPlanets(planets as Planet[]))
-    });
+    getCollection('people')
+        .then((collection) => {
+            const characters = collection.docs
+                .map(character => mapCharacter(character.data() as CharacterDTO, character.id))
+            store.dispatch(actionCreators.setCharacters(characters))
+        });
+    getCollection('planets')
+        .then((collection) => {
+            const planets = collection.docs
+                .map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id))
+            store.dispatch(actionCreators.setPlanets(planets))
+        });
 }
 
 export const searchMovieEntity = (title: string): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> => DBRef

@@ -1,0 +1,89 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "@saritasa/eslint-config-react",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings"
+    ],
+    "parserOptions":  {
+      "ecmaVersion":  2018,  // Allows for the parsing of modern ECMAScript features
+      "sourceType":  "module",  // Allows for the use of imports
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "plugins": [
+      "prettier",
+      "react",
+      "react-hooks",
+      "promise",
+      "import"],
+    "overrides": [
+      {
+        "files": ["src/**/*.test.js"],
+        "plugins": ["jest"],
+        "env": {
+          "jest": true,
+          "commonjs": true
+        },
+        "rules": {
+          "global-require": "off",
+          "require-jsdoc": "off"
+        }
+      }
+    ],
+    "rules": {
+      // "prettier/prettier": {
+      //   "endOfLine": "auto"
+      // }
+      "import/extensions": ["error", "always", {
+        "js": "never",
+        "ts": "never",
+        "tsx": "never"
+      }],
+      "@typescript-eslint/explicit-function-return-type": 0,
+      "@typescript-eslint/no-explicit-any": 0,
+      "lines-between-class-members": ["error", "always", { 
+        "exceptAfterSingleLine": true 
+      }],
+      "flowtype/no-types-missing-file-annotation": "off",
+      "react/display-name": "off",
+      "jsx-a11y/click-events-have-key-events": "off",
+      "jsx-a11y/label-has-for": [ "error", {
+        "required": {
+          "some": [ "nesting", "id" ]
+        }
+      }],
+      "padding-line-between-statements": "off",
+      "valid-jsdoc": "off",
+      "require-jsdoc": "off",
+      "jsdoc/require-param-type": "off",
+      "jsdoc/require-returns-type": "off",
+      "jsdoc/check-tag-names": "off",
+      "jsdoc/require-description-complete-sentence": "off",
+      "react/prop-types": "off",
+      "prettier/prettier": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "no-shadow": "warn"
+    },
+    "settings": {
+      "flowtype": {
+        "onlyFilesWithFlowAnnotation": true
+      },
+      "import/parsers": {
+        "@typescript-eslint/parser": [".ts", ".tsx"]
+      },
+      "import/resolver": {
+        "node": {
+          "paths": ["src"],
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      },
+      "react": {
+        "version": "detect"
+      }
+    }
+  }
+  

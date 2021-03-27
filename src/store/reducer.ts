@@ -1,21 +1,35 @@
 /* eslint-disable no-param-reassign */
 import { combineReducers, createReducer } from '@reduxjs/toolkit';
-import * as actionCreators from './action-creators/action-creators';
-import { AuthStateRootState, ComponentsRootState, DataStoreRootState } from '../models/redux-store-state';
 
-const dataStoreInitialState: DataStoreRootState = {
-    films: [],
+import { 
+    AuthStateRootState, 
+    ComponentsRootState, 
+    MoviesStore, 
+    CharactersStore, 
+    PlanetsStore 
+} from './redux-store-state';
+
+import * as actionCreators from './action-creators/action-creators';
+
+const moviesStoreInitialState: MoviesStore = {
+    movies: [],
     relevantCharacters: [],
     relevantPlanets: [],
-    people: [],
-    planets: [],
     movieItem: null,
+}
+
+const planetsStoreInitialState: PlanetsStore = {
+    planets: [],
     planetItem: null,
-    personItem: null,
-    numberOfItemsDisplayPeople: 1,
     numberOfItemsDisplayPlanets: 1,
-    itemsToDispPeople: 1,
     itemsToDispPlanets: 1,
+}
+
+const charactersStoreInitialState: CharactersStore = {
+    characters: [],
+    characterItem: null,
+    numberOfItemsDisplayCharacters: 1,
+    itemsToDispCharacters: 1,
 }
 
 const componentsInitialState: ComponentsRootState = {
@@ -34,12 +48,11 @@ const authState: AuthStateRootState = {
     isUserSignedIn: UserSignInStatus.Pending,
 }
 
-
-/** Store where all loaded data is being saved */
-export const dataStoreReducer = createReducer(dataStoreInitialState, builder => {
+/** Movies store reducer */
+export const moviesStoreReducer = createReducer(moviesStoreInitialState, builder => {
     builder
         .addCase(actionCreators.setMovies, (state, action) => {
-            state.films = action.payload;
+            state.movies = action.payload;
         })
         .addCase(actionCreators.setRelevChars, (state, action) => {
             state.relevantCharacters = action.payload;
@@ -47,41 +60,51 @@ export const dataStoreReducer = createReducer(dataStoreInitialState, builder => 
         .addCase(actionCreators.setRelevPlanets, (state, action) => {
             state.relevantPlanets = action.payload;
         })
-        .addCase(actionCreators.setPeople, (state, action) => {
-            state.people = action.payload;
-        })
-        .addCase(actionCreators.setPlanets, (state, action) => {
-            state.planets = action.payload;
-        })
         .addCase(actionCreators.setMovieItem, (state, action) => {
             state.movieItem = action.payload
+        })
+        .addCase(actionCreators.flushMovieItem, (state) => {
+            state.movieItem = null
+        })
+})
+
+/** People store reducer */
+export const charactersStoreReducer = createReducer(charactersStoreInitialState, builder => {
+    builder
+        .addCase(actionCreators.setCharacters, (state, action) => {
+            state.characters = action.payload;
+        })
+        .addCase(actionCreators.setPersonItem, (state, action) => {
+            state.characterItem = action.payload
+        })
+        .addCase(actionCreators.setNumberOfItemsDisplayCharacters, (state, action) => {
+            state.numberOfItemsDisplayCharacters = action.payload
+        })
+        .addCase(actionCreators.discardCharactersItemsAmmount, (state) => {
+            state.itemsToDispCharacters = 1
+        })
+        .addCase(actionCreators.addItemsToDisplayCharacters, (state) => {
+            state.itemsToDispCharacters += state.numberOfItemsDisplayCharacters
+        })
+})
+
+/** Planets store reducer */
+export const planetsStoreReducer = createReducer(planetsStoreInitialState, builder => {
+    builder
+        .addCase(actionCreators.setPlanets, (state, action) => {
+            state.planets = action.payload;
         })
         .addCase(actionCreators.setPlanetItem, (state, action) => {
             state.planetItem = action.payload
         })
-        .addCase(actionCreators.setPersonItem, (state, action) => {
-            state.personItem = action.payload
-        })
-        .addCase(actionCreators.setNumberOfItemsDisplayPeople, (state, action) => {
-            state.numberOfItemsDisplayPeople = action.payload
-        })
         .addCase(actionCreators.setNumberOfItemsDisplayPlanets, (state, action) => {
             state.numberOfItemsDisplayPlanets = action.payload
-        })
-        .addCase(actionCreators.discardPeopleItemsAmmount, (state) => {
-            state.itemsToDispPeople = 1
         })
         .addCase(actionCreators.discardPlanetsItemsAmmount, (state) => {
             state.itemsToDispPlanets = 1
         })
-        .addCase(actionCreators.addItemsToDisplayPeople, (state) => {
-            state.itemsToDispPeople += state.numberOfItemsDisplayPeople
-        })
         .addCase(actionCreators.addItemsToDisplayPlanets, (state) => {
             state.itemsToDispPlanets += state.numberOfItemsDisplayPlanets
-        })
-        .addCase(actionCreators.flushMovieItem, (state) => {
-            state.movieItem = null
         })
 })
 
@@ -121,7 +144,9 @@ export const authStateReducer = createReducer(authState, builder => {
 
 export const reducer = combineReducers({
     componentsState: componentsStateReducer,
-    dataStore: dataStoreReducer,
+    moviesStore: moviesStoreReducer,
+    planetsStore: planetsStoreReducer,
+    charactersStore: charactersStoreReducer,
     authState: authStateReducer,
 })
 

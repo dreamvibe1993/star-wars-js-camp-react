@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 
 import { MovieItemEditForm } from '../MovieItemEditForm'
-import { Person } from '../../models/person';
+import { Character } from '../../models/character';
 import { Planet } from '../../models/planet';
 import { Params } from '../../models/query-params'
 
@@ -52,10 +52,10 @@ export const MovieItemScreen: React.FC = () => {
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
 
     /** Variable to check if there's any relevant planets */
-    const relevantPlanets = useSelector((state: RootState) => state.dataStore.relevantPlanets)
+    const relevantPlanets = useSelector((state: RootState) => state.moviesStore.relevantPlanets)
 
     /** Variable to check if there's any relevant characters */
-    const relevantCharacters = useSelector((state: RootState) => state.dataStore.relevantCharacters)
+    const relevantCharacters = useSelector((state: RootState) => state.moviesStore.relevantCharacters)
 
     const queryParam = useParams<Params>()
     const queries = new URLSearchParams(location.search)
@@ -63,7 +63,7 @@ export const MovieItemScreen: React.FC = () => {
     /** Query in case of a user decides to edit an entry */
     const edit: string | null = queries.get('edit')
 
-    const movie = useSelector((state: RootState) => state.dataStore.movieItem)
+    const movie = useSelector((state: RootState) => state.moviesStore.movieItem)
 
     /** State of movie's existence in the db */
     // const [isEntryExist, setEntryExist] = useState<boolean>();
@@ -110,7 +110,7 @@ export const MovieItemScreen: React.FC = () => {
                 multiple
                 native
             >
-                {relevantCharacters.map((character: Person) => (<option key={character.docId} onClick={() => renderCharacInfo(character.docId)} value={character.name}>
+                {relevantCharacters.map((character: Character) => (<option key={character.docId} onClick={() => renderCharacInfo(character.docId)} value={character.name}>
                     {character.name}
                 </option>))}
             </Select>
