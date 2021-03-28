@@ -82,12 +82,7 @@ export const MovieItemScreen: React.FC = () => {
         }
         dispatch(loadMovieItem(queryParam.id))
     }, [queryParam.id])
-
-    /** if there's no movie item show nothing */
-    if (!movie && !isMovieLoadingPending) {
-        return <Redirect to="/not-found" />
-    }
-
+    
     if (isMovieLoadingPending) {
         return (
             <>
@@ -97,6 +92,12 @@ export const MovieItemScreen: React.FC = () => {
             </>
         )
     }
+    
+    /** if there's no movie item show nothing */
+    if (!movie && !isMovieLoadingPending) {
+        return <Redirect to="/not-found" />
+    }
+
 
     /** If a user decides to see an info about a relevant character pastes a link of such */
     function renderCharacInfo(charID: string) {

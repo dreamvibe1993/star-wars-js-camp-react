@@ -1,7 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
     Button,
@@ -21,9 +21,11 @@ import { Movie } from '../../../models/movie';
 import { MovieTransferValueEditForm } from '../../../models/movie-transfer-value-edit-form'
 import { movieEditYupValScheme } from '../../../models/yup-validation-schemas';
 import styles from './MovieItemEditForm.module.css'
-import { editMovieEntry } from '../../../api/services/edit-movie-data';
 import { RootState } from '../../../store/store';
 import { UserSignInStatus } from '../../../store/reducer';
+import { MoviesDTO } from '../../../api/dtos/MovieDTO';
+import { movieDTOMapper } from '../../../api/mappers/mapper';
+import { editMovieEntry } from '../../../store/thunks/movies-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -58,6 +60,7 @@ function getRidOfLineBreaks(openingCrawl: string): string {
 export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
     const history = useHistory();
     const materialUIStyles = useStyles();
+    const dispatch = useDispatch()
 
     /** Variable to check if a user's logged in */
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
@@ -68,20 +71,26 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
             producer: movie.producer,
             releaseDate: movie.releaseDate,
             director: movie.director,
-            openingCrawl: getRidOfLineBreaks(movie.openingCrawl)
+            openingCrawl: getRidOfLineBreaks(movie.openingCrawl),
+            charactersPKs: movie.charactersPKs,
+            planetsPKs: movie.planetsPKs,
+            created: movie.created,
+            edited: movie.edited,
+            episodeId: movie.episodeId,
+            speciesPKs: movie.speciesPKs,
+            starshipsPKs: movie.starshipsPKs,
+            vehiclesPKs: movie.vehiclesPKs,
+            pk: movie.pk,
+            docId: movie.docId,
         },
         validationSchema,
-        onSubmit: (values: MovieTransferValueEditForm) => {
-            editMovieEntry(movie, values).then(() => {
-                console.log("Document successfully updated!");
-                history.push("/films/")
-            })
-                .catch((error: Error) => {
-                    console.error("Error updating document: ", error);
-                    history.push('/error')
-                });
+        onSubmit: (values: Movie) => {
+            const movieDTO = movieDTOMapper(values, movie.pk)
+            dispatch(editMovieEntry({MovieDTO: movieDTO, docID: values.docId}))
         }
     })
+
+ 
 
     return (
         <>

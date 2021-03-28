@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 
 import { Movie } from '../../../models/movie';
-import { DeletionConfirmationModal } from '../../DeletionConfirmationModal';
+import { DeletionConfirmationModal } from '../DeletionConfirmationModal';
 import styles from '../MovieItemScreen/MovieItemScreen.module.css'
 import { RootState } from '../../../store/store';
 

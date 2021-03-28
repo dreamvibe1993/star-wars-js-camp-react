@@ -30,6 +30,7 @@ import {
     discardCharactersItemsAmmount,
 } from '../../../store/reducer';
 import { lazyloadMoreCharacters } from '../../../store/thunks/characters-thunks'
+import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -58,6 +59,10 @@ export const CharactersSidebar: React.FC = () => {
     const queryParams = useParams<Params>();
 
     const dispatch = useDispatch();
+
+    if (movieSidebarSnapshotTeardown !== null) {
+        movieSidebarSnapshotTeardown()
+    }
 
     const listItems = useMemo(() => characters.map((characterItem: Character) => (
         <ListItem key={characterItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/people/${characterItem.docId}`} button >

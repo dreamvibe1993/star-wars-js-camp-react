@@ -24,6 +24,7 @@ import { NAVBAR_HEIGHT , ITEM_HEIGHT } from '../../../constants/sizing-constants
 import { RootState } from '../../../store/store';
 import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../../store/reducer';
 import { lazyloadMorePlanets } from '../../../store/thunks/planets-thunks';
+import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -56,6 +57,10 @@ export const PlanetsSidebar: React.FC = () => {
             <ListItemText primary={planetItem.name} />
         </ListItem>
     ))
+
+    if (movieSidebarSnapshotTeardown !== null) {
+        movieSidebarSnapshotTeardown()
+    }
 
     /** If a window size was changed rerenders planets items into the sidebar */
     function getAmountOfItemsPerWindowSize() {

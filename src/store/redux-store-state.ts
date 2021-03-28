@@ -19,6 +19,8 @@ export interface MoviesStore {
     areEntitiesLoading: boolean;
 
     isEntityBeingAdded: boolean;
+
+    isEntityBeingDeleted: boolean;
 }
 
 /** Planets store */

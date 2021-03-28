@@ -9,28 +9,21 @@ import { setCharacters, setMovies, setPlanets } from "../reducer";
 import { RootState } from "../store";
 import { PlanetDTO } from "../../api/dtos/PlanetDTO";
 import { CharacterDTO } from "../../api/dtos/CharacterDTO";
-import { MovieTransferValueCreateForm } from "../../models/movies-transfer-value-create-form";
 
+export let movieSidebarSnapshotTeardown: null | (() => void);
 
 export const subscribeToMovies = createAsyncThunk(
     'movies/loadMovs',
     async (id, thunkAPI) => {
         const moviesCollection = MoviesDataAPI.getMoviesCollection()
-        const snapShotTearDown = moviesCollection.onSnapshot((querySnapshot) => {
-            const movies = querySnapshot.docs.map(movie => mapMovie(movie.data() as MoviesDTO, movie.id))
-            thunkAPI.dispatch(setMovies(movies))
-        })
-        // return snapShotTearDown
+        movieSidebarSnapshotTeardown = moviesCollection.onSnapshot(
+            (querySnapshot) => {
+                const movies = querySnapshot.docs.map(movie => mapMovie(movie.data() as MoviesDTO, movie.id))
+                thunkAPI.dispatch(setMovies(movies))
+            },
+            (error) => console.error(error)
+        )
     },
-    {
-        condition: (id, { getState }) => {
-            const { moviesStore } = getState() as RootState
-            if (moviesStore.movies.length > 0) {
-                return false
-            }
-        },
-        dispatchConditionRejection: true
-    }
 )
 
 export const loadMovieItem = createAsyncThunk(
@@ -48,14 +41,14 @@ export const loadMovieItem = createAsyncThunk(
                 const relevantPlanetsDocs = await PlanetsDataAPI.getRelevantPlanetsCollection(movie.planetsPKs.slice(0, 10))
                 relevantPlanets = relevantPlanetsDocs.docs.map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id))
             }
-            return {movie, relevantCharacters, relevantPlanets}
+            return { movie, relevantCharacters, relevantPlanets }
         }
     }
 )
 
 export const loadDataToAddWhenCreating = createAsyncThunk(
     'movies/loadDataToAdd',
-    async(id, thunkAPI) => {
+    async (id, thunkAPI) => {
         const charactersDocs = await CharactersDataAPI.getCompleteCharactersCollection()
         const planetsDocs = await PlanetsDataAPI.getCompletePlanetsCollection()
         const characters = charactersDocs.docs.map(character => mapCharacter(character.data() as CharacterDTO, character.id))
@@ -80,74 +73,31 @@ export const addMovieEntry = createAsyncThunk(
     }
 )
 
+interface editionArgsProps { MovieDTO: MoviesDTO, docID: string }
 
-/**load individ movitem */
-// .onSnapshot((querySnapshot) => {
-//     if (!querySnapshot.exists && onNotFound) {
-//         onNotFound()
-//     } else {
-//         const movie: Movie = mapMovie(querySnapshot.data() as MoviesDTO, querySnapshot.id)
-//         loadRelevantCharactersData(movie.charactersPKs)
-//         loadRelevantPlanetsData(movie.planetsPKs)
-//         store.dispatch(setMovieItem(movie))
-//     }
-// })
+export const editMovieEntry = createAsyncThunk(
+    'movies/edit',
+    async ({ MovieDTO, docID }: editionArgsProps) => {
+        MoviesDataAPI.getMoviesCollection().doc(docID).update(MovieDTO)
+        return mapMovie(MovieDTO, docID)
+    }
+)
 
 
-/**
- * Loads chars that are participated in the particular movie
- * @param characters Array of characters' pk to find those.
- */
-//  const loadRelevantCharactersData = (charactersPKs: number[]): void => {
-//     if (charactersPKs.length > 0) {
-//         // The slice's here since the firestore allows only up to 10 items to be requested at once.
-//         const charactersPKsTen = charactersPKs.slice(0, 10)
-//         DBRef.collection('people')
-//             .where('pk', 'in', charactersPKsTen)
-//             .get()
-//             .then((querySnapshot) => {
-//                 const relevantCharacters = querySnapshot.docs
-//                     .map(character => mapCharacter(character.data() as CharacterDTO, character.id))
-//                 store.dispatch(setRelevChars(relevantCharacters))
-//             })
-//     }
-//     store.dispatch(setRelevChars([]))
-// }
-
-
-/**
- * Loads planets that are participated in the particular movie
- * @param planets Array of planets' pk to find those
- */
-//  const loadRelevantPlanetsData = (planetsPKs: number[]): void => {
-//     if (planetsPKs.length > 0) {
-//         // The slice's here since the firestore allows only up to 10 items to be requested at once.
-//         const planetsPKsTen = planetsPKs.slice(0, 10)
-//         DBRef.collection('planets')
-//             .where('pk', 'in', planetsPKsTen)
-//             .get()
-//             .then((querySnapshot) => {
-//                 const relevantPlanets = querySnapshot.docs
-//                     .map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id))
-//                 store.dispatch(setRelevPlanets(relevantPlanets))
-//             })
-//     }
-//     store.dispatch(setRelevPlanets([]))
-// }
-
-
-// /** If a user creates an entry that func loads whole set of characters and planets to add into entry. */
-// export const loadCharsAndPlanetsToMovieCreate = (): void => {
-//     getCollection('people')
-//         .then((collection) => {
-//             const characters = collection.docs
-//                 .map(character => mapCharacter(character.data() as CharacterDTO, character.id))
-//             store.dispatch(setCharacters(characters))
-//         });
-//     getCollection('planets')
-//         .then((collection) => {
-//             const planets = collection.docs
-//                 .map(planet => mapPlanet(planet.data() as PlanetDTO, planet.id))
-//             store.dispatch(setPlanets(planets))
-//         });
+export const deleteMovieEntry = createAsyncThunk(
+    'movies/delete',
+    async (docId: string) => MoviesDataAPI.getMoviesCollection().doc(docId).delete()
+)
+//  {
+//     history.push("/films")
+//     dispatch(setCommonBackdropOn())
+//     DBRef.collection('films').doc(entryID)
+//         .delete()
+//         .then(() => {
+//             dispatch(setCommonBackdropOff())
+//             console.log('Document successfully deleted!');
+//         }).catch((error) => {
+//             console.error(error)
+//             history.push('/error')
+//         })
 // }

@@ -24,8 +24,8 @@ import { MovieTransferValueEditForm } from "../../models/movie-transfer-value-ed
  * @param movie Movie item from store.
  * @param formValues Values from a form.
  */
-export const editMovieEntry = (movie: Movie, formValues: MovieTransferValueEditForm): Promise<void> => DBRef
-    .collection('films')
-    .doc(movie.docId)
-    .update(mapMovieDTOForEdit(movie, formValues))
+// export const editMovieEntry = (movie: Movie, formValues: MovieTransferValueEditForm): Promise<void> => DBRef
+//     .collection('films')
+//     .doc(movie.docId)
+//     .update(mapMovieDTOForEdit(movie, formValues))
 

@@ -1,15 +1,11 @@
-import { createSlice, PayloadAction, combineReducers, createAsyncThunk } from '@reduxjs/toolkit'
-import { CharacterDTO } from '../api/dtos/CharacterDTO';
-import { DBRef } from '../api/firebase';
-import { mapCharacter } from '../api/mappers/mapper';
+import { createSlice, PayloadAction, combineReducers } from '@reduxjs/toolkit'
 // import { loadCharactersData, loadMoreCharactersItems } from '../api/services/load-characters-data';
 import { Character } from '../models/character';
 import { Movie } from '../models/movie';
 import { Planet } from '../models/planet';
 import { AuthStateRootState, CharactersStore, ComponentsRootState, MoviesStore, PlanetsStore } from './redux-store-state';
-import { store } from './store';
 import { lazyloadMoreCharacters, loadCharacterItem } from './thunks/characters-thunks';
-import { addMovieEntry, loadDataToAddWhenCreating, loadMovieItem, subscribeToMovies } from './thunks/movies-thunks';
+import { addMovieEntry, deleteMovieEntry, editMovieEntry, loadDataToAddWhenCreating, loadMovieItem } from './thunks/movies-thunks';
 import { lazyloadMorePlanets, loadPlanetItem } from './thunks/planets-thunks';
 
 
@@ -23,6 +19,7 @@ const moviesStoreReducer = createSlice({
         isMovieLoadingPending: true,
         areEntitiesLoading: false,
         isEntityBeingAdded: false,
+        isEntityBeingDeleted: false,
     } as MoviesStore,
     reducers: {
         setMovies: (state, action: PayloadAction<Movie[]>) => {
@@ -51,9 +48,6 @@ const moviesStoreReducer = createSlice({
                     state.relevantPlanets = action.payload.relevantPlanets
                 }
             })
-            .addCase(loadMovieItem.pending, (state) => {
-                state.isMovieLoadingPending = true;
-            })
             .addCase(loadDataToAddWhenCreating.pending, (state) => {
                 state.areEntitiesLoading = true;
             })
@@ -68,7 +62,18 @@ const moviesStoreReducer = createSlice({
             })  
             .addCase(addMovieEntry.fulfilled, (state) => {
                 state.isEntityBeingAdded = false;
-            })  
+            })
+            .addCase(editMovieEntry.fulfilled, (state, action) => {
+                state.movieItem = action.payload
+            })
+            .addCase(deleteMovieEntry.pending, (state) => {
+                state.isEntityBeingDeleted = true
+            })
+            .addCase(deleteMovieEntry.fulfilled, (state) => {
+                state.movieItem = null
+                state.isEntityBeingDeleted = false
+                state.isMovieLoadingPending = true
+            })
     }
 
 
@@ -236,6 +241,9 @@ const componentsStateReducer = createSlice({
             })
             .addCase(lazyloadMorePlanets.fulfilled, (state) => {
                 state.isSidebarLoading = false
+            })
+            .addCase(deleteMovieEntry.pending, (state) => {
+                state.isDeletionConfirmationOpen = false
             })
     }
 })
