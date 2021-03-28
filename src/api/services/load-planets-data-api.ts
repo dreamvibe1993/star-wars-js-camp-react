@@ -28,3 +28,9 @@ export const getPlanetItemDoc = (docID: string): Promise<firebase.firestore.Docu
     .collection('planets')
     .doc(docID)
     .get()
+
+export function getRelevantPlanetsCollection(planetsPKsTen: number[]): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> {
+    return DBRef.collection('planets')
+        .where('pk', 'in', planetsPKsTen)
+        .get()
+}

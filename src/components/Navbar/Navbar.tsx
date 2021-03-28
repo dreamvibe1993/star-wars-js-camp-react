@@ -20,7 +20,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 import { signOut } from '../../api/services/auth';
-import { searchMovieEntity } from '../../api/services/load-movies-data';
+import { searchMovieEntity } from '../../api/services/load-movies-data-api';
 
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 import styles from './Navbar.module.css'

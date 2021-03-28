@@ -16,6 +16,12 @@ export function getChunkOfCharactersCollection(last: firebase.firestore.QueryDoc
 }
 
 export const getCharacterItemDoc = (docID: string): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> => DBRef
-        .collection('people')
-        .doc(docID)
-        .get()
+    .collection('people')
+    .doc(docID)
+    .get()
+
+export function getRelevantCharactersCollection(charactersPKsTen: number[]): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> {
+    return DBRef.collection('people')
+                .where('pk', 'in', charactersPKsTen)
+                .get()
+}

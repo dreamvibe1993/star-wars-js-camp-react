@@ -8,12 +8,12 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 
 import './App.css';
 import { Navbar } from './components/Navbar/Navbar';
-import { MoviesSidebar } from './components/MoviesSidebar';
-import { CharactersSidebar } from './components/CharactersSidebar';
-import { PlanetsSidebar } from './components/PlanetsSidebar';
+import { MoviesSidebar } from './components/Movies/MoviesSidebar';
+import { CharactersSidebar } from './components/Characters/CharactersSidebar';
+import { PlanetsSidebar } from './components/Planets/PlanetsSidebar';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { LoginPage } from './components/LoginPage';
-import { CreateMovieItemScreen } from './components/CreateMovieItemScreen';
+import { CreateMovieItemScreen } from './components/Movies/CreateMovieItemScreen';
 import { NotFoundScreen } from './components/NotFoundScreen';
 import { DRAWER_WIDTH } from './constants/sizing-constants';
 import { ErrorScreen } from './components/ErrorScreen';

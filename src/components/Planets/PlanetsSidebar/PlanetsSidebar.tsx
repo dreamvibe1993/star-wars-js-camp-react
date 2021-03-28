@@ -13,17 +13,17 @@ import {
     Theme
 } from '@material-ui/core';
 
-import { Planet } from '../../models/planet';
-import { WelcomeScreen } from '../WelcomeScreen';
-import { Sidebar } from '../Sidebar';
+import { Planet } from '../../../models/planet';
+import { WelcomeScreen } from '../../WelcomeScreen';
+import { Sidebar } from '../../Sidebar';
 import { PlanetsItemScreen } from '../PlanetsItemScreen';
-import { Params } from '../../models/query-params'
+import { Params } from '../../../models/query-params'
 import styles from './PlanetsSidebar.module.css'
-import { NAVBAR_HEIGHT , ITEM_HEIGHT } from '../../constants/sizing-constants';
+import { NAVBAR_HEIGHT , ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
-import { RootState } from '../../store/store';
-import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../store/reducer';
-import { lazyloadMorePlanets } from '../../store/thunks/planets-thunks';
+import { RootState } from '../../../store/store';
+import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../../store/reducer';
+import { lazyloadMorePlanets } from '../../../store/thunks/planets-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

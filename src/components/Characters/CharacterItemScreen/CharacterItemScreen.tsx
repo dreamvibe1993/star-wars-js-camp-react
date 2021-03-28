@@ -14,11 +14,11 @@ import {
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { Params } from '../../models/query-params'
+import { Params } from '../../../models/query-params'
 
 // import { loadCharacterItemData } from '../../api/services/load-characters-data-api';
-import { RootState } from '../../store/store';
-import { loadCharacterItem } from '../../store/thunks/characters-thunks';
+import { RootState } from '../../../store/store';
+import { loadCharacterItem } from '../../../store/thunks/characters-thunks';
 
 const useStyles = makeStyles(() =>
     createStyles({

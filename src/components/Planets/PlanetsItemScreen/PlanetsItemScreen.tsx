@@ -14,10 +14,10 @@ import {
     TableRow,
 } from '@material-ui/core';
 
-import { Params } from '../../models/query-params';
+import { Params } from '../../../models/query-params';
 
-import { RootState } from '../../store/store';
-import { loadPlanetItem } from '../../store/thunks/planets-thunks';
+import { RootState } from '../../../store/store';
+import { loadPlanetItem } from '../../../store/thunks/planets-thunks';
 
 const useStyles = makeStyles(() =>
     createStyles({

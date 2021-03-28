@@ -17,13 +17,13 @@ import {
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
-import { Movie } from '../../models/movie';
-import { MovieTransferValueEditForm } from '../../models/movie-transfer-value-edit-form'
-import { movieEditYupValScheme } from '../../models/yup-validation-schemas';
+import { Movie } from '../../../models/movie';
+import { MovieTransferValueEditForm } from '../../../models/movie-transfer-value-edit-form'
+import { movieEditYupValScheme } from '../../../models/yup-validation-schemas';
 import styles from './MovieItemEditForm.module.css'
-import { editMovieEntry } from '../../api/services/edit-movie-data';
-import { RootState } from '../../store/store';
-import { UserSignInStatus } from '../../store/reducer';
+import { editMovieEntry } from '../../../api/services/edit-movie-data';
+import { RootState } from '../../../store/store';
+import { UserSignInStatus } from '../../../store/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

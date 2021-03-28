@@ -8,11 +8,17 @@ export interface MoviesStore {
     /** Movies that are disp. in the sidebar */
     movies: Movie[];
     /** Rel. charaters of a movie item */
-    relevantCharacters: Character[];
+    relevantCharacters: Character[] | null;
     /** Rel. planets of a movie item */
-    relevantPlanets: Planet[];
+    relevantPlanets: Planet[] | null;
     /** Movie item to display */
     movieItem: Movie | null;
+
+    isMovieLoadingPending: boolean;
+
+    areEntitiesLoading: boolean;
+
+    isEntityBeingAdded: boolean;
 }
 
 /** Planets store */

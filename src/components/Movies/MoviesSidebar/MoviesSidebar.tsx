@@ -11,16 +11,16 @@ import {
     makeStyles,
 } from '@material-ui/core';
 
-import { Movie } from '../../models/movie';
+import { Movie } from '../../../models/movie';
 import { MovieItemScreen } from '../MovieItemScreen';
-import { WelcomeScreen } from '../WelcomeScreen';
-import { Params } from '../../models/query-params'
-import { Sidebar } from '../Sidebar';
+import { WelcomeScreen } from '../../WelcomeScreen';
+import { Params } from '../../../models/query-params'
+import { Sidebar } from '../../Sidebar';
 
-import { loadMoviesData } from '../../api/services/load-movies-data';
 import styles from './MoviesSidebar.module.css'
-import { RootState } from '../../store/store';
-import { UserSignInStatus , setCommonBackdropOn, setCommonBackdropOff } from '../../store/reducer';
+import { RootState } from '../../../store/store';
+import { UserSignInStatus } from '../../../store/reducer';
+import { subscribeToMovies } from '../../../store/thunks/movies-thunks';
 
 
 const useStyles = makeStyles(() =>
@@ -54,17 +54,10 @@ export const MoviesSidebar: React.FC = () => {
     ))
 
     /** Hook that triggers movies loading */
-    useEffect(() => loadMoviesData(), [])
-    
-    /** Hooks that triggers the backdrop on */
     useEffect(() => {
-        if (movies.length < 1) {
-            dispatch(setCommonBackdropOn())
-        } else {
-            dispatch(setCommonBackdropOff())
-        }
-    }, [movies.length])
-
+        dispatch(subscribeToMovies())
+    }, [])
+  
     const createEntryButton = (
         < >
             <Divider />

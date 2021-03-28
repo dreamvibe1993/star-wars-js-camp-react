@@ -9,6 +9,7 @@ import { Planet } from '../models/planet';
 import { AuthStateRootState, CharactersStore, ComponentsRootState, MoviesStore, PlanetsStore } from './redux-store-state';
 import { store } from './store';
 import { lazyloadMoreCharacters, loadCharacterItem } from './thunks/characters-thunks';
+import { addMovieEntry, loadDataToAddWhenCreating, loadMovieItem, subscribeToMovies } from './thunks/movies-thunks';
 import { lazyloadMorePlanets, loadPlanetItem } from './thunks/planets-thunks';
 
 
@@ -19,6 +20,9 @@ const moviesStoreReducer = createSlice({
         relevantCharacters: [],
         relevantPlanets: [],
         movieItem: null,
+        isMovieLoadingPending: true,
+        areEntitiesLoading: false,
+        isEntityBeingAdded: false,
     } as MoviesStore,
     reducers: {
         setMovies: (state, action: PayloadAction<Movie[]>) => {
@@ -37,6 +41,35 @@ const moviesStoreReducer = createSlice({
             state.movieItem = null
         },
     },
+    extraReducers: builder => {
+        builder
+            .addCase(loadMovieItem.fulfilled, (state, action) => {
+                state.isMovieLoadingPending = false;
+                if (action.payload) {
+                    state.movieItem = action.payload.movie
+                    state.relevantCharacters = action.payload.relevantCharacters
+                    state.relevantPlanets = action.payload.relevantPlanets
+                }
+            })
+            .addCase(loadMovieItem.pending, (state) => {
+                state.isMovieLoadingPending = true;
+            })
+            .addCase(loadDataToAddWhenCreating.pending, (state) => {
+                state.areEntitiesLoading = true;
+            })
+            .addCase(loadDataToAddWhenCreating.fulfilled, (state) => {
+                state.areEntitiesLoading = false;
+            })
+            .addCase(loadDataToAddWhenCreating.rejected, (state) => {
+                state.areEntitiesLoading = false;
+            })
+            .addCase(addMovieEntry.pending, (state) => {
+                state.isEntityBeingAdded = true;
+            })  
+            .addCase(addMovieEntry.fulfilled, (state) => {
+                state.isEntityBeingAdded = false;
+            })  
+    }
 
 
 })
@@ -84,7 +117,7 @@ const charactersStoreReducer = createSlice({
             })
             .addCase(loadCharacterItem.pending, (state) => {
                 state.isCharacterLoadingPending = true
-            })            
+            })
             .addCase(loadCharacterItem.rejected, (state) => {
                 state.isCharacterLoadingPending = false
             })
@@ -141,7 +174,7 @@ const planetsStoreReducer = createSlice({
             })
             .addCase(loadPlanetItem.pending, (state) => {
                 state.isPlanetLoadingPending = true
-            })            
+            })
             .addCase(loadPlanetItem.rejected, (state) => {
                 state.isPlanetLoadingPending = false
             })

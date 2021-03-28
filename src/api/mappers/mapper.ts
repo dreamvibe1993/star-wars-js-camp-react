@@ -97,14 +97,14 @@ export const mapCharacter = (payload: CharacterDTO, docID: string): Character =>
  * @param payload Movie's data to map.
  * @param indexNumber Personal key to set.
  */
-export const movieDTOMapper = (payload: MovieTransferValueCreateForm, indexNumber: number): MoviesDTO => ({
+export const movieDTOMapper = (payload: Movie, indexNumber: number): MoviesDTO => ({
   fields: {
     director: payload.director,
     opening_crawl: payload.openingCrawl,
     producer: payload.producer,
     release_date: payload.releaseDate,
     title: payload.title,
-    created: new Date().toISOString(),
+    created: payload.created ?? new Date().toISOString(),
     edited: new Date().toISOString(),
     episode_id: '',
     characters: payload.charactersPKs,

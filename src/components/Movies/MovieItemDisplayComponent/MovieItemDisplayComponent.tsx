@@ -15,17 +15,17 @@ import {
     Theme 
 } from '@material-ui/core';
 
-import { Movie } from '../../models/movie';
-import { DeletionConfirmationModal } from '../DeletionConfirmationModal';
+import { Movie } from '../../../models/movie';
+import { DeletionConfirmationModal } from '../../DeletionConfirmationModal';
 import styles from '../MovieItemScreen/MovieItemScreen.module.css'
-import { RootState } from '../../store/store';
+import { RootState } from '../../../store/store';
 
-import { UserSignInStatus, setDeletionModalOpen } from '../../store/reducer';
+import { UserSignInStatus, setDeletionModalOpen } from '../../../store/reducer';
 
 
 interface Props {
     movie: Movie;
-    relevantEntitiesBlock: JSX.Element;
+    relevantEntitiesBlock: JSX.Element | null;
 }
 
 const useStyles = makeStyles((theme: Theme) =>

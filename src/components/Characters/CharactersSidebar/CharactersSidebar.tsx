@@ -13,23 +13,23 @@ import {
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { Character } from '../../models/character';
-import { WelcomeScreen } from '../WelcomeScreen';
-import { Sidebar } from '../Sidebar';
+import { Character } from '../../../models/character';
+import { WelcomeScreen } from '../../WelcomeScreen';
+import { Sidebar } from '../../Sidebar';
 import { CharacterItemScreen } from '../CharacterItemScreen';
-import { Params } from '../../models/query-params'
+import { Params } from '../../../models/query-params'
 import styles from './CharactersSidebar.module.css'
-import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../constants/sizing-constants';
+import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
-import { RootState } from '../../store/store';
+import { RootState } from '../../../store/store';
 import {
     setCommonBackdropOn,
     setCommonBackdropOff,
     setNumberOfItemsDisplayCharacters,
     addItemsToDisplayCharacters,
     discardCharactersItemsAmmount,
-} from '../../store/reducer';
-import { lazyloadMoreCharacters } from '../../store/thunks/characters-thunks'
+} from '../../../store/reducer';
+import { lazyloadMoreCharacters } from '../../../store/thunks/characters-thunks'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

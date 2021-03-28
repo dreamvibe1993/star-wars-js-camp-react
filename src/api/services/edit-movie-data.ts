@@ -10,13 +10,13 @@ import { MovieTransferValueEditForm } from "../../models/movie-transfer-value-ed
  * Adds an entry into the db.
  * @param formValues Values from a form.
  */
-export const addMovieEntry = (formValues: MovieTransferValueCreateForm): Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>> => DBRef
-    .collection('films')
-    .get()
-    .then(querySnapshot => querySnapshot.docs.length)
-    .then(indexNumber => DBRef
-        .collection('films')
-        .add({ ...movieDTOMapper(formValues, indexNumber) }))
+// export const addMovieEntry = (formValues: MovieTransferValueCreateForm): Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>> => DBRef
+//     .collection('films')
+//     .get()
+//     .then(querySnapshot => querySnapshot.docs.length)
+//     .then(indexNumber => DBRef
+//         .collection('films')
+//         .add({ ...movieDTOMapper(formValues, indexNumber) }))
 
 
 /**
