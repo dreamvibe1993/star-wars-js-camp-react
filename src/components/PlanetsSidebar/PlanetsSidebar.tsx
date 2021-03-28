@@ -19,12 +19,11 @@ import { Sidebar } from '../Sidebar';
 import { PlanetsItemScreen } from '../PlanetsItemScreen';
 import { Params } from '../../models/query-params'
 import styles from './PlanetsSidebar.module.css'
-import { NAVBAR_HEIGHT } from '../../constants/sizing-constants';
-import { ITEM_HEIGHT } from '../../constants/sizing-constants';
+import { NAVBAR_HEIGHT , ITEM_HEIGHT } from '../../constants/sizing-constants';
 
-import { loadMorePlanetsItems, loadPlanetsData } from '../../api/services/load-planets-data-api';
 import { RootState } from '../../store/store';
-import { setSidebarLoadingOn, setSidebarLoadingOff, setCommonBackdropOn, setCommonBackdropOff, setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../store/reducer';
+import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../store/reducer';
+import { lazyloadMorePlanets } from '../../store/thunks/planets-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -58,27 +57,6 @@ export const PlanetsSidebar: React.FC = () => {
         </ListItem>
     ))
 
-    /** Hook that loads planets items if a number of the items is changed */
-    useEffect(() => {
-        loadPlanetsData()
-            .then((querySnapshot) => {
-            const last = querySnapshot.docs[numberOfItemsToDisplay]
-            if (last) {
-                dispatch(setSidebarLoadingOn())
-                loadMorePlanetsItems(last, numberOfItemsToDisplay).then(() => dispatch(setSidebarLoadingOff()))
-            }
-        });
-    }, [numberOfItemsToDisplay])
-
-    /** Hook that triggers the common backdrop to appear */
-    useEffect(() => {
-        if (planets.length < 1) {
-            dispatch(setCommonBackdropOn())
-        } else {
-            dispatch(setCommonBackdropOff())
-        }
-    }, [planets.length])
-
     /** If a window size was changed rerenders planets items into the sidebar */
     function getAmountOfItemsPerWindowSize() {
         const ammount = Math.ceil((window.innerHeight - NAVBAR_HEIGHT) / ITEM_HEIGHT)
@@ -90,8 +68,8 @@ export const PlanetsSidebar: React.FC = () => {
         getAmountOfItemsPerWindowSize()
         if (numberOfItemsToDisplay === 1) {
             dispatch(addItemsToDisplayPlanets())
-            dispatch(setCommonBackdropOn())
         }
+        dispatch(lazyloadMorePlanets(numberOfItemsToDisplay))
     }, [numberOfItemsToDisplay])
 
     /** Triggers recalculating of ammounts of planets items to display if the size of the window's changed */

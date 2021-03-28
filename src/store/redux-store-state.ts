@@ -25,6 +25,8 @@ export interface PlanetsStore {
     itemsToDispPlanets: number;
     /** Threshold of planets to display in the sidebar */
     numberOfItemsDisplayPlanets: number;
+
+    isPlanetLoadingPending: boolean;
 }
 
 

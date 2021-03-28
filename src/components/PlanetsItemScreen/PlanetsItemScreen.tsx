@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import {
+    CircularProgress,
     createStyles,
     makeStyles,
     Paper,
@@ -15,9 +16,8 @@ import {
 
 import { Params } from '../../models/query-params';
 
-import { loadPlanetItemData } from '../../api/services/load-planets-data-api';
 import { RootState } from '../../store/store';
-import { setCommonBackdropOff } from '../../store/reducer';
+import { loadPlanetItem } from '../../store/thunks/planets-thunks';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -27,6 +27,14 @@ const useStyles = makeStyles(() =>
         tenthWidth: {
             width: "10%",
         },
+        spinnerContainer: {
+            width: '100%',
+            minHeight: "550px",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white'
+        }
     }),
 );
 
@@ -38,26 +46,30 @@ export const PlanetsItemScreen: React.FC = () => {
     const planet = useSelector((state: RootState) => state.planetsStore.planetItem);
     const dispatch = useDispatch()
 
-    /** Hook that triggers planet's entry loading. */
-    useEffect(() => {
-        dispatch(setCommonBackdropOff())
-        return loadPlanetItemData(queryParam.id, () => { history.push('/not-found') });
-    }, [queryParam.id])
-
-    /** If a user got back from another tab pastes an ID of a current entry */
-    useEffect(() => {
-        if (planet && !queryParam.id) {
-            history.replace(`/planets/${planet.docId}`)
-        }
-    }, [queryParam.id])
-
-    /** If there's no planet item show nothing */
-    if (!planet) {
-        return null;
-    }
-
-    return (
-        <>
+     /**  Hook that triggers planet's entry loading if there's one existing. */
+     useEffect(() => {
+         if (planet && !queryParam.id) {
+             history.replace(`/planets/${planet.docId}`)
+         }
+         dispatch(loadPlanetItem(queryParam.id))
+     }, [queryParam.id])
+ 
+     const isPlanetLoadingPending = useSelector((state: RootState) => state.planetsStore.isPlanetLoadingPending)
+ 
+     if (!planet && !isPlanetLoadingPending) {
+         return <Redirect to="/not-found" />
+     }
+     if (isPlanetLoadingPending) {
+         return (
+             <>
+                 <div className={materialUIStyles.spinnerContainer} >
+                     <CircularProgress color="inherit" />
+                 </div>
+             </>
+         )
+     }
+     return planet && (
+         <>
             <TableContainer component={Paper}>
                 <Table className={materialUIStyles.table} size="medium">
                     <TableBody>

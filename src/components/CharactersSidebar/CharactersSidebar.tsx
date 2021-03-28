@@ -29,7 +29,7 @@ import {
     addItemsToDisplayCharacters,
     discardCharactersItemsAmmount,
 } from '../../store/reducer';
-import { lazyloadMoreCharacters } from '../../store/thunks'
+import { lazyloadMoreCharacters } from '../../store/thunks/characters-thunks'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

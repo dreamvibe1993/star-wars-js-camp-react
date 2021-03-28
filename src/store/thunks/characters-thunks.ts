@@ -1,11 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import thunk from "redux-thunk";
-import { CharacterDTO } from "../api/dtos/CharacterDTO";
-import { DBRef } from "../api/firebase";
-import { mapCharacter } from "../api/mappers/mapper";
-import * as CharactersDataAPI from '../api/services/load-characters-data-api'
-import { setCharacters, setSidebarLoadingOff, setSidebarLoadingOn } from "./reducer";
-import { RootState } from "./store";
+import { CharacterDTO } from "../../api/dtos/CharacterDTO";
+import { mapCharacter } from "../../api/mappers/mapper";
+import * as CharactersDataAPI from '../../api/services/load-characters-data-api'
+import { RootState } from "../store";
 
 export const lazyloadMoreCharacters = createAsyncThunk(
     'charactersStore/llMoreChars',

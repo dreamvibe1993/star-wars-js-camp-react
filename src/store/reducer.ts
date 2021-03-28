@@ -8,7 +8,9 @@ import { Movie } from '../models/movie';
 import { Planet } from '../models/planet';
 import { AuthStateRootState, CharactersStore, ComponentsRootState, MoviesStore, PlanetsStore } from './redux-store-state';
 import { store } from './store';
-import { lazyloadMoreCharacters, loadCharacterItem } from './thunks';
+import { lazyloadMoreCharacters, loadCharacterItem } from './thunks/characters-thunks';
+import { lazyloadMorePlanets, loadPlanetItem } from './thunks/planets-thunks';
+
 
 const moviesStoreReducer = createSlice({
     name: 'moviesStore',
@@ -105,6 +107,7 @@ const planetsStoreReducer = createSlice({
         planetItem: null,
         numberOfItemsDisplayPlanets: 1,
         itemsToDispPlanets: 1,
+        isPlanetLoadingPending: true
     } as PlanetsStore,
     reducers: {
         setPlanets: (state, action: PayloadAction<Planet[]>) => {
@@ -123,6 +126,26 @@ const planetsStoreReducer = createSlice({
             state.itemsToDispPlanets += state.numberOfItemsDisplayPlanets
         },
     },
+    extraReducers: builder => {
+        builder
+            .addCase(lazyloadMorePlanets.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.planets = action.payload;
+                }
+            })
+            .addCase(loadPlanetItem.fulfilled, (state, action) => {
+                state.isPlanetLoadingPending = false
+                if (action.payload) {
+                    state.planetItem = action.payload
+                }
+            })
+            .addCase(loadPlanetItem.pending, (state) => {
+                state.isPlanetLoadingPending = true
+            })            
+            .addCase(loadPlanetItem.rejected, (state) => {
+                state.isPlanetLoadingPending = false
+            })
+    }
 })
 
 export const {
@@ -170,6 +193,15 @@ const componentsStateReducer = createSlice({
                 state.isSidebarLoading = false
             })
             .addCase(lazyloadMoreCharacters.fulfilled, (state) => {
+                state.isSidebarLoading = false
+            })
+            .addCase(lazyloadMorePlanets.pending, (state) => {
+                state.isSidebarLoading = true
+            })
+            .addCase(lazyloadMorePlanets.rejected, (state) => {
+                state.isSidebarLoading = false
+            })
+            .addCase(lazyloadMorePlanets.fulfilled, (state) => {
                 state.isSidebarLoading = false
             })
     }
