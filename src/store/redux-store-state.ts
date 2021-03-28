@@ -27,6 +27,8 @@ export interface PlanetsStore {
     numberOfItemsDisplayPlanets: number;
 }
 
+
+
 /** People store */
 export interface CharactersStore {
     /** Characters that are disp. in the sidebar */
@@ -37,6 +39,8 @@ export interface CharactersStore {
     itemsToDispCharacters: number;
     /** Threshold of planets to display in the sidebar */
     numberOfItemsDisplayCharacters: number;
+
+    isCharacterLoadingPending: boolean;
 }
 
 /** Components state store */

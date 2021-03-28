@@ -22,7 +22,7 @@ import styles from './PlanetsSidebar.module.css'
 import { NAVBAR_HEIGHT } from '../../constants/sizing-constants';
 import { ITEM_HEIGHT } from '../../constants/sizing-constants';
 
-import { loadMorePlanetsItems, loadPlanetsData } from '../../api/services/load-planets-data';
+import { loadMorePlanetsItems, loadPlanetsData } from '../../api/services/load-planets-data-api';
 import { RootState } from '../../store/store';
 import { setSidebarLoadingOn, setSidebarLoadingOff, setCommonBackdropOn, setCommonBackdropOff, setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../store/reducer';
 

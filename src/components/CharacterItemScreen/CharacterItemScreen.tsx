@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import {
     createStyles,
@@ -12,21 +12,31 @@ import {
     TableRow,
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { Params } from '../../models/query-params'
 
 // import { loadCharacterItemData } from '../../api/services/load-characters-data-api';
 import { RootState } from '../../store/store';
-import { setCommonBackdropOff } from '../../store/reducer';
+import { loadCharacterItem } from '../../store/thunks';
 
 const useStyles = makeStyles(() =>
     createStyles({
         table: {
             width: "100%",
+            minHeight: "550px"
         },
         tenthWidth: {
             width: "10%",
         },
+        spinnerContainer: {
+            width: '100%',
+            minHeight: "550px",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white'
+        }
     }),
 );
 
@@ -37,31 +47,32 @@ export const CharacterItemScreen: React.FC = () => {
     const queryParam = useParams<Params>()
     const dispatch = useDispatch()
 
-    /** 
-     * Hook that triggers person's entry loading if there's one existing.
-    */
-    // useEffect(() => {
-    //     dispatch(setCommonBackdropOff())
-    //     return loadCharacterItemData(queryParam.id, () => { history.push('/not-found') })
-    // }, [queryParam.id])
-
-    
     /** Variable to check if there's any person item loaded in the store */
     const character = useSelector((state: RootState) => state.charactersStore.characterItem);
 
-    /** If a user got back from another tab pastes an ID of a current entry */
+    /**  Hook that triggers person's entry loading if there's one existing. */
     useEffect(() => {
         if (character && !queryParam.id) {
             history.replace(`/people/${character.docId}`)
         }
+        dispatch(loadCharacterItem(queryParam.id))
     }, [queryParam.id])
 
-    /** If there's no character item show nothing */
-    if (!character) {
-        return null
-    }
+    const isCharacterLoadingPending = useSelector((state: RootState) => state.charactersStore.isCharacterLoadingPending)
 
-    return (
+    if (!character && !isCharacterLoadingPending) {
+        return <Redirect to="/not-found" />
+    }
+    if (isCharacterLoadingPending) {
+        return (
+            <>
+                <div className={materialUIStyles.spinnerContainer} >
+                    <CircularProgress color="inherit" />
+                </div>
+            </>
+        )
+    }
+    return character && (
         <>
             <TableContainer component={Paper}>
                 <Table className={materialUIStyles.table} size="medium">
@@ -103,6 +114,7 @@ export const CharacterItemScreen: React.FC = () => {
             </TableContainer>
         </>
     );
+
 }
 
 

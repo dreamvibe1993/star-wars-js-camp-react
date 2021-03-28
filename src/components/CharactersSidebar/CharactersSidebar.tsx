@@ -65,21 +65,6 @@ export const CharactersSidebar: React.FC = () => {
         </ListItem>
     )), [characters])
 
-    /** Hook that loads people items if a number of the items is changed */
-    useEffect(() => {
-        dispatch(lazyloadMoreCharacters(numberOfItemsToDisplay))
-    }, [numberOfItemsToDisplay])
-
-    /** Hook that triggers the common backdrop to appear */
-    useEffect(() => {
-        if (characters.length < 1) {
-            dispatch(setCommonBackdropOn())
-        } else {
-            dispatch(setCommonBackdropOff())
-        }
-    }, [characters.length])
-
-
     /** If a window size was changed rerenders people items into the sidebar */
     function getAmountOfItemsPerWindowSize() {
         const ammount = Math.ceil((window.innerHeight - NAVBAR_HEIGHT) / ITEM_HEIGHT)
@@ -92,6 +77,7 @@ export const CharactersSidebar: React.FC = () => {
         if (numberOfItemsToDisplay === 1) {
             dispatch(addItemsToDisplayCharacters())
         }
+        dispatch(lazyloadMoreCharacters(numberOfItemsToDisplay))
     }, [numberOfItemsToDisplay])
 
     /** Triggers recalculating of ammounts of people items to display if the size of the window's changed */

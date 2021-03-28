@@ -119,8 +119,6 @@ export const CreateMovieItemScreen: React.FC = () => {
         loadCharsAndPlanetsToMovieCreate()
     }, [])
 
-
-
     const formik = useFormik({
         initialValues,
         validationSchema,

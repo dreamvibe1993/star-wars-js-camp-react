@@ -15,7 +15,7 @@ import {
 
 import { Params } from '../../models/query-params';
 
-import { loadPlanetItemData } from '../../api/services/load-planets-data';
+import { loadPlanetItemData } from '../../api/services/load-planets-data-api';
 import { RootState } from '../../store/store';
 import { setCommonBackdropOff } from '../../store/reducer';
 

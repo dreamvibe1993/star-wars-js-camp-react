@@ -8,7 +8,7 @@ import { Movie } from '../models/movie';
 import { Planet } from '../models/planet';
 import { AuthStateRootState, CharactersStore, ComponentsRootState, MoviesStore, PlanetsStore } from './redux-store-state';
 import { store } from './store';
-import { lazyloadMoreCharacters } from './thunks';
+import { lazyloadMoreCharacters, loadCharacterItem } from './thunks';
 
 const moviesStoreReducer = createSlice({
     name: 'moviesStore',
@@ -41,18 +41,6 @@ const moviesStoreReducer = createSlice({
 
 export const { setMovies, setRelevChars, setRelevPlanets, setMovieItem, flushMovieItem } = moviesStoreReducer.actions
 
-
-// .then((limitedQuerySnapshot) => {
-//     if (!limitedQuerySnapshot.empty) {
-//         const characters = limitedQuerySnapshot.docs.map(character => mapCharacter(character.data() as CharacterDTO, character.id));
-//         store.dispatch(setCharacters(characters));
-//     }
-// });
-// }
-// )
-// loadMoreCharactersItems(last, numberOfItemsToDisplay)
-// .then(() => dispatch(setSidebarLoadingOff()))
-
 const charactersStoreReducer = createSlice({
     name: 'charactersStore',
     initialState: {
@@ -60,6 +48,7 @@ const charactersStoreReducer = createSlice({
         characterItem: null,
         numberOfItemsDisplayCharacters: 1,
         itemsToDispCharacters: 1,
+        isCharacterLoadingPending: true
     } as CharactersStore,
     reducers: {
         setCharacters: (state, action: PayloadAction<Character[]>) => {
@@ -84,9 +73,20 @@ const charactersStoreReducer = createSlice({
                 if (action.payload) {
                     state.characters = action.payload;
                 }
-            })        
+            })
+            .addCase(loadCharacterItem.fulfilled, (state, action) => {
+                state.isCharacterLoadingPending = false
+                if (action.payload) {
+                    state.characterItem = action.payload
+                }
+            })
+            .addCase(loadCharacterItem.pending, (state) => {
+                state.isCharacterLoadingPending = true
+            })            
+            .addCase(loadCharacterItem.rejected, (state) => {
+                state.isCharacterLoadingPending = false
+            })
     }
-    // thunkAPI.dispatch(setCharacters(characters));
 
 })
 
@@ -139,6 +139,7 @@ const componentsStateReducer = createSlice({
         isDeletionConfirmationOpen: false,
         isSidebarLoading: false,
         isCommonLoadingBckDropOn: false,
+        redirectTo404: false,
     } as ComponentsRootState,
     reducers: {
         setDeletionModalOpen: (state) => {
@@ -162,13 +163,13 @@ const componentsStateReducer = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(lazyloadMoreCharacters.pending, (state, action) => {
+            .addCase(lazyloadMoreCharacters.pending, (state) => {
                 state.isSidebarLoading = true
             })
-            .addCase(lazyloadMoreCharacters.rejected, (state, action) => {
+            .addCase(lazyloadMoreCharacters.rejected, (state) => {
                 state.isSidebarLoading = false
             })
-            .addCase(lazyloadMoreCharacters.fulfilled, (state, action) => {
+            .addCase(lazyloadMoreCharacters.fulfilled, (state) => {
                 state.isSidebarLoading = false
             })
     }
