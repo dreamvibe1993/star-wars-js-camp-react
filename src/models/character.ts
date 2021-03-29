@@ -17,7 +17,7 @@ export interface Character {
   /** Person's homeworld */
   homeworld: number;
   /** Person's image */
-  image: string;
+  image: string | null;
   /** Person's weight. Measured in kilograms*/
   mass: number;
   /** Person's name */

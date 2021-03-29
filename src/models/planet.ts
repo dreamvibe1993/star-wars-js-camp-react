@@ -31,4 +31,6 @@ export interface Planet {
    * pasting that quant. into the url) 
    */
   docId: string;
+
+  img: string | null;
 }

@@ -4,8 +4,11 @@ import { useHistory } from 'react-router-dom';
 
 import {
     Button,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
     createStyles,
-    Grid,
     makeStyles,
     Paper,
     Table,
@@ -13,8 +16,7 @@ import {
     TableCell,
     TableContainer,
     TableRow,
-    Theme,
-    Typography
+    Theme
 } from '@material-ui/core';
 
 import { Movie } from '../../../models/movie';
@@ -32,11 +34,6 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        root: {
-            '& > *': {
-                margin: theme.spacing(1),
-            },
-        },
         deleteButton: {
             marginRight: '15px'
         },
@@ -44,22 +41,17 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
         },
         imgContainer: {
-            maxHeight: '20%',
-            maxWidth: '20%',
-            margin: '5px'
+            height: '450px',
+            width: '450px',
+            margin: '5px',
+            backgroundPosition: 'left',
+            backgroundSize: '70%',
         },
-        grid: {
-            flexGrow: 1
-        },
+
         buttonContainer: {
             marginBottom: '15px',
-            // width: '20%',
             textAlign: 'right',
         },
-        titleContainer: {
-            display: 'flex'
-        }
-
     }),
 );
 
@@ -85,41 +77,23 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
     return (
         <>
             <DeletionConfirmationModal movieID={movie.docId} />
-            <div className={materialUIStyles.root}>
+            <div>
                 <TableContainer className={materialUIStyles.tableContainer} component={Paper}>
-                    <img alt="image" className={materialUIStyles.imgContainer} src={movie.img || 'https://via.placeholder.com/728x1000?text=No+image'} />
+                    <Card style={{boxShadow: 'none'}}>
+                        <CardActionArea>
+                            <CardMedia
+                                className={materialUIStyles.imgContainer}
+                                image={movie.img || 'https://via.placeholder.com/728x1000?text=No+image'}
+                                title={movie.title}
+                            />
+                        </CardActionArea>
+                    </Card>
                     <Table className={styles.table} size="medium">
                         <TableBody>
                             <TableRow >
                                 <TableCell align="left" ><strong>Title: </strong></TableCell>
                                 <TableCell align="center">
-                                    <div style={{display: 'flex'}}>
-                                        <h1>
-                                            {movie.title}
-
-                                        </h1>
-                                        {isUserSignedIn === UserSignInStatus.Authorised &&
-                                            <>
-                                                <Button
-                                                    className={materialUIStyles.deleteButton}
-                                                    color="primary"
-                                                    onClick={() => dispatch(setDeletionModalOpen())}
-                                                    type="button"
-                                                    variant="contained"
-                                                >
-                                                    DELETE
-                                                </Button>
-                                                <Button
-                                                    color="primary"
-                                                    onClick={() => pushEditQueryToURL()}
-                                                    type="button"
-                                                    variant="contained"
-                                                >
-                                                    EDIT
-                                                </Button>
-                                            </>
-                                        }
-                                    </div>
+                                    <h1>{movie.title}</h1>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
@@ -138,51 +112,36 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
                                 <TableCell align="left"><strong>Opening crawl: </strong></TableCell>
                                 <TableCell align="center">{movie.openingCrawl}</TableCell>
                             </TableRow>
-                            <TableRow>
-                                {relevantEntitiesBlock}
+                            <TableRow >
+                                <TableCell style={{ borderBottom: 'none' }} />
+                                <TableCell align="right" style={{ borderBottom: 'none' }}>
+                                    {isUserSignedIn === UserSignInStatus.Authorised &&
+                                        <div>
+                                            <Button
+                                                className={materialUIStyles.deleteButton}
+                                                color="primary"
+                                                onClick={() => dispatch(setDeletionModalOpen())}
+                                                type="button"
+                                                variant="contained"
+                                            >
+                                                DELETE
+                                                </Button>
+                                            <Button
+                                                color="primary"
+                                                onClick={() => pushEditQueryToURL()}
+                                                type="button"
+                                                variant="contained"
+                                            >
+                                                EDIT
+                                                </Button>
+                                        </div>
+                                    }
+                                </TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
                 </TableContainer>
-
-                <Grid className={materialUIStyles.grid} component={Paper} spacing={2} container>
-                    <Grid xs={2} item>
-                        <div>
-                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
-                            <Typography align='center' gutterBottom >Name Name</Typography>
-                        </div>
-                    </Grid>
-                    <Grid xs={2} item>
-                        <div>
-                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
-                            <Typography align='center' gutterBottom >Name Name</Typography>
-                        </div>
-                    </Grid>
-                    <Grid xs={2} item>
-                        <div>
-                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
-                            <Typography align='center' gutterBottom >Name Name</Typography>
-                        </div>
-                    </Grid>
-                    <Grid xs={2} item>
-                        <div>
-                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
-                            <Typography align='center' gutterBottom >Name Name</Typography>
-                        </div>
-                    </Grid>
-                    <Grid xs={2} item>
-                        <div>
-                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
-                            <Typography align='center' gutterBottom >Name Name</Typography>
-                        </div>
-                    </Grid>
-                    <Grid xs={2} item>
-                        <div>
-                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
-                            <Typography align='center' gutterBottom >Name Name</Typography>
-                        </div>
-                    </Grid>
-                </Grid>
+                {relevantEntitiesBlock}
             </div>
         </>)
 }

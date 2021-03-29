@@ -171,7 +171,7 @@ export const Navbar: React.FC<Props> = ({
             <Toolbar>
                 <Tabs aria-label="simple tabs" onChange={setSliderPosition} value={value}>
                     <Tab component={NavLink} label="Films" to="/films" {...a11yProps(0)} />
-                    <Tab component={NavLink} label="People" to="/people" {...a11yProps(1)} />
+                    <Tab component={NavLink} label="Characters" to="/people" {...a11yProps(1)} />
                     <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
                 </Tabs>
                 <Typography className={styles.title} variant="h6">

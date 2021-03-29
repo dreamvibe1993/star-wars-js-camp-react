@@ -31,4 +31,6 @@ export interface PlanetDTO {
   pk: number;
   /** Planet's id */
   id: string;
+  /** Picture of the planet if is */
+  img: string | null;
 }

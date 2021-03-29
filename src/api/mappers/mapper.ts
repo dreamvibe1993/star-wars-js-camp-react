@@ -67,6 +67,7 @@ export const mapPlanet = (payload: PlanetDTO, docID: string): Planet => ({
   pk: payload.pk,
   model: payload.model,
   docId: docID,
+  img: payload.img
 } as Planet);
 
 /**
@@ -83,7 +84,7 @@ export const mapCharacter = (payload: CharacterDTO, docID: string): Character =>
   hairColor: payload.fields.hair_color,
   height: payload.fields.height,
   homeworld: payload.fields.homeworld,
-  image: payload.fields.image,
+  image: payload.fields.image ?? null,
   mass: payload.fields.mass,
   name: payload.fields.name,
   skinColor: payload.fields.skin_color,

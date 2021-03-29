@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import {
+    Card,
+    CardActionArea,
+    CardMedia,
     createStyles,
     makeStyles,
     Table,
@@ -29,14 +32,23 @@ const useStyles = makeStyles(() =>
         tenthWidth: {
             width: "10%",
         },
+        tableContainer: {
+            display: 'flex',
+        },
         spinnerContainer: {
             width: '100%',
             minHeight: "550px",
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'white'
-        }
+        },
+        imgContainer: {
+            height: '600px',
+            width: '400px',
+            margin: '5px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+        },
     }),
 );
 
@@ -74,7 +86,17 @@ export const CharacterItemScreen: React.FC = () => {
     }
     return character && (
         <>
-            <TableContainer component={Paper}>
+            <TableContainer className={materialUIStyles.tableContainer} component={Paper}>
+                <Card>
+                    <CardActionArea>
+                        <CardMedia
+                            className={materialUIStyles.imgContainer}
+                            image={character.image || 'https://via.placeholder.com/728x1000?text=No+image'}
+                            title={character.name}
+                        />
+                    </CardActionArea>
+                </Card>
+                {/* <img alt="image" className={materialUIStyles.imgContainer} src={ } /> */}
                 <Table className={materialUIStyles.table} size="medium">
                     <TableBody>
                         <TableRow >
@@ -105,7 +127,7 @@ export const CharacterItemScreen: React.FC = () => {
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Weight: </strong></TableCell>
                             <TableCell align="center">{character.mass}</TableCell>
                         </TableRow>
-                        <TableRow >
+                        <TableRow>
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Skincolor: </strong></TableCell>
                             <TableCell align="center">{character.skinColor}</TableCell>
                         </TableRow>

@@ -20,7 +20,7 @@ export interface CharacterDTO {
     /** Person's homeworld */
     homeworld: number;
     /** Person's image */
-    image: string;
+    image: string | null;
     /** Person's weight */
     mass: number;
     /** Person's name */

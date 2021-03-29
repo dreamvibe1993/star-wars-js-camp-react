@@ -3,16 +3,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
 
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    CardActionArea,
+    CardActions,
+    CardContent,
+    CardMedia,
     CircularProgress,
     createStyles,
     FormControl,
+    Grid,
     InputLabel,
     makeStyles,
     Paper,
     Select,
     TableCell,
-    Theme
+    Theme,
+    Typography
 } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { MovieItemEditForm } from '../MovieItemEditForm'
 import { Character } from '../../../models/character';
@@ -24,6 +35,8 @@ import { MovieItemDisplayComponent } from '../MovieItemDisplayComponent';
 import { RootState } from '../../../store/store';
 import { UserSignInStatus } from '../../../store/reducer';
 import { loadMovieItem } from '../../../store/thunks/movies-thunks';
+import { CharacterItemScreen } from '../../Characters/CharacterItemScreen';
+import { Card } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,6 +59,14 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+        },
+        grid: {
+            flexGrow: 1,
+            backgroundColor: '#505050',
+            borderRadius: '5px'
+        },
+        media: {
+            height: 200,
         }
     }),
 );
@@ -82,7 +103,7 @@ export const MovieItemScreen: React.FC = () => {
         }
         dispatch(loadMovieItem(queryParam.id))
     }, [queryParam.id])
-    
+
     if (isMovieLoadingPending) {
         return (
             <>
@@ -92,7 +113,7 @@ export const MovieItemScreen: React.FC = () => {
             </>
         )
     }
-    
+
     /** if there's no movie item show nothing */
     if (!movie && !isMovieLoadingPending) {
         return <Redirect to="/not-found" />
@@ -109,51 +130,133 @@ export const MovieItemScreen: React.FC = () => {
     }
 
     const relevantCharactersJSX = (
-        <FormControl className={materialUIStyles.formControl}>
-            <InputLabel htmlFor="select-multiple-native" shrink>
-                Characters (click to see the info)
-                                        </InputLabel>
-            <Select
-                inputProps={{
-                    id: 'select-multiple-native',
-                }}
-                value={relevantCharacters}
-                multiple
-                native
+        <Accordion style={{ width: '100%', marginTop: '15px' }}>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
             >
-                {relevantCharacters && relevantCharacters.map((character: Character) => (<option key={character.docId} onClick={() => renderCharacInfo(character.docId)} value={character.name}>
-                    {character.name}
-                </option>))}
-            </Select>
-        </FormControl>
+                <Typography align='center' variant="h6" gutterBottom>LIST OF THE MOVIE CHARACTERS</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Grid className={materialUIStyles.grid} spacing={2} container>
+                    {relevantCharacters && relevantCharacters.map(character => (
+                        <Grid key={character.docId} onClick={() => renderCharacInfo(character.docId)} xs={2} item>
+                            <Card>
+                                <CardActionArea>
+                                    <CardMedia
+                                        className={materialUIStyles.media}
+                                        image={character.image || 'https://via.placeholder.com/200x300?text=No+image'}
+                                        title={character.name}
+                                    />
+                                    <CardContent>
+                                        <Typography component="h2" variant="h5" gutterBottom>
+                                            {character.name}
+                                        </Typography>
+                                        <Typography color="textSecondary" component="p" variant="body2">
+                                            Color of the eyes: {character.eyeColor}
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions style={{display: 'flex', justifyContent: 'space-around'}}>
+                                    <Button color="inherit" size="small">
+                                        Learn More
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                            {/* <div>
+                                <img alt="image" src={character.image || 'https://via.placeholder.com/200x300?text=No+image'} style={{ height: '300px', width: '200px' }} />
+                                <Typography align='center' gutterBottom >{character.name}</Typography>
+                            </div> */}
+                        </Grid>
+                    ))}
+                </Grid>
+            </AccordionDetails>
+        </Accordion>
+
+        // <FormControl className={materialUIStyles.formControl}>
+        //     <InputLabel htmlFor="select-multiple-native" shrink>
+        //         Characters (click to see the info)
+        //                                 </InputLabel>
+        //     <Select
+        //         inputProps={{
+        //             id: 'select-multiple-native',
+        //         }}
+        //         value={relevantCharacters}
+        //         multiple
+        //         native
+        //     >
+        //         {relevantCharacters && relevantCharacters.map((character: Character) => (<option key={character.docId} onClick={() => renderCharacInfo(character.docId)} value={character.name}>
+        //             {character.name}
+        //         </option>))}
+        //     </Select>
+        // </FormControl>
     )
     const relevantPlanetsJSX = (
-        <FormControl className={materialUIStyles.formControl}>
-            <InputLabel htmlFor="select-multiple-native" shrink>
-                Planets (click to see the info)
-                                </InputLabel>
-            <Select
-                inputProps={{
-                    id: 'select-multiple-native',
-                }}
-                value={relevantCharacters}
-                multiple
-                native
+
+        <Accordion style={{ width: '100%', marginTop: '15px' }}>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
             >
-                {relevantPlanets && relevantPlanets.map((planet: Planet) => (<option key={planet.docId} onClick={() => renderPlanetInfo(planet.docId)} value={planet.name}>
-                    {planet.name}
-                </option>))}
-            </Select>
-        </FormControl>
+                <Typography align='center' variant="h6" gutterBottom>LIST OF THE MOVIE PLANETS</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Grid className={materialUIStyles.grid} spacing={2} container>
+                    {relevantPlanets && relevantPlanets.map(planet => (
+                        <Grid key={planet.docId} xs={2} item onClick={() => renderPlanetInfo(planet.docId)}>
+                            <Card>
+                                <CardActionArea>
+                                    <CardMedia
+                                        className={materialUIStyles.media}
+                                        image={planet.img || 'https://via.placeholder.com/200x300?text=No+image'}
+                                        title={planet.name}
+                                    />
+                                    <CardContent>
+                                        <Typography component="h2" variant="h5" gutterBottom>
+                                            {planet.name}
+                                        </Typography>
+                                        <Typography color="textSecondary" component="p" variant="body2">
+                                            Diameter: {planet.diameter}
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions style={{display: 'flex', justifyContent: 'space-around'}}>
+                                    <Button color="inherit" size="small">
+                                        Learn More
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </AccordionDetails>
+        </Accordion>
+
+        // <FormControl className={materialUIStyles.formControl}>
+        //     <InputLabel htmlFor="select-multiple-native" shrink>
+        //         Planets (click to see the info)
+        //                         </InputLabel>
+        //     <Select
+        //         inputProps={{
+        //             id: 'select-multiple-native',
+        //         }}
+        //         value={relevantCharacters}
+        //         multiple
+        //         native
+        //     >
+        //         {relevantPlanets && relevantPlanets.map((planet: Planet) => (<option key={planet.docId} onClick={() => renderPlanetInfo(planet.docId)} value={planet.name}>
+        //             {planet.name}
+        //         </option>))}
+        //     </Select>
+        // </FormControl>
     )
 
     const relevantEntitiesBlock = (relevantPlanets || relevantCharacters) && (
         <>
-            <TableCell align="left"><strong>Participated characters and planets: </strong></TableCell>
-            <TableCell align="center">
-                {relevantPlanets && relevantPlanetsJSX}
-                {relevantCharacters && relevantCharactersJSX}
-            </TableCell>
+            {relevantCharacters && relevantCharactersJSX}
+            {relevantPlanets && relevantPlanetsJSX}
         </>
     );
 
@@ -169,10 +272,10 @@ export const MovieItemScreen: React.FC = () => {
 
     if (edit && movie) {
         return <MovieItemEditForm movie={movie} />
-    } 
+    }
     if (!edit && movie) {
         return < MovieItemDisplayComponent movie={movie} relevantEntitiesBlock={relevantEntitiesBlock} />
-    } 
-        return null
+    }
+    return null
 }
 
