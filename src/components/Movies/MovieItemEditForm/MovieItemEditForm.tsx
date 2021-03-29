@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
     Button,
+    Checkbox,
+    CircularProgress,
     createStyles,
+    FormControl,
+    Input,
+    InputLabel,
+    ListItemText,
     makeStyles,
+    MenuItem,
+    Select,
     Table,
     TableBody,
     TableCell,
@@ -22,10 +30,13 @@ import { MovieTransferValueEditForm } from '../../../models/movie-transfer-value
 import { movieEditYupValScheme } from '../../../models/yup-validation-schemas';
 import styles from './MovieItemEditForm.module.css'
 import { RootState } from '../../../store/store';
-import { UserSignInStatus } from '../../../store/reducer';
+import { setRelevChars, setRelevPlanets, UserSignInStatus } from '../../../store/reducer';
 import { MoviesDTO } from '../../../api/dtos/MovieDTO';
 import { movieDTOMapper } from '../../../api/mappers/mapper';
-import { editMovieEntry } from '../../../store/thunks/movies-thunks';
+import { editMovieEntry, loadDataToAddWhenCreating } from '../../../store/thunks/movies-thunks';
+import { Planet } from '../../../models/planet';
+import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../constants/sizing-constants';
+import { Character } from '../../../models/character';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,7 +47,18 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         cancelButton: {
             marginRight: "10px",
-        }
+        },
+        formControl: {
+            margin: theme.spacing(1),
+            width: '100%',
+        },
+        spinnerContainer: {
+            width: '100%',
+            minHeight: "550px",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
     }),
 );
 
@@ -56,11 +78,38 @@ function getRidOfLineBreaks(openingCrawl: string): string {
     return openingCrawl.replace(/[\n\r]+/gm, ' ')
 }
 
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
 /** Component that renders an interface for an entry editing */
 export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
     const history = useHistory();
     const materialUIStyles = useStyles();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+    const [characterNames, setCharacterNames] = React.useState<string[]>([]);
+    const [planetsNames, setPlanetsNames] = React.useState<string[]>([]);
+
+    const relevantCharacters = useSelector((state: RootState) => state.moviesStore.relevantCharacters)
+    const relevantPlanets = useSelector((state: RootState) => state.moviesStore.relevantPlanets)
+
+    const charsCollection = useSelector((state: RootState) => state.charactersStore.characters)
+    const planetsCollection = useSelector((state: RootState) => state.planetsStore.planets)
+
+    const [newRelevantCharacters, setNewRelevantCharacters] = React.useState<Character[] | null>(relevantCharacters)
+    const [newRelevantPlanets, setNewRelevantPlanets] = React.useState<Planet[] | null>(relevantPlanets)
+
+
+    useEffect(() => {
+        dispatch(loadDataToAddWhenCreating())
+    }, [])
+
 
     /** Variable to check if a user's logged in */
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
@@ -87,12 +136,54 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
         validationSchema,
         onSubmit: (values: Movie) => {
             const movieDTO = movieDTOMapper(values, movie.pk)
-            dispatch(editMovieEntry({MovieDTO: movieDTO, docID: values.docId}))
-        }
+            dispatch(editMovieEntry({ MovieDTO: movieDTO, docID: values.docId }))
+            dispatch(setRelevPlanets(newRelevantPlanets))
+            dispatch(setRelevChars(newRelevantCharacters))
+            history.goBack()
+        },
     })
 
- 
+    const handleChangeCharacters = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setCharacterNames(event.target.value as string[]);
+    };
 
+    const handleChangePlanets = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setPlanetsNames(event.target.value as string[]);
+    };
+
+    useEffect(() => {
+        if (relevantCharacters) {
+            const names = relevantCharacters.map(char => char.name)
+            setCharacterNames(names)
+        }
+        if (relevantPlanets) {
+            const names = relevantPlanets.map(planet => planet.name)
+            setPlanetsNames(names)
+        }
+    }, [relevantCharacters, relevantPlanets])
+
+    useEffect(() => {
+        const characters = charsCollection && charsCollection.filter((character: Character) => characterNames.find((name: string) => name === character.name))
+        const charactersPersonalKeys = characters.map((character: Character) => character.pk)
+        if (characters.length === 0) {
+            setNewRelevantCharacters(null)
+        } else {
+            setNewRelevantCharacters(characters)
+        }
+        formik.setFieldValue('charactersPKs', charactersPersonalKeys)
+    }, [characterNames, charsCollection])
+
+    useEffect(() => {
+        const planets = planetsCollection && planetsCollection.filter((planet: Planet) => planetsNames.find((name: string) => name === planet.name))
+        const planetsPersonalKeys = planets.map((planet: Planet) => planet.pk)
+        if (planets.length === 0) {
+            setNewRelevantPlanets(null)
+        } else {
+            setNewRelevantPlanets(planets)
+        }
+        formik.setFieldValue('planetsPKs', planetsPersonalKeys)
+    }, [planetsNames, planetsCollection])
+    
     return (
         <>
             <div className={materialUIStyles.root}>
@@ -161,9 +252,71 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             multiline />
                                     </TableCell>
                                 </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth}><strong>Img link: </strong></TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            name="img"
+                                            onChange={formik.handleChange} value={formik.values.img}
+                                            variant="outlined"
+                                            fullWidth
+                                            multiline />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth}><strong>Characters: </strong></TableCell>
+                                    <TableCell>
+                                        <FormControl className={materialUIStyles.formControl}>
+                                            <InputLabel id="characters">Add or remove characters</InputLabel>
+                                            <Select
+                                                id="demo-mutiple-checkbox"
+                                                input={<Input />}
+                                                labelId="characters"
+                                                MenuProps={MenuProps}
+                                                onChange={handleChangeCharacters}
+                                                renderValue={(selected) => (selected as string[]).join(', ')}
+                                                value={characterNames}
+                                                multiple
+                                            >
+                                                {charsCollection && charsCollection.map((char) => (
+                                                    <MenuItem key={char.docId} value={char.name}>
+                                                        <Checkbox checked={characterNames.includes(char.name)} />
+                                                        <ListItemText primary={char.name} />
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth}><strong>Planets: </strong></TableCell>
+                                    <TableCell>
+                                        <FormControl className={materialUIStyles.formControl}>
+                                            <InputLabel id="planets">Add or remove planets</InputLabel>
+                                            <Select
+                                                id="demo-mutiple-checkbox"
+                                                input={<Input />}
+                                                labelId="planets"
+                                                MenuProps={MenuProps}
+                                                onChange={handleChangePlanets}
+                                                renderValue={(selected) => (selected as string[]).join(', ')}
+                                                value={planetsNames}
+                                                multiple
+                                            >
+                                                {planetsCollection && planetsCollection.map((planet) => (
+                                                    <MenuItem key={planet.docId} value={planet.name}>
+                                                        <Checkbox checked={planetsNames.includes(planet.name)} />
+                                                        <ListItemText primary={planet.name} />
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
+
                     {isUserSignedIn === UserSignInStatus.Authorised &&
                         <div className={styles.buttonContainer}>
                             <Button className={materialUIStyles.cancelButton} color="primary" onClick={() => history.goBack()} type="button" variant="contained">CANCEL</Button>

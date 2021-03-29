@@ -27,10 +27,10 @@ const moviesStoreReducer = createSlice({
         setMovies: (state, action: PayloadAction<Movie[]>) => {
             state.movies = action.payload;
         },
-        setRelevChars: (state, action: PayloadAction<Character[]>) => {
+        setRelevChars: (state, action: PayloadAction<Character[] | null>) => {
             state.relevantCharacters = action.payload;
         },
-        setRelevPlanets: (state, action: PayloadAction<Planet[]>) => {
+        setRelevPlanets: (state, action: PayloadAction<Planet[] | null>) => {
             state.relevantPlanets = action.payload;
         },
         setMovieItem: (state, action: PayloadAction<Movie>) => {

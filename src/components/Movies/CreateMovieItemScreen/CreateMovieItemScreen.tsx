@@ -49,8 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         formControl: {
             margin: theme.spacing(1),
-            minWidth: 300,
-            maxWidth: 600,
+            width: '100%'
         },
         cancelButton: {
             marginRight: '10px',
@@ -167,7 +166,7 @@ export const CreateMovieItemScreen: React.FC = () => {
     if (isEntityBeingAdded) {
         return <Redirect to="/films" />
     }
-    
+
     return (
         <>
             <div className={materialUIStyles.root}>
@@ -232,6 +231,17 @@ export const CreateMovieItemScreen: React.FC = () => {
                                             helperText={formik.touched.openingCrawl && formik.errors.openingCrawl}
                                             name="openingCrawl"
                                             onChange={formik.handleChange} value={formik.values.openingCrawl}
+                                            variant="outlined"
+                                            fullWidth
+                                            multiline />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="left" className={styles.tenthWidth}><strong>Img link: </strong></TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            name="img"
+                                            onChange={formik.handleChange} value={formik.values.img}
                                             variant="outlined"
                                             fullWidth
                                             multiline />

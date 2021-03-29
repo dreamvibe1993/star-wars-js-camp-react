@@ -164,33 +164,13 @@ export const MovieItemScreen: React.FC = () => {
                                     </Button>
                                 </CardActions>
                             </Card>
-                            {/* <div>
-                                <img alt="image" src={character.image || 'https://via.placeholder.com/200x300?text=No+image'} style={{ height: '300px', width: '200px' }} />
-                                <Typography align='center' gutterBottom >{character.name}</Typography>
-                            </div> */}
                         </Grid>
                     ))}
                 </Grid>
             </AccordionDetails>
         </Accordion>
 
-        // <FormControl className={materialUIStyles.formControl}>
-        //     <InputLabel htmlFor="select-multiple-native" shrink>
-        //         Characters (click to see the info)
-        //                                 </InputLabel>
-        //     <Select
-        //         inputProps={{
-        //             id: 'select-multiple-native',
-        //         }}
-        //         value={relevantCharacters}
-        //         multiple
-        //         native
-        //     >
-        //         {relevantCharacters && relevantCharacters.map((character: Character) => (<option key={character.docId} onClick={() => renderCharacInfo(character.docId)} value={character.name}>
-        //             {character.name}
-        //         </option>))}
-        //     </Select>
-        // </FormControl>
+
     )
     const relevantPlanetsJSX = (
 
@@ -205,7 +185,7 @@ export const MovieItemScreen: React.FC = () => {
             <AccordionDetails>
                 <Grid className={materialUIStyles.grid} spacing={2} container>
                     {relevantPlanets && relevantPlanets.map(planet => (
-                        <Grid key={planet.docId} xs={2} item onClick={() => renderPlanetInfo(planet.docId)}>
+                        <Grid key={planet.docId} onClick={() => renderPlanetInfo(planet.docId)} xs={2} item>
                             <Card>
                                 <CardActionArea>
                                     <CardMedia
@@ -233,24 +213,6 @@ export const MovieItemScreen: React.FC = () => {
                 </Grid>
             </AccordionDetails>
         </Accordion>
-
-        // <FormControl className={materialUIStyles.formControl}>
-        //     <InputLabel htmlFor="select-multiple-native" shrink>
-        //         Planets (click to see the info)
-        //                         </InputLabel>
-        //     <Select
-        //         inputProps={{
-        //             id: 'select-multiple-native',
-        //         }}
-        //         value={relevantCharacters}
-        //         multiple
-        //         native
-        //     >
-        //         {relevantPlanets && relevantPlanets.map((planet: Planet) => (<option key={planet.docId} onClick={() => renderPlanetInfo(planet.docId)} value={planet.name}>
-        //             {planet.name}
-        //         </option>))}
-        //     </Select>
-        // </FormControl>
     )
 
     const relevantEntitiesBlock = (relevantPlanets || relevantCharacters) && (
