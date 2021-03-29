@@ -29,6 +29,7 @@ export const mapMovie = (payload: MoviesDTO, docID: string): Movie => ({
   pk: payload.pk,
   model: payload.model,
   docId: docID,
+  img: payload.img ?? null
 } as Movie);
 
 /**
@@ -109,10 +110,11 @@ export const movieDTOMapper = (payload: Movie, indexNumber: number): MoviesDTO =
     episode_id: '',
     characters: payload.charactersPKs,
     planets: payload.planetsPKs,
-    species: [],
-    starships: [],
-    vehicles: [],
+    species: payload.speciesPKs ?? [],
+    starships: payload.starshipsPKs ?? [],
+    vehicles: payload.vehiclesPKs ?? [],
   },
+  img: payload.img ?? null,
   pk: indexNumber + 1,
   model: '',
 });

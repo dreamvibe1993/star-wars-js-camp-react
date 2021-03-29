@@ -17,6 +17,7 @@ const sidebar = {
 
 const theme = createMuiTheme({
   palette: {
+    type: 'dark',
     primary: {
       light: '#484848',
       main: '#212121',

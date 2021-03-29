@@ -20,7 +20,7 @@ import { Sidebar } from '../../Sidebar';
 import styles from './MoviesSidebar.module.css'
 import { RootState } from '../../../store/store';
 import { UserSignInStatus } from '../../../store/reducer';
-import { subscribeToMovies } from '../../../store/thunks/movies-thunks';
+import { movieSidebarSnapshotTeardown, subscribeToMovies } from '../../../store/thunks/movies-thunks';
 
 
 const useStyles = makeStyles(() =>
@@ -57,7 +57,7 @@ export const MoviesSidebar: React.FC = () => {
     useEffect(() => {
         dispatch(subscribeToMovies())
     }, [])
-  
+    
     const createEntryButton = (
         < >
             <Divider />

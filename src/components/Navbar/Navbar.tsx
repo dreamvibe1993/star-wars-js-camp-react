@@ -20,13 +20,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 import { signOut } from '../../api/services/auth';
-import { searchMovieEntity } from '../../api/services/load-movies-data-api';
 
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 import styles from './Navbar.module.css'
 import { RootState } from '../../store/store';
-import { UserSignInStatus , setCommonBackdropOn, setCommonBackdropOff } from '../../store/reducer';
+import { UserSignInStatus, setCommonBackdropOn, setCommonBackdropOff } from '../../store/reducer';
 import { logo } from '../../imgs/logo';
+import { searchMovieEntry } from '../../store/thunks/movies-thunks';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -104,22 +104,20 @@ export const Navbar: React.FC<Props> = ({
         },
         validationSchema,
         onSubmit: (values) => {
-            dispatch(setCommonBackdropOn())
-            searchMovieEntity(values.title).then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        querySnapshot.forEach((querySnapshotItem) => {
-                            history.push(`/films/${querySnapshotItem.id}`)
-                        })
-                    } else {
-                        history.push('/not-found')
-                    }
-                    dispatch(setCommonBackdropOff())
-                })
+            dispatch(searchMovieEntry(values.title))
         }
     })
     const [value, setValue] = useState<SliderState>(false);
     const location = useLocation();
 
+    const redirectLink = useSelector((state: RootState) => state.moviesStore.redirectLink)
+
+    useEffect(() => {
+        console.log(redirectLink)
+        if (redirectLink) {
+            history.push(redirectLink)
+        }
+    }, [redirectLink])
     /** Hook that checks an url and sets the slider accordingly */
     useEffect(() => {
         if (location.pathname.includes('/films')) {
@@ -152,7 +150,7 @@ export const Navbar: React.FC<Props> = ({
         };
     }
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn);
-    
+
 
     function signUserOut() {
         signOut()

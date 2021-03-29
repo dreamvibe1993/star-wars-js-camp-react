@@ -21,6 +21,8 @@ export interface MoviesStore {
     isEntityBeingAdded: boolean;
 
     isEntityBeingDeleted: boolean;
+
+    redirectLink: string | null;
 }
 
 /** Planets store */

@@ -82,6 +82,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
             vehiclesPKs: movie.vehiclesPKs,
             pk: movie.pk,
             docId: movie.docId,
+            img: movie.img
         },
         validationSchema,
         onSubmit: (values: Movie) => {

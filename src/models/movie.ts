@@ -30,4 +30,6 @@ export interface Movie {
   pk: number;
   /** Document identificator */
   docId: string;
+  /** Movie's image link */
+  img: string | null;
 }

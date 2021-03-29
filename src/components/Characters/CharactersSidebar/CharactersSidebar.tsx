@@ -60,9 +60,11 @@ export const CharactersSidebar: React.FC = () => {
 
     const dispatch = useDispatch();
 
-    if (movieSidebarSnapshotTeardown !== null) {
-        movieSidebarSnapshotTeardown()
-    }
+    useEffect(() => {
+        if (movieSidebarSnapshotTeardown) {
+            movieSidebarSnapshotTeardown()
+        }
+    }, [movieSidebarSnapshotTeardown])
 
     const listItems = useMemo(() => characters.map((characterItem: Character) => (
         <ListItem key={characterItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/people/${characterItem.docId}`} button >

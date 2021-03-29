@@ -8,6 +8,7 @@ import {
     FormControl,
     InputLabel,
     makeStyles,
+    Paper,
     Select,
     TableCell,
     Theme
@@ -45,7 +46,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'white'
         }
     }),
 );
@@ -86,9 +86,9 @@ export const MovieItemScreen: React.FC = () => {
     if (isMovieLoadingPending) {
         return (
             <>
-                <div className={materialUIStyles.spinnerContainer} >
+                <Paper className={materialUIStyles.spinnerContainer} >
                     <CircularProgress color="inherit" />
-                </div>
+                </Paper>
             </>
         )
     }

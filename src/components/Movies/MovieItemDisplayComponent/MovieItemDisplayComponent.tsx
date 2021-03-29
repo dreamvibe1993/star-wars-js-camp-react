@@ -2,17 +2,19 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { 
-    Button, 
-    createStyles, 
-    makeStyles, 
-    Paper, 
-    Table, 
+import {
+    Button,
+    createStyles,
+    Grid,
+    makeStyles,
+    Paper,
+    Table,
     TableBody,
-    TableCell, 
-    TableContainer, 
-    TableRow, 
-    Theme 
+    TableCell,
+    TableContainer,
+    TableRow,
+    Theme,
+    Typography
 } from '@material-ui/core';
 
 import { Movie } from '../../../models/movie';
@@ -38,6 +40,26 @@ const useStyles = makeStyles((theme: Theme) =>
         deleteButton: {
             marginRight: '15px'
         },
+        tableContainer: {
+            display: 'flex',
+        },
+        imgContainer: {
+            maxHeight: '20%',
+            maxWidth: '20%',
+            margin: '5px'
+        },
+        grid: {
+            flexGrow: 1
+        },
+        buttonContainer: {
+            marginBottom: '15px',
+            // width: '20%',
+            textAlign: 'right',
+        },
+        titleContainer: {
+            display: 'flex'
+        }
+
     }),
 );
 
@@ -64,12 +86,41 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
         <>
             <DeletionConfirmationModal movieID={movie.docId} />
             <div className={materialUIStyles.root}>
-                <TableContainer component={Paper}>
+                <TableContainer className={materialUIStyles.tableContainer} component={Paper}>
+                    <img alt="image" className={materialUIStyles.imgContainer} src={movie.img || 'https://via.placeholder.com/728x1000?text=No+image'} />
                     <Table className={styles.table} size="medium">
                         <TableBody>
                             <TableRow >
                                 <TableCell align="left" ><strong>Title: </strong></TableCell>
-                                <TableCell align="center"><h1>{movie.title}</h1></TableCell>
+                                <TableCell align="center">
+                                    <div style={{display: 'flex'}}>
+                                        <h1>
+                                            {movie.title}
+
+                                        </h1>
+                                        {isUserSignedIn === UserSignInStatus.Authorised &&
+                                            <>
+                                                <Button
+                                                    className={materialUIStyles.deleteButton}
+                                                    color="primary"
+                                                    onClick={() => dispatch(setDeletionModalOpen())}
+                                                    type="button"
+                                                    variant="contained"
+                                                >
+                                                    DELETE
+                                                </Button>
+                                                <Button
+                                                    color="primary"
+                                                    onClick={() => pushEditQueryToURL()}
+                                                    type="button"
+                                                    variant="contained"
+                                                >
+                                                    EDIT
+                                                </Button>
+                                            </>
+                                        }
+                                    </div>
+                                </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell align="left" ><strong>Producer: </strong></TableCell>
@@ -93,27 +144,45 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
                         </TableBody>
                     </Table>
                 </TableContainer>
-                {isUserSignedIn === UserSignInStatus.Authorised &&
-                    <div className={styles.buttonContainer}>
-                        <Button
-                            className={materialUIStyles.deleteButton}
-                            color="primary"
-                            onClick={() => dispatch(setDeletionModalOpen())}
-                            type="button"
-                            variant="contained"
-                        >
-                            DELETE
-                        </Button>
-                        <Button
-                            color="primary"
-                            onClick={() => pushEditQueryToURL()}
-                            type="button"
-                            variant="contained"
-                        >
-                            EDIT
-            </Button>
-                    </div>
-                }
+
+                <Grid className={materialUIStyles.grid} component={Paper} spacing={2} container>
+                    <Grid xs={2} item>
+                        <div>
+                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
+                            <Typography align='center' gutterBottom >Name Name</Typography>
+                        </div>
+                    </Grid>
+                    <Grid xs={2} item>
+                        <div>
+                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
+                            <Typography align='center' gutterBottom >Name Name</Typography>
+                        </div>
+                    </Grid>
+                    <Grid xs={2} item>
+                        <div>
+                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
+                            <Typography align='center' gutterBottom >Name Name</Typography>
+                        </div>
+                    </Grid>
+                    <Grid xs={2} item>
+                        <div>
+                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
+                            <Typography align='center' gutterBottom >Name Name</Typography>
+                        </div>
+                    </Grid>
+                    <Grid xs={2} item>
+                        <div>
+                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
+                            <Typography align='center' gutterBottom >Name Name</Typography>
+                        </div>
+                    </Grid>
+                    <Grid xs={2} item>
+                        <div>
+                            <img alt="image" src='https://via.placeholder.com/200x300?text=No+image' />
+                            <Typography align='center' gutterBottom >Name Name</Typography>
+                        </div>
+                    </Grid>
+                </Grid>
             </div>
         </>)
 }

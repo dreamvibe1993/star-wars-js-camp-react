@@ -84,6 +84,7 @@ const initialValues: Movie = {
     vehiclesPKs: [],
     pk: 0,
     docId: '',
+    img: '',
 }
 
 const MenuProps = {

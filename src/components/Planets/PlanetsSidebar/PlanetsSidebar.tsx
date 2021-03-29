@@ -57,10 +57,12 @@ export const PlanetsSidebar: React.FC = () => {
             <ListItemText primary={planetItem.name} />
         </ListItem>
     ))
-
-    if (movieSidebarSnapshotTeardown !== null) {
-        movieSidebarSnapshotTeardown()
-    }
+    
+    useEffect(() => {
+        if (movieSidebarSnapshotTeardown) {
+            movieSidebarSnapshotTeardown()
+        }
+    }, [movieSidebarSnapshotTeardown])
 
     /** If a window size was changed rerenders planets items into the sidebar */
     function getAmountOfItemsPerWindowSize() {

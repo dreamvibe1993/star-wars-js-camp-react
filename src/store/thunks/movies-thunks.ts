@@ -88,6 +88,29 @@ export const deleteMovieEntry = createAsyncThunk(
     'movies/delete',
     async (docId: string) => MoviesDataAPI.getMoviesCollection().doc(docId).delete()
 )
+
+export const searchMovieEntry = createAsyncThunk(
+    'movies/search',
+    async (title: string) => {
+        const movieDocs = await MoviesDataAPI.searchMovieEntity(title)
+        if (!movieDocs.empty) {
+            return `/films/${movieDocs.docs[movieDocs.docs.length - 1].id}`
+        } 
+            return '/not-found'
+    }
+)
+
+// searchMovieEntity(values.title).then((querySnapshot) => {
+//     if (!querySnapshot.empty) {
+//         querySnapshot.forEach((querySnapshotItem) => {
+//             history.push(`/films/${querySnapshotItem.id}`)
+//         })
+//     } else {
+//         history.push('/not-found')
+//     }
+//     dispatch(setCommonBackdropOff())
+// })
+
 //  {
 //     history.push("/films")
 //     dispatch(setCommonBackdropOn())

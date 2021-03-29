@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction, combineReducers } from '@reduxjs/toolkit'
 // import { loadCharactersData, loadMoreCharactersItems } from '../api/services/load-characters-data';
 import { Character } from '../models/character';
@@ -5,7 +6,7 @@ import { Movie } from '../models/movie';
 import { Planet } from '../models/planet';
 import { AuthStateRootState, CharactersStore, ComponentsRootState, MoviesStore, PlanetsStore } from './redux-store-state';
 import { lazyloadMoreCharacters, loadCharacterItem } from './thunks/characters-thunks';
-import { addMovieEntry, deleteMovieEntry, editMovieEntry, loadDataToAddWhenCreating, loadMovieItem } from './thunks/movies-thunks';
+import { addMovieEntry, deleteMovieEntry, editMovieEntry, loadDataToAddWhenCreating, loadMovieItem, searchMovieEntry } from './thunks/movies-thunks';
 import { lazyloadMorePlanets, loadPlanetItem } from './thunks/planets-thunks';
 
 
@@ -20,6 +21,7 @@ const moviesStoreReducer = createSlice({
         areEntitiesLoading: false,
         isEntityBeingAdded: false,
         isEntityBeingDeleted: false,
+        redirectLink: null,
     } as MoviesStore,
     reducers: {
         setMovies: (state, action: PayloadAction<Movie[]>) => {
@@ -73,6 +75,15 @@ const moviesStoreReducer = createSlice({
                 state.movieItem = null
                 state.isEntityBeingDeleted = false
                 state.isMovieLoadingPending = true
+            })
+            .addCase(searchMovieEntry.pending, (state) => {
+                state.redirectLink = null
+            })
+            .addCase(searchMovieEntry.fulfilled, (state, action) => {
+                state.redirectLink = action.payload
+            })
+            .addCase(searchMovieEntry.rejected, (state) => {
+                state.redirectLink = `/not-found`
             })
     }
 
