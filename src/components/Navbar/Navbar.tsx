@@ -18,15 +18,17 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Switch from '@material-ui/core/Switch';
 
-import { UserSignInStatus } from '../../store/reducer';
+import { setThemingMode, UserSignInStatus } from '../../store/reducer';
 import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
 
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 import styles from './Navbar.module.css'
 import { RootState } from '../../store/reducer';
-import { logo } from '../../imgs/logo';
+import { Logo } from '../../imgs/logo';
 import { searchMovieEntry } from '../../store/thunks/movies-thunks';
+import { useMediaQuery } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
                 duration: theme.transitions.duration.leavingScreen,
             }),
             zIndex: theme.zIndex.drawer + 1,
-            backgroundColor: 'black',
         },
 
         searchIcon: {
@@ -150,18 +151,16 @@ export const Navbar: React.FC<Props> = ({
     }
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn);
 
+    const [toggler, setToggler] = React.useState<boolean>(true);
+    
+      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setToggler(event.target.checked);
+        dispatch(setThemingMode(event.target.checked))
+      };
 
-    // function signUserOut() {
-    //     signOut()
-    //         .then(() => {
-    //             console.log('Signed Out');
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //             history.push('/error')
-    //         })
-    // }
+    const themingMode = useSelector((state: RootState) => state.componentsState.mode)
 
+    
     return (
         <AppBar
             className={clsx(materialUIStyles.appBar)}
@@ -174,8 +173,18 @@ export const Navbar: React.FC<Props> = ({
                     <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
                 </Tabs>
                 <Typography className={styles.title} variant="h6">
-                    <Link className={styles.cancelLinkStyles} to="/">{logo}</Link>
+                    <Link className={styles.cancelLinkStyles} to="/"><Logo color={themingMode ? '#fff200' : '#fff'}/></Link>
                 </Typography>
+
+                <div>
+                    <Switch
+                        checked={toggler}
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                        name="themingToggler"
+                        onChange={handleChange}
+                    />
+                </div>
+
                 <form onSubmit={formik.handleSubmit}>
                     <div className={materialUIStyles.search}>
                         <div className={materialUIStyles.searchIcon}>
@@ -189,15 +198,14 @@ export const Navbar: React.FC<Props> = ({
                             inputProps={{ 'aria-label': 'search' }}
                             name="title"
                             onChange={formik.handleChange}
-                            placeholder="Search…"
+                            placeholder="Search..."
                         />
                     </div>
                 </form>
                 {isUserSignedIn === UserSignInStatus.Authorised
                     ? <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())}>Logout</Button>
-                    : <Link className={styles.cancelLinkStyles} to='/login'>
-                        <Button color="inherit">Login</Button>
-                    </Link>}
+                    : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+                }
             </Toolbar>
         </AppBar>
     )

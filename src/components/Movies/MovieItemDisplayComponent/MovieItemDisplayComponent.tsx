@@ -47,7 +47,13 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundPosition: 'left',
             backgroundSize: '70%',
         },
-
+        card: {
+            width: 'auto',
+            maxHeight: '600px',
+            maxWidth: '350px',
+            height: 'auto',
+            boxShadow: 'none'
+        },
         buttonContainer: {
             marginBottom: '15px',
             textAlign: 'right',
@@ -79,7 +85,7 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
             <DeletionConfirmationModal movieID={movie.docId} />
             <div>
                 <TableContainer className={materialUIStyles.tableContainer} component={Paper}>
-                    <Card style={{boxShadow: 'none'}}>
+                    <Card className={materialUIStyles.card}>
                         <CardActionArea>
                             <CardMedia
                                 className={materialUIStyles.imgContainer}
@@ -125,7 +131,7 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
                                                 variant="contained"
                                             >
                                                 DELETE
-                                                </Button>
+                                            </Button>
                                             <Button
                                                 color="primary"
                                                 onClick={() => pushEditQueryToURL()}
@@ -133,7 +139,7 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
                                                 variant="contained"
                                             >
                                                 EDIT
-                                                </Button>
+                                            </Button>
                                         </div>
                                     }
                                 </TableCell>

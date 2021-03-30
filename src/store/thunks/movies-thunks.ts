@@ -10,6 +10,7 @@ import { RootState } from "../reducer";
 import { PlanetDTO } from "../../api/dtos/PlanetDTO";
 import { CharacterDTO } from "../../api/dtos/CharacterDTO";
 
+// eslint-disable-next-line import/no-mutable-exports
 export let movieSidebarSnapshotTeardown: null | (() => void);
 
 export const subscribeToMovies = createAsyncThunk(
@@ -43,6 +44,7 @@ export const loadMovieItem = createAsyncThunk(
             }
             return { movie, relevantCharacters, relevantPlanets }
         }
+        return null
     }
 )
 
@@ -99,28 +101,3 @@ export const searchMovieEntry = createAsyncThunk(
             return '/not-found'
     }
 )
-
-// searchMovieEntity(values.title).then((querySnapshot) => {
-//     if (!querySnapshot.empty) {
-//         querySnapshot.forEach((querySnapshotItem) => {
-//             history.push(`/films/${querySnapshotItem.id}`)
-//         })
-//     } else {
-//         history.push('/not-found')
-//     }
-//     dispatch(setCommonBackdropOff())
-// })
-
-//  {
-//     history.push("/films")
-//     dispatch(setCommonBackdropOn())
-//     DBRef.collection('films').doc(entryID)
-//         .delete()
-//         .then(() => {
-//             dispatch(setCommonBackdropOff())
-//             console.log('Document successfully deleted!');
-//         }).catch((error) => {
-//             console.error(error)
-//             history.push('/error')
-//         })
-// }

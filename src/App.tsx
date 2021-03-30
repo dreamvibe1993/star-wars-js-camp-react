@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Backdrop, CircularProgress } from '@material-ui/core';
+import { Backdrop, CircularProgress, CssBaseline, createMuiTheme, ThemeProvider, useMediaQuery } from '@material-ui/core';
 
 import './App.css';
 import { Navbar } from './components/Navbar/Navbar';
@@ -83,56 +83,89 @@ export const App: React.FC = () => {
    */
   const { open } = drawerContextValue;
 
-  useEffect(() => {
-    getSignInStatus()
-}, [isUserSignedIn])
+  useEffect(() => getSignInStatus(), [])
+
+  const themingMode = useSelector((state: RootState) => state.componentsState.mode)
+
+  const theme = createMuiTheme({
+    palette: {
+      type: themingMode ? 'dark' : 'light',
+      primary: {
+        light: themingMode ? '#484848' : '#757ce8',
+        main: themingMode ? '#212121' : '#3f50b5',
+        dark: themingMode ? '#000000' : '#002884',
+        contrastText: '#fff'
+      },
+      secondary: {
+        light: '#ff7961',
+        main: '#f44336',
+        dark: '#ba000d',
+        contrastText: '#000',
+      },
+    },
+  });
+
+  const mediaQueryMatch = useMediaQuery('(min-width:768px)')
 
   return (
     <div className="App">
+      <ThemeProvider theme={theme}>
+        <CssBaseline>
 
-      <DrawerContext.Provider value={drawerContextValue}>
-        <Navbar setDrawerState={changeDrawerState} />
-        <main
-          className={clsx(materialUIStyles.content, {
-            [materialUIStyles.contentShift]: open,
-          })}
-        >
-          <div className={materialUIStyles.drawerHeader} />
-          {isUserSignedIn !== UserSignInStatus.Pending && 
-          <React.Fragment>
-            <Route path="/" exact>
-              <WelcomeScreen />
-            </Route>
-            <Route path="/films/:id?">
-              <MoviesSidebar />
-            </Route>
-            <Route path="/people/:id?">
-              <CharactersSidebar />
-            </Route>
-            <Route path="/planets/:id?">
-              <PlanetsSidebar />
-            </Route>
-            <Route path="/login">
-              <LoginPage />
-            </Route>
-            <Route path="/create-film-entry">
-              {isUserSignedIn === UserSignInStatus.Authorised ? <CreateMovieItemScreen /> : <Redirect to="/login" />}
-            </Route>
-            <Route path="/not-found">
-              <NotFoundScreen />
-            </Route>
-            <Route path="/error">
-              <ErrorScreen />
-            </Route>
-            <Route path="/register">
-              <RegistrationPage />
-            </Route>
-          </React.Fragment>}
-        </main>
-      </DrawerContext.Provider>
-      <Backdrop className={materialUIStyles.backdrop} open={isCommonLoadingBackDropOn}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+          <DrawerContext.Provider value={drawerContextValue}>
+            {mediaQueryMatch && <Navbar setDrawerState={changeDrawerState} />}
+            <main
+              className={clsx(materialUIStyles.content, {
+                [materialUIStyles.contentShift]: open,
+              })}
+            >
+              <div className={materialUIStyles.drawerHeader} />
+              {isUserSignedIn !== UserSignInStatus.Pending &&
+                <React.Fragment>
+                  <Switch>
+                    <Route path="/" exact>
+                      <WelcomeScreen />
+                    </Route>
+                    <Route path="/films/:id?">
+                      <MoviesSidebar />
+                    </Route>
+                    <Route path="/people/:id?">
+                      <CharactersSidebar />
+                    </Route>
+                    <Route path="/planets/:id?">
+                      <PlanetsSidebar />
+                    </Route>
+                    <Route path="/login">
+                      <LoginPage />
+                    </Route>
+                    <Route path="/create-film-entry">
+                      {isUserSignedIn === UserSignInStatus.Authorised ? <CreateMovieItemScreen /> : <Redirect to="/login" />}
+                    </Route>
+                    <Route path="/not-found">
+                      <NotFoundScreen />
+                    </Route>
+                    <Route path="/error">
+                      <ErrorScreen />
+                    </Route>
+                    <Route path="/register">
+                      <RegistrationPage />
+                    </Route>
+                    <Route path="*">
+                      <Redirect to="/not-found" />
+                    </Route>
+                  </Switch>
+                </React.Fragment>}
+            </main>
+          </DrawerContext.Provider>
+          <Backdrop className={materialUIStyles.backdrop} open={isCommonLoadingBackDropOn}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+
+        </CssBaseline>
+
+      </ThemeProvider>
+
+
     </div>
   );
 }

@@ -32,7 +32,7 @@ import { Params } from '../../../models/query-params'
 
 import { getMovieItemData } from '../../../api/services/load-movies-data-api';
 import { MovieItemDisplayComponent } from '../MovieItemDisplayComponent';
-import { RootState } from '../../../store/reducer';
+import { RootState, setMovieLoadingPending } from '../../../store/reducer';
 import { UserSignInStatus } from '../../../store/reducer';
 import { loadMovieItem } from '../../../store/thunks/movies-thunks';
 import { CharacterItemScreen } from '../../Characters/CharacterItemScreen';
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         grid: {
             flexGrow: 1,
-            backgroundColor: '#505050',
+            backgroundColor: 'rgb(0,0,0,.05)',
             borderRadius: '5px'
         },
         media: {
@@ -84,18 +84,19 @@ export const MovieItemScreen: React.FC = () => {
     /** Variable to check if there's any relevant planets */
     const relevantPlanets = useSelector((state: RootState) => state.moviesStore.relevantPlanets)
 
+    
     /** Variable to check if there's any relevant characters */
     const relevantCharacters = useSelector((state: RootState) => state.moviesStore.relevantCharacters)
-
+    
     const queryParam = useParams<Params>()
     const queries = new URLSearchParams(location.search)
-
+    
     /** Query in case of a user decides to edit an entry */
     const edit: string | null = queries.get('edit')
-
+    
     const movie = useSelector((state: RootState) => state.moviesStore.movieItem)
     const isMovieLoadingPending = useSelector((state: RootState) => state.moviesStore.isMovieLoadingPending)
-
+    
     /** If a user got back from another tab pastes an ID of a current entry */
     useEffect(() => {
         if (movie && movie.docId && !queryParam.id) {
@@ -103,6 +104,7 @@ export const MovieItemScreen: React.FC = () => {
         }
         dispatch(loadMovieItem(queryParam.id))
     }, [queryParam.id])
+    
 
     if (isMovieLoadingPending) {
         return (

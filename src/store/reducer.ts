@@ -40,6 +40,9 @@ const moviesStoreReducer = createSlice({
         flushMovieItem: state => {
             state.movieItem = null
         },
+        setMovieLoadingPending: (state, action) => {
+            state.isMovieLoadingPending = action.payload
+        }
     },
     extraReducers: builder => {
         builder
@@ -91,7 +94,7 @@ const moviesStoreReducer = createSlice({
 
 })
 
-export const { setMovies, setRelevChars, setRelevPlanets, setMovieItem, flushMovieItem } = moviesStoreReducer.actions
+export const { setMovies, setRelevChars, setRelevPlanets, setMovieItem, flushMovieItem, setMovieLoadingPending } = moviesStoreReducer.actions
 
 const charactersStoreReducer = createSlice({
     name: 'charactersStore',
@@ -212,7 +215,7 @@ const componentsStateReducer = createSlice({
         isDeletionConfirmationOpen: false,
         isSidebarLoading: false,
         isCommonLoadingBckDropOn: false,
-        redirectTo404: false,
+        mode: true,
     } as ComponentsRootState,
     reducers: {
         setDeletionModalOpen: (state) => {
@@ -233,6 +236,9 @@ const componentsStateReducer = createSlice({
         setCommonBackdropOff: (state) => {
             state.isCommonLoadingBckDropOn = false
         },
+        setThemingMode: (state, action) => {
+            state.mode = action.payload
+        }
     },
     extraReducers: builder => {
         builder
@@ -266,7 +272,8 @@ export const {
     setSidebarLoadingOn,
     setSidebarLoadingOff,
     setCommonBackdropOn,
-    setCommonBackdropOff
+    setCommonBackdropOff,
+    setThemingMode
 } = componentsStateReducer.actions;
 
 export enum UserSignInStatus {

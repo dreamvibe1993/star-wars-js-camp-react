@@ -112,7 +112,7 @@ export const RegistrationPage: React.FC = () => {
                 </Paper>
             </form>
             <Typography color="textSecondary" variant="subtitle1">
-                Already have an account? <NavLink style={{ color: "yellow" }} to="/login">Log in!</NavLink>
+                Already have an account? <NavLink style={{ color: "red" }} to="/login">Log in!</NavLink>
             </Typography>
         </div>
     )

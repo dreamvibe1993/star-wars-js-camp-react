@@ -63,6 +63,8 @@ export interface ComponentsRootState {
     isSidebarLoading: boolean;
     /** State of the main backdrop */
     isCommonLoadingBckDropOn: boolean;
+
+    mode: boolean;
 }
 
 /** Auth state store */
