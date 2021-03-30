@@ -69,4 +69,7 @@ export interface ComponentsRootState {
 export interface AuthStateRootState {
     /** State of a current user's credentials */
     isUserSignedIn: UserSignInStatus.Pending | UserSignInStatus.Authorised | UserSignInStatus.Unauthorised;
+    passwordErrorCodeMsg: string | null;
+    emailErrorCodeMsg: string | null;
+    userEmail: string | null;
 }

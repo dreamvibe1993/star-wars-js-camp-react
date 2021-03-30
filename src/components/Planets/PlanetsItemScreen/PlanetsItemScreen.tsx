@@ -16,7 +16,7 @@ import {
 
 import { Params } from '../../../models/query-params';
 
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import { loadPlanetItem } from '../../../store/thunks/planets-thunks';
 
 const useStyles = makeStyles(() =>

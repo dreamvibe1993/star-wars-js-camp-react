@@ -19,12 +19,12 @@ import InputBase from '@material-ui/core/InputBase';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { signOut } from '../../api/services/auth';
+import { UserSignInStatus } from '../../store/reducer';
+import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
 
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 import styles from './Navbar.module.css'
-import { RootState } from '../../store/store';
-import { UserSignInStatus, setCommonBackdropOn, setCommonBackdropOff } from '../../store/reducer';
+import { RootState } from '../../store/reducer';
 import { logo } from '../../imgs/logo';
 import { searchMovieEntry } from '../../store/thunks/movies-thunks';
 
@@ -113,7 +113,6 @@ export const Navbar: React.FC<Props> = ({
     const redirectLink = useSelector((state: RootState) => state.moviesStore.redirectLink)
 
     useEffect(() => {
-        console.log(redirectLink)
         if (redirectLink) {
             history.push(redirectLink)
         }
@@ -152,16 +151,16 @@ export const Navbar: React.FC<Props> = ({
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn);
 
 
-    function signUserOut() {
-        signOut()
-            .then(() => {
-                console.log('Signed Out');
-            })
-            .catch((error) => {
-                console.error(error);
-                history.push('/error')
-            })
-    }
+    // function signUserOut() {
+    //     signOut()
+    //         .then(() => {
+    //             console.log('Signed Out');
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //             history.push('/error')
+    //         })
+    // }
 
     return (
         <AppBar
@@ -195,7 +194,7 @@ export const Navbar: React.FC<Props> = ({
                     </div>
                 </form>
                 {isUserSignedIn === UserSignInStatus.Authorised
-                    ? <Button color="inherit" onClick={() => signUserOut()}>Logout</Button>
+                    ? <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())}>Logout</Button>
                     : <Link className={styles.cancelLinkStyles} to='/login'>
                         <Button color="inherit">Login</Button>
                     </Link>}

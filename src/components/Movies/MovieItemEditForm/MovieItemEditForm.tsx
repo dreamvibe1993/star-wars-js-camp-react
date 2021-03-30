@@ -29,7 +29,7 @@ import { Movie } from '../../../models/movie';
 import { MovieTransferValueEditForm } from '../../../models/movie-transfer-value-edit-form'
 import { movieEditYupValScheme } from '../../../models/yup-validation-schemas';
 import styles from './MovieItemEditForm.module.css'
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import { setRelevChars, setRelevPlanets, UserSignInStatus } from '../../../store/reducer';
 import { MoviesDTO } from '../../../api/dtos/MovieDTO';
 import { movieDTOMapper } from '../../../api/mappers/mapper';

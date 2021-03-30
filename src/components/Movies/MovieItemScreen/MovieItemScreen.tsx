@@ -32,7 +32,7 @@ import { Params } from '../../../models/query-params'
 
 import { getMovieItemData } from '../../../api/services/load-movies-data-api';
 import { MovieItemDisplayComponent } from '../MovieItemDisplayComponent';
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import { UserSignInStatus } from '../../../store/reducer';
 import { loadMovieItem } from '../../../store/thunks/movies-thunks';
 import { CharacterItemScreen } from '../../Characters/CharacterItemScreen';

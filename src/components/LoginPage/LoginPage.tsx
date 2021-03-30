@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { NavLink, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import TextField from '@material-ui/core/TextField';
 import {
@@ -9,15 +9,16 @@ import {
     createStyles,
     makeStyles,
     Paper,
-    Theme
+    Theme,
+    Typography
 } from '@material-ui/core';
-
-import { signIn } from '../../api/services/auth';
 
 import styles from './LoginPage.module.css'
 import { loginPageYupValScheme } from '../../models/yup-validation-schemas';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
-import { setCommonBackdropOff } from '../../store/reducer';
+import { setCommonBackdropOff, UserSignInStatus } from '../../store/reducer';
+import { signIn } from '../../store/thunks/auth-thunks';
+import { RootState } from '../../store/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -55,7 +56,6 @@ const validationSchema = loginPageYupValScheme;
 /** Login page interface */
 export const LoginPage: React.FC = () => {
     const materialUIStyles = useStyles();
-    const history = useHistory();
     const dispatch = useDispatch();
 
     const formik = useFormik({
@@ -65,21 +65,33 @@ export const LoginPage: React.FC = () => {
         },
         validationSchema,
         onSubmit: (values) => {
-            signIn(values.email, values.password)
-                .then(() => {
-                    dispatch(setCommonBackdropOff());
-                    history.push('/');
-                })
-                .catch((error) => {
-                    dispatch(setCommonBackdropOff());
-                    if (error.code === 'auth/user-not-found') {
-                        formik.setFieldError('email', error.message)
-                    } else if (error.code === 'auth/wrong-password') {
-                        formik.setFieldError('password', error.message)
-                    }
-                })
+            dispatch(signIn({email: values.email, password: values.password}))
         },
     });
+
+    const isUserAuthorized = useSelector((state: RootState) => state.authState.isUserSignedIn)
+    const userEmail = useSelector((state: RootState) => state.authState.userEmail)
+    const passwordErrorMessage = useSelector((state: RootState) => state.authState.passwordErrorCodeMsg)
+    const emailErrorMessage = useSelector((state: RootState) => state.authState.emailErrorCodeMsg)
+
+
+    useEffect(() => {
+        if (passwordErrorMessage) {
+            formik.setFieldError('password', passwordErrorMessage)
+        }
+        if (emailErrorMessage) {
+            formik.setFieldError('email', emailErrorMessage)
+        }
+    }, [passwordErrorMessage, emailErrorMessage])
+
+    if (isUserAuthorized === UserSignInStatus.Authorised) {
+        return (
+            <Paper>
+                You are already logged in as {userEmail}
+                <Button>Log out</Button>
+            </Paper>
+        )
+    }
 
     return (
         <div className={styles.fullWidth}>
@@ -113,6 +125,9 @@ export const LoginPage: React.FC = () => {
                     </Button>
                 </Paper>
             </form>
+            <Typography color="textSecondary" variant="subtitle1">
+                Don't have an account yet? <NavLink style={{color: "yellow"}} to="/register">Register!</NavLink>
+            </Typography>
         </div>
     )
 }

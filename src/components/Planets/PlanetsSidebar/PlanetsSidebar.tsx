@@ -21,7 +21,7 @@ import { Params } from '../../../models/query-params'
 import styles from './PlanetsSidebar.module.css'
 import { NAVBAR_HEIGHT , ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../../store/reducer';
 import { lazyloadMorePlanets } from '../../../store/thunks/planets-thunks';
 import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';

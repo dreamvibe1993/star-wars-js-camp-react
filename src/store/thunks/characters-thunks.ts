@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CharacterDTO } from "../../api/dtos/CharacterDTO";
 import { mapCharacter } from "../../api/mappers/mapper";
 import * as CharactersDataAPI from '../../api/services/load-characters-data-api'
-import { RootState } from "../store";
+import { RootState } from "../reducer";
 
 export const lazyloadMoreCharacters = createAsyncThunk(
     'charactersStore/llMoreChars',

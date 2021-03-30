@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, PayloadAction, combineReducers } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction, combineReducers, configureStore } from '@reduxjs/toolkit'
 // import { loadCharactersData, loadMoreCharactersItems } from '../api/services/load-characters-data';
 import { Character } from '../models/character';
 import { Movie } from '../models/movie';
@@ -8,6 +8,7 @@ import { AuthStateRootState, CharactersStore, ComponentsRootState, MoviesStore, 
 import { lazyloadMoreCharacters, loadCharacterItem } from './thunks/characters-thunks';
 import { addMovieEntry, deleteMovieEntry, editMovieEntry, loadDataToAddWhenCreating, loadMovieItem, searchMovieEntry } from './thunks/movies-thunks';
 import { lazyloadMorePlanets, loadPlanetItem } from './thunks/planets-thunks';
+import { signIn, signCurrentUserOut } from './thunks/auth-thunks';
 
 
 const moviesStoreReducer = createSlice({
@@ -61,7 +62,7 @@ const moviesStoreReducer = createSlice({
             })
             .addCase(addMovieEntry.pending, (state) => {
                 state.isEntityBeingAdded = true;
-            })  
+            })
             .addCase(addMovieEntry.fulfilled, (state) => {
                 state.isEntityBeingAdded = false;
             })
@@ -278,6 +279,9 @@ const authStateReducer = createSlice({
     name: 'authState',
     initialState: {
         isUserSignedIn: UserSignInStatus.Pending,
+        passwordErrorCodeMsg: null,
+        emailErrorCodeMsg: null,
+        userEmail: null,
     } as AuthStateRootState,
     reducers: {
         signUserIn: (state) => {
@@ -286,12 +290,36 @@ const authStateReducer = createSlice({
         signUserOut: (state) => {
             state.isUserSignedIn = UserSignInStatus.Unauthorised
         },
+        setPassErrMsg: (state, action) => {
+            state.passwordErrorCodeMsg = action.payload
+        },
+        setEmailErrMsg: (state, action) => {
+            state.emailErrorCodeMsg = action.payload
+        },
+        setUserEmailString: (state, action) => {
+            state.userEmail = action.payload
+        }
     },
+    extraReducers: builder => {
+        builder
+            .addCase(signIn.fulfilled, (state) => {
+                state.isUserSignedIn = UserSignInStatus.Authorised
+            })
+            .addCase(signIn.rejected, (state) => {
+                state.isUserSignedIn = UserSignInStatus.Unauthorised
+            })
+            .addCase(signCurrentUserOut.fulfilled, state => {
+                state.isUserSignedIn = UserSignInStatus.Unauthorised
+            })
+    }
 })
 
 export const {
     signUserIn,
     signUserOut,
+    setPassErrMsg,
+    setEmailErrMsg,
+    setUserEmailString
 } = authStateReducer.actions;
 
 export const reducer = combineReducers({
@@ -301,4 +329,8 @@ export const reducer = combineReducers({
     charactersStore: charactersStoreReducer.reducer,
     authState: authStateReducer.reducer,
 })
+
+export const store = configureStore({ reducer });
+
+export type RootState = ReturnType<typeof store.getState>
 

@@ -13,7 +13,7 @@ import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './DeletionConfirmationModal.module.css'
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import { setDeletionModalClose } from '../../../store/reducer';
 import { deleteMovieEntry } from '../../../store/thunks/movies-thunks';
 import { Redirect } from 'react-router-dom';

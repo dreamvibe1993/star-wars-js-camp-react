@@ -21,7 +21,7 @@ import { Params } from '../../../models/query-params'
 import styles from './CharactersSidebar.module.css'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import {
     setCommonBackdropOn,
     setCommonBackdropOff,

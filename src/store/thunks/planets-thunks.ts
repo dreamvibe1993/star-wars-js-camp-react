@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { PlanetDTO } from "../../api/dtos/PlanetDTO";
 import { mapPlanet } from "../../api/mappers/mapper";
 import * as PlanetsDataApi from '../../api/services/load-planets-data-api'
-import { RootState } from "../store";
+import { RootState } from "../reducer";
 
 export const lazyloadMorePlanets = createAsyncThunk(
     'planetsStore/llMorePlanets',

@@ -33,7 +33,7 @@ import styles from './CreateMovieItemScreen.module.css';
 import { createMovieItemYupValScheme } from '../../../models/yup-validation-schemas';
 import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../constants/sizing-constants';
 import { MovieTransferValueCreateForm } from '../../../models/movies-transfer-value-create-form';
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import { setCommonBackdropOff, setCommonBackdropOn } from '../../../store/reducer';
 import { addMovieEntry, loadDataToAddWhenCreating } from '../../../store/thunks/movies-thunks';
 import { movieDTOMapper } from '../../../api/mappers/mapper';

@@ -20,7 +20,7 @@ import { ErrorScreen } from './components/ErrorScreen';
 import { UserSignInStatus } from './store/reducer'
 
 import { getSignInStatus } from './api/services/auth';
-import { RootState } from './store/store';
+import { RootState } from './store/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

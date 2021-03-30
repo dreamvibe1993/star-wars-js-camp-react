@@ -1,8 +1,23 @@
 import firebase from "firebase/app";
 import { firebaseApp } from '../firebase';
 
-import { store } from '../../store/store';
-import { signUserIn, signUserOut, setCommonBackdropOn } from "../../store/reducer";
+import { signUserIn, setCommonBackdropOn, setUserEmailString } from "../../store/reducer";
+import { store } from '../../store/reducer';
+import { signCurrentUserOut } from "../../store/thunks/auth-thunks";
+
+// export const registerUser = (email: string, password: string): void => {
+//   firebaseApp.auth().createUserWithEmailAndPassword(email, password)
+//     .then((userCredential) => {
+//       // Signed in 
+//       var user = userCredential.user;
+//       // ...
+//     })
+//     .catch((error) => {
+//       var errorCode = error.code;
+//       var errorMessage = error.message;
+//       // ..
+//     });
+// }
 
 /** Checking if user is signed in or out. */
 export const getSignInStatus = (): void => {
@@ -10,8 +25,10 @@ export const getSignInStatus = (): void => {
     // the observer is only triggered on sign-in or sign-out.
     if (user) {
       store.dispatch(signUserIn());
+      store.dispatch(setUserEmailString(user.email))
     } else {
-      store.dispatch(signUserOut());
+      store.dispatch(signCurrentUserOut());
+      store.dispatch(setUserEmailString(null))
     }
   })
 };
@@ -21,16 +38,11 @@ export const getSignInStatus = (): void => {
  * @param email User's email
  * @param password User's password
  */
-export const signIn = (email: string, password: string): Promise<firebase.auth.UserCredential> => {
-  store.dispatch(setCommonBackdropOn());
-  return firebaseApp
+export const userSignIn = (email: string, password: string): Promise<firebase.auth.UserCredential> => firebaseApp
     .auth()
-    .signInWithEmailAndPassword(email, password)
-};
+    .signInWithEmailAndPassword(email, password);
 
 /** Signing a user out. */
-export const signOut = (): Promise<void> => firebaseApp
-    .auth()
-    .signOut();
-
+export const userSignOut = (): Promise<void> => firebaseApp
+  .auth().signOut();
 

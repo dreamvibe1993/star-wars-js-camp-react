@@ -20,7 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { Params } from '../../../models/query-params'
 
 // import { loadCharacterItemData } from '../../api/services/load-characters-data-api';
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../store/reducer';
 import { loadCharacterItem } from '../../../store/thunks/characters-thunks';
 
 const useStyles = makeStyles(() =>
