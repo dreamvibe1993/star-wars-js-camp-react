@@ -123,9 +123,6 @@ export const WelcomeScreen: React.FC = () => {
                     <Button color="inherit" onClick={handleOpen} size="small">
                         About
                     </Button>
-                    <Button color="inherit" size="small">
-                        Log in
-                    </Button>
                 </CardActions>
             </Card>
         </>

@@ -5,19 +5,7 @@ import { signUserIn, setCommonBackdropOn, setUserEmailString } from "../../store
 import { store } from '../../store/reducer';
 import { signCurrentUserOut } from "../../store/thunks/auth-thunks";
 
-// export const registerUser = (email: string, password: string): void => {
-//   firebaseApp.auth().createUserWithEmailAndPassword(email, password)
-//     .then((userCredential) => {
-//       // Signed in 
-//       var user = userCredential.user;
-//       // ...
-//     })
-//     .catch((error) => {
-//       var errorCode = error.code;
-//       var errorMessage = error.message;
-//       // ..
-//     });
-// }
+export const createUser = (email: string, password: string): Promise<firebase.auth.UserCredential> => firebaseApp.auth().createUserWithEmailAndPassword(email, password)
 
 /** Checking if user is signed in or out. */
 export const getSignInStatus = (): void => {

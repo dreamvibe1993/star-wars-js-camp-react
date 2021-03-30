@@ -1,29 +1,13 @@
-import React, { useEffect } from 'react';
+import { makeStyles, Theme, createStyles, Paper, TextField, Button, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
-import { NavLink } from 'react-router-dom';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import TextField from '@material-ui/core/TextField';
-import {
-    Button,
-    Card,
-    CardActionArea,
-    CardActions,
-    CardContent,
-    CardMedia,
-    createStyles,
-    makeStyles,
-    Paper,
-    Theme,
-    Typography
-} from '@material-ui/core';
-
-import styles from './LoginPage.module.css'
-import { loginPageYupValScheme } from '../../models/yup-validation-schemas';
+import { NavLink, Redirect } from 'react-router-dom';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
-import { UserSignInStatus } from '../../store/reducer';
-import { signCurrentUserOut, signIn } from '../../store/thunks/auth-thunks';
-import { RootState } from '../../store/reducer';
+import { accCreateYupValScheme } from '../../models/yup-validation-schemas';
+import { RootState, UserSignInStatus } from '../../store/reducer';
+import { createUserAccount, signIn } from '../../store/thunks/auth-thunks';
+import styles from './RegistrationPage.module.css'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -59,78 +43,40 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const validationSchema = loginPageYupValScheme;
+const validationSchema = accCreateYupValScheme;
 
-/** Login page interface */
-export const LoginPage: React.FC = () => {
+export const RegistrationPage: React.FC = () => {
     const materialUIStyles = useStyles();
     const dispatch = useDispatch();
-
+    const isUserAuthorized = useSelector((state: RootState) => state.authState.isUserSignedIn)
     const formik = useFormik({
         initialValues: {
             email: '',
             password: '',
+            repeatPassword: '',
         },
         validationSchema,
         onSubmit: (values) => {
-            dispatch(signIn({ email: values.email, password: values.password }))
+            if (values.password !== values.repeatPassword) {
+                formik.setFieldError('password', 'Passwords don\'t match!')
+            }
+            dispatch(createUserAccount({ email: values.email, password: values.password }))
         },
     });
-
-    const isUserAuthorized = useSelector((state: RootState) => state.authState.isUserSignedIn)
-    const userEmail = useSelector((state: RootState) => state.authState.userEmail)
-    const passwordErrorMessage = useSelector((state: RootState) => state.authState.passwordErrorCodeMsg)
-    const emailErrorMessage = useSelector((state: RootState) => state.authState.emailErrorCodeMsg)
-
-
-    useEffect(() => {
-        if (passwordErrorMessage) {
-            formik.setFieldError('password', passwordErrorMessage)
-        }
-        if (emailErrorMessage) {
-            formik.setFieldError('email', emailErrorMessage)
-        }
-    }, [passwordErrorMessage, emailErrorMessage])
-
     if (isUserAuthorized === UserSignInStatus.Authorised) {
-        return (
-            <div className={styles.thirdWidth}>
-                <Card>
-                    <CardActionArea>
-                        <CardMedia
-                            className={materialUIStyles.media}
-                            image='https://i.pinimg.com/736x/66/51/fb/6651fbdbd1891d94bb29ba120c8d315c.jpg'
-                            title="Welcome"
-                        />
-                        <CardContent>
-                            <Typography component="h2" variant="h5" gutterBottom>
-                                Welcome {userEmail}!
-                            </Typography>
-                            <Typography color="textSecondary" component="p" variant="body2">
-                                We are glad to meet you.
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                    <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
-                        <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())} size="small">
-                            Log out
-                        </Button>
-                    </CardActions>
-                </Card>
-            </div>
-        )
+        return <Redirect to="/login" />
     }
-
     return (
         <div className={styles.fullWidth}>
             <form className={styles.thirdWidth} onSubmit={formik.handleSubmit}>
                 <Paper className={styles.flexColumn}>
+                    <Typography component="h2" style={{marginTop: '15px'}} variant="h4">Create an account</Typography>
                     <TextField
                         className={materialUIStyles.spacing}
                         error={formik.touched.email && Boolean(formik.errors.email)}
                         helperText={formik.touched.email && formik.errors.email}
                         id="email"
-                        label="Email"
+                        label="Type your email"
                         name="email"
                         onChange={formik.handleChange}
                         value={formik.values.email}
@@ -141,20 +87,32 @@ export const LoginPage: React.FC = () => {
                         error={formik.touched.password && Boolean(formik.errors.password)}
                         helperText={formik.touched.password && formik.errors.password}
                         id="password"
-                        label="Password"
+                        label="Type your password"
                         name="password"
                         onChange={formik.handleChange}
                         type="password"
                         value={formik.values.password}
                         variant="outlined"
                     />
+                    <TextField
+                        className={materialUIStyles.spacing}
+                        error={formik.touched.repeatPassword && Boolean(formik.errors.repeatPassword)}
+                        helperText={formik.touched.repeatPassword && formik.errors.repeatPassword}
+                        id="repeatPassword"
+                        label="Repeat your password"
+                        name="repeatPassword"
+                        onChange={formik.handleChange}
+                        type="password"
+                        value={formik.values.repeatPassword}
+                        variant="outlined"
+                    />
                     <Button className={materialUIStyles.spacing} color="primary" type="submit" variant="contained">
                         Submit
-                    </Button>
+                </Button>
                 </Paper>
             </form>
             <Typography color="textSecondary" variant="subtitle1">
-                Don't have an account yet? <NavLink style={{ color: "yellow" }} to="/register">Create an account!</NavLink>
+                Already have an account? <NavLink style={{ color: "yellow" }} to="/login">Log in!</NavLink>
             </Typography>
         </div>
     )

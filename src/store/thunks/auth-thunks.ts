@@ -27,3 +27,10 @@ export const signCurrentUserOut = createAsyncThunk(
         await AuthAPI.userSignOut()
     }
 )
+
+export const createUserAccount = createAsyncThunk(
+    'auth/create',
+    async ({email, password}: UserCredentials) => {
+        await AuthAPI.createUser(email, password)
+    }
+)

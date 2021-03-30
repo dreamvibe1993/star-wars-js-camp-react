@@ -37,6 +37,22 @@ export const loginPageYupValScheme = yup.object({
         .required('Password is required'),
 });
 
+/** Yup validation scheme of create an account form */
+export const accCreateYupValScheme = yup.object({
+    email: yup
+        .string()
+        .email('Enter a valid email')
+        .required('Email is required'),
+    password: yup
+        .string()
+        .min(6, 'Password should be of minimum 6 characters length')
+        .required('Password is required'),
+    repeatPassword: yup
+        .string()
+        .min(6, 'Password should be of minimum 6 characters length')
+        .required('Please repeat your password'),
+});
+
 /** Yup validation scheme of edit movie form */
 export const movieEditYupValScheme = yup.object({
     title: yup

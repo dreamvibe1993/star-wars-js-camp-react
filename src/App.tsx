@@ -21,6 +21,7 @@ import { UserSignInStatus } from './store/reducer'
 
 import { getSignInStatus } from './api/services/auth';
 import { RootState } from './store/reducer';
+import { RegistrationPage } from './components/RegistrationPage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -122,6 +123,9 @@ export const App: React.FC = () => {
             </Route>
             <Route path="/error">
               <ErrorScreen />
+            </Route>
+            <Route path="/register">
+              <RegistrationPage />
             </Route>
           </React.Fragment>}
         </main>
