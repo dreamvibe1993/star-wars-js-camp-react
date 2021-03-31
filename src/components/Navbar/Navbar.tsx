@@ -120,6 +120,7 @@ export const Navbar: React.FC<Props> = ({
     }, [redirectLink])
     /** Hook that checks an url and sets the slider accordingly */
     useEffect(() => {
+
         if (location.pathname.includes('/films')) {
             setValue(0)
             setDrawerState(true)
@@ -152,15 +153,15 @@ export const Navbar: React.FC<Props> = ({
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn);
 
     const [toggler, setToggler] = React.useState<boolean>(true);
-    
-      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setToggler(event.target.checked);
         dispatch(setThemingMode(event.target.checked))
-      };
+    };
 
     const themingMode = useSelector((state: RootState) => state.componentsState.mode)
 
-    
+
     return (
         <AppBar
             className={clsx(materialUIStyles.appBar)}
@@ -173,7 +174,7 @@ export const Navbar: React.FC<Props> = ({
                     <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
                 </Tabs>
                 <Typography className={styles.title} variant="h6">
-                    <Link className={styles.cancelLinkStyles} to="/"><Logo color={themingMode ? '#fff200' : '#fff'}/></Link>
+                    <Link className={styles.cancelLinkStyles} to="/"><Logo color={themingMode ? '#fff200' : '#fff'} /></Link>
                 </Typography>
 
                 <div>

@@ -105,7 +105,7 @@ export const App: React.FC = () => {
     },
   });
 
-  const mediaQueryMatch = useMediaQuery('(min-width:768px)')
+
 
   return (
     <div className="App">
@@ -113,7 +113,7 @@ export const App: React.FC = () => {
         <CssBaseline>
 
           <DrawerContext.Provider value={drawerContextValue}>
-            {mediaQueryMatch && <Navbar setDrawerState={changeDrawerState} />}
+            <Navbar setDrawerState={changeDrawerState} />
             <main
               className={clsx(materialUIStyles.content, {
                 [materialUIStyles.contentShift]: open,
