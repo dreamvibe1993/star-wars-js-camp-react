@@ -26,17 +26,16 @@ import {
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
-
+import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../constants/sizing-constants';
 import { Character } from '../../../models/character';
 import { Planet } from '../../../models/planet';
 import styles from './CreateMovieItemScreen.module.css';
 import { createMovieItemYupValScheme } from '../../../models/yup-validation-schemas';
-import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../constants/sizing-constants';
-import { RootState } from '../../../store/reducer';
+import { Movie } from '../../../models/movie';
+import { RootState } from '../../../store/thunks/store';
 
 import { addMovieEntry, loadDataToAddWhenCreating } from '../../../store/thunks/movies-thunks';
 import { movieDTOMapper } from '../../../api/mappers/mapper';
-import { Movie } from '../../../models/movie';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -107,7 +106,6 @@ function getStyles(name: string, characterNames: string[], theme: Theme) {
 /** Component that provides an interface to create a movie entry */
 export const CreateMovieItemScreen: React.FC = () => {
     const theme = useTheme();
-    const history = useHistory();
     const dispatch = useDispatch();
     /** Styles that are more superior than module.css */
     const materialUIStyles = useStyles();
@@ -298,7 +296,6 @@ export const CreateMovieItemScreen: React.FC = () => {
                                             </FormControl>
                                             <FormControl className={materialUIStyles.formControl} >
                                                 <InputLabel id="mutiple-chip-label">Planets to add</InputLabel>
-
                                                 <Select
                                                     id="select-planets-to-add"
                                                     input={<Input id="select-planets-to-add" />}

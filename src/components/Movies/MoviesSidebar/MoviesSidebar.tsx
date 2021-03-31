@@ -16,12 +16,11 @@ import { MovieItemScreen } from '../MovieItemScreen';
 import { WelcomeScreen } from '../../WelcomeScreen';
 import { Params } from '../../../models/query-params'
 import { Sidebar } from '../../Sidebar';
-
 import styles from './MoviesSidebar.module.css'
-import { RootState , UserSignInStatus } from '../../../store/reducer';
+import { RootState } from '../../../store/thunks/store';
 
-import { movieSidebarSnapshotTeardown, subscribeToMovies } from '../../../store/thunks/movies-thunks';
-
+import { UserSignInStatus } from '../../../store/thunks/auth-thunks';
+import { subscribeToMovies } from '../../../store/thunks/movies-thunks';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -63,7 +62,7 @@ export const MoviesSidebar: React.FC<Props> = ({setDrawerState}) => {
     }, [])
     
     const createEntryButton = (
-        < >
+        <>
             <Divider />
             <ListItem component={NavLink} to="/create-film-entry" button divider>
                 <ListItemText primary="Create an entry" />

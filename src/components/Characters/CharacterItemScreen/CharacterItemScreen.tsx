@@ -20,9 +20,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { Params } from '../../../models/query-params'
 
-// import { loadCharacterItemData } from '../../api/services/load-characters-data-api';
-import { RootState } from '../../../store/reducer';
 import { loadCharacterItem } from '../../../store/thunks/characters-thunks';
+import { RootState } from '../../../store/thunks/store';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -107,7 +106,6 @@ export const CharacterItemScreen: React.FC = () => {
                         />
                     </CardActionArea>
                 </Card>
-                {/* <img alt="image" className={materialUIStyles.imgContainer} src={ } /> */}
                 <Table className={materialUIStyles.table} size="medium">
                     <TableBody>
                         <TableRow >
@@ -146,8 +144,4 @@ export const CharacterItemScreen: React.FC = () => {
                 </Table>
             </TableContainer>
     );
-
 }
-
-
-

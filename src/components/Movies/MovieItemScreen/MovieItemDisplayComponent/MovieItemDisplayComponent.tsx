@@ -21,10 +21,10 @@ import {
 import { Movie } from '../../../../models/movie';
 import { DeletionConfirmationModal } from '../../DeletionConfirmationModal';
 import styles from '../MovieItemScreen.module.css'
-import { RootState , UserSignInStatus, setDeletionModalOpen } from '../../../../store/reducer';
+import { RootState } from '../../../../store/thunks/store';
 
-
-
+import { UserSignInStatus } from '../../../../store/thunks/auth-thunks';
+import { setDeletionModalOpen } from '../../../../store/thunks/components-thunks';
 
 interface Props {
     movie: Movie;
@@ -85,7 +85,7 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
             search: `edit=1`,
         })
     }
-
+    
     return (
         <>
             <DeletionConfirmationModal movieID={movie.docId} />

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import {
     makeStyles,
@@ -10,12 +12,10 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { Button } from '@material-ui/core';
 
-import { useDispatch, useSelector } from 'react-redux';
-
-import { Redirect } from 'react-router-dom';
 import styles from './DeletionConfirmationModal.module.css'
-import { RootState , setDeletionModalClose } from '../../../store/reducer';
+import { RootState } from '../../../store/thunks/store';
 
+import { setDeletionModalClose } from '../../../store/thunks/components-thunks';
 import { deleteMovieEntry } from '../../../store/thunks/movies-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>

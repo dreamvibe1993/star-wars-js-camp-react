@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 
@@ -16,8 +16,8 @@ import {
 
 import { Params } from '../../../models/query-params';
 
-import { RootState } from '../../../store/reducer';
 import { loadPlanetItem } from '../../../store/thunks/planets-thunks';
+import { RootState } from '../../../store/thunks/store';
 
 const useStyles = makeStyles(() =>
     createStyles({

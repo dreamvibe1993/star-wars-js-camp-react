@@ -24,11 +24,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { MovieItemEditForm } from './MovieItemEditForm'
 import { Params } from '../../../models/query-params'
+import { RootState } from '../../../store/thunks/store';
 
 import { MovieItemDisplayComponent } from './MovieItemDisplayComponent';
-import { RootState, UserSignInStatus } from '../../../store/reducer';
-
+import { UserSignInStatus } from '../../../store/thunks/auth-thunks';
 import { loadMovieItem } from '../../../store/thunks/movies-thunks';
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -113,7 +114,6 @@ export const MovieItemScreen: React.FC = () => {
         dispatch(loadMovieItem(queryParam.id))
     }, [queryParam.id])
 
-
     if (isMovieLoadingPending) {
         return (
             <>
@@ -128,7 +128,6 @@ export const MovieItemScreen: React.FC = () => {
     if (!movie && !isMovieLoadingPending) {
         return <Redirect to="/not-found" />
     }
-
 
     /** If a user decides to see an info about a relevant character pastes a link of such */
     function renderCharacInfo(charID: string) {
@@ -179,11 +178,9 @@ export const MovieItemScreen: React.FC = () => {
                 </Grid>
             </AccordionDetails>
         </Accordion>
-
-
     )
-    const relevantPlanetsJSX = (
 
+    const relevantPlanetsJSX = (
         <Accordion className={materialUIStyles.jsxAccorderons}>
             <AccordionSummary
                 aria-controls="panel1a-content"
@@ -231,7 +228,6 @@ export const MovieItemScreen: React.FC = () => {
             {relevantPlanets && relevantPlanetsJSX}
         </>
     );
-
 
     if (isUserSignedIn === UserSignInStatus.Unauthorised && edit) {
         return (

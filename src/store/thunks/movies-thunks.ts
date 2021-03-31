@@ -1,31 +1,49 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+/* eslint-disable no-param-reassign */
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CharacterDTO } from "../../api/dtos/CharacterDTO";
 import { MoviesDTO } from "../../api/dtos/MovieDTO";
-import { mapCharacter, mapMovie, mapPlanet, movieDTOMapper } from "../../api/mappers/mapper";
+import { PlanetDTO } from "../../api/dtos/PlanetDTO";
+import { mapMovie, mapCharacter, mapPlanet } from "../../api/mappers/mapper";
+import { Character } from "../../models/character";
+import { Planet } from "../../models/planet";
 import * as MoviesDataAPI from '../../api/services/load-movies-data-api'
 import * as CharactersDataAPI from '../../api/services/load-characters-data-api'
 import * as PlanetsDataAPI from '../../api/services/load-planets-data-api'
 
-import { setCharacters, setMovies, setPlanets , RootState } from "../reducer";
+import { Movie } from "../../models/movie";
+import { setCharacters } from "./characters-thunks";
+import { setPlanets } from "./planets-thunks";
+import { RootState } from "./store";
 
-import { PlanetDTO } from "../../api/dtos/PlanetDTO";
-import { CharacterDTO } from "../../api/dtos/CharacterDTO";
+
+/** Movies store */
+export interface MoviesStore {
+    /** Movies that are disp. in the sidebar */
+    movies: Movie[];
+    /** Rel. charaters of a movie item */
+    relevantCharacters: Character[] | null;
+    /** Rel. planets of a movie item */
+    relevantPlanets: Planet[] | null;
+    /** Movie item to display */
+    movieItem: Movie | null;
+
+    isMovieLoadingPending: boolean;
+
+    areEntitiesLoading: boolean;
+
+    isEntityBeingAdded: boolean;
+
+    isEntityBeingDeleted: boolean;
+
+    redirectLink: string | null;
+
+    areMovieEntitiesLoaded: boolean;
+}
 
 // eslint-disable-next-line import/no-mutable-exports
 export let movieSidebarSnapshotTeardown: null | (() => void);
 
-export const subscribeToMovies = createAsyncThunk(
-    'movies/loadMovs',
-    async (id, thunkAPI) => {
-        const moviesCollection = MoviesDataAPI.getMoviesCollection()
-        movieSidebarSnapshotTeardown = moviesCollection.onSnapshot(
-            (querySnapshot) => {
-                const movies = querySnapshot.docs.map(movie => mapMovie(movie.data() as MoviesDTO, movie.id))
-                thunkAPI.dispatch(setMovies(movies))
-            },
-            (error) => console.error(error)
-        )
-    },
-)
+
 
 export const loadMovieItem = createAsyncThunk(
     'movies/loadMovItem',
@@ -100,4 +118,108 @@ export const searchMovieEntry = createAsyncThunk(
         } 
             return '/not-found'
     }
+)
+
+export const moviesStoreReducer = createSlice({
+    name: 'moviesStore',
+    initialState: {
+        movies: [],
+        relevantCharacters: [],
+        relevantPlanets: [],
+        movieItem: null,
+        isMovieLoadingPending: true,
+        areEntitiesLoading: false,
+        isEntityBeingAdded: false,
+        isEntityBeingDeleted: false,
+        redirectLink: null,
+        areMovieEntitiesLoaded: false,
+    } as MoviesStore,
+    reducers: {
+        setMovies: (state, action: PayloadAction<Movie[]>) => {
+            if (action.payload) {
+                state.movies = action.payload;
+                state.areMovieEntitiesLoaded = true;
+            }
+            
+        },
+        setRelevChars: (state, action: PayloadAction<Character[] | null>) => {
+            state.relevantCharacters = action.payload;
+        },
+        setRelevPlanets: (state, action: PayloadAction<Planet[] | null>) => {
+            state.relevantPlanets = action.payload;
+        },
+        setMovieItem: (state, action: PayloadAction<Movie>) => {
+            state.movieItem = action.payload
+        },
+        flushMovieItem: state => {
+            state.movieItem = null
+        },
+        setMovieLoadingPending: (state, action) => {
+            state.isMovieLoadingPending = action.payload
+        }
+    },
+    extraReducers: builder => {
+        builder
+        .addCase(loadMovieItem.fulfilled, (state, action) => {
+        state.isMovieLoadingPending = false;
+                if (action.payload) {
+                    state.movieItem = action.payload.movie
+                    state.relevantCharacters = action.payload.relevantCharacters
+                    state.relevantPlanets = action.payload.relevantPlanets
+                }
+            })
+            .addCase(loadDataToAddWhenCreating.pending, (state) => {
+                state.areEntitiesLoading = true;
+            })
+            .addCase(loadDataToAddWhenCreating.fulfilled, (state) => {
+                state.areEntitiesLoading = false;
+            })
+            .addCase(loadDataToAddWhenCreating.rejected, (state) => {
+                state.areEntitiesLoading = false;
+            })
+            .addCase(addMovieEntry.pending, (state) => {
+                state.isEntityBeingAdded = true;
+            })
+            .addCase(addMovieEntry.fulfilled, (state) => {
+                state.isEntityBeingAdded = false;
+            })
+            .addCase(editMovieEntry.fulfilled, (state, action) => {
+                state.movieItem = action.payload
+            })
+            .addCase(deleteMovieEntry.pending, (state) => {
+                state.isEntityBeingDeleted = true
+            })
+            .addCase(deleteMovieEntry.fulfilled, (state) => {
+                state.movieItem = null
+                state.isEntityBeingDeleted = false
+                state.isMovieLoadingPending = true
+            })
+            .addCase(searchMovieEntry.pending, (state) => {
+                state.redirectLink = null
+            })
+            .addCase(searchMovieEntry.fulfilled, (state, action) => {
+                state.redirectLink = action.payload
+            })
+            .addCase(searchMovieEntry.rejected, (state) => {
+                state.redirectLink = `/not-found`
+            })
+    }
+
+
+})
+
+export const { setMovies, setRelevChars, setRelevPlanets, setMovieItem, flushMovieItem, setMovieLoadingPending } = moviesStoreReducer.actions
+
+export const subscribeToMovies = createAsyncThunk(
+    'movies/loadMovs',
+    async (id, thunkAPI) => {
+        const moviesCollection = MoviesDataAPI.getMoviesCollection()
+        movieSidebarSnapshotTeardown = moviesCollection.onSnapshot(
+            (querySnapshot) => {
+                const movies = querySnapshot.docs.map(movie => mapMovie(movie.data() as MoviesDTO, movie.id))
+                thunkAPI.dispatch(setMovies(movies))
+            },
+            (error) => console.error(error)
+        )
+    },
 )

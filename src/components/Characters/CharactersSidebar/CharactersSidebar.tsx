@@ -20,16 +20,9 @@ import { CharacterItemScreen } from '../CharacterItemScreen';
 import { Params } from '../../../models/query-params'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
-import { RootState ,
-    setCommonBackdropOn,
-    setCommonBackdropOff,
-    setNumberOfItemsDisplayCharacters,
-    addItemsToDisplayCharacters,
-    discardCharactersItemsAmmount,
-} from '../../../store/reducer';
-
-import { lazyloadMoreCharacters } from '../../../store/thunks/characters-thunks'
+import { addItemsToDisplayCharacters, discardCharactersItemsAmmount, lazyloadMoreCharacters, setNumberOfItemsDisplayCharacters } from '../../../store/thunks/characters-thunks'
 import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';
+import { RootState } from '../../../store/thunks/store';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -113,9 +106,8 @@ export const CharactersSidebar: React.FC<Props> = ({setDrawerState}) => {
         })
     }, [dispatch])
 
-
     return (
-        < >
+        <>
             <Sidebar setDrawerState={setDrawerState}>
                 <div ref={scrollRef} className={materialUIStyles.drawerContainer}>
                     <List>

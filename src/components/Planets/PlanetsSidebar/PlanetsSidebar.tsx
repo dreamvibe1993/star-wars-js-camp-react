@@ -20,11 +20,10 @@ import { PlanetsItemScreen } from '../PlanetsItemScreen';
 import { Params } from '../../../models/query-params'
 import styles from './PlanetsSidebar.module.css'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
+import { RootState } from '../../../store/thunks/store';
 
-import { RootState , setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../../store/reducer';
-
-import { lazyloadMorePlanets } from '../../../store/thunks/planets-thunks';
 import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';
+import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, lazyloadMorePlanets, discardPlanetsItemsAmmount } from '../../../store/thunks/planets-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

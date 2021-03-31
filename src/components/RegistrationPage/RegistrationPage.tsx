@@ -1,13 +1,24 @@
-import { makeStyles, Theme, createStyles, Paper, TextField, Button, Typography } from '@material-ui/core';
-import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
+import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
+
+import { 
+    makeStyles, 
+    Theme, 
+    createStyles, 
+    Paper, 
+    TextField, 
+    Button, 
+    Typography 
+} from '@material-ui/core';
+
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
-import { accCreateYupValScheme } from '../../models/yup-validation-schemas';
-import { RootState, UserSignInStatus } from '../../store/reducer';
-import { createUserAccount, signIn } from '../../store/thunks/auth-thunks';
 import styles from './RegistrationPage.module.css'
+import { accCreateYupValScheme } from '../../models/yup-validation-schemas';
+import { RootState } from '../../store/thunks/store';
+
+import { createUserAccount, UserSignInStatus } from '../../store/thunks/auth-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

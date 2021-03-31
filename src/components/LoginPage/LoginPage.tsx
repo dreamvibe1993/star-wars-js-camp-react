@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { NavLink } from 'react-router-dom';
@@ -20,9 +21,9 @@ import {
 
 import { loginPageYupValScheme } from '../../models/yup-validation-schemas';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
-import { UserSignInStatus , RootState } from '../../store/reducer';
-import { signCurrentUserOut, signIn } from '../../store/thunks/auth-thunks';
 
+import { signCurrentUserOut, signIn, UserSignInStatus } from '../../store/thunks/auth-thunks';
+import { RootState } from '../../store/thunks/store';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

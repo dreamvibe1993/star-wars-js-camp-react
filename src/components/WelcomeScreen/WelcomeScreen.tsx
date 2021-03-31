@@ -1,5 +1,21 @@
 import React from 'react';
-import { Backdrop, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, createStyles, Fade, makeStyles, Modal, Paper, Theme, Typography, useMediaQuery } from '@material-ui/core';
+import { 
+    Backdrop, 
+    Button, 
+    Card, 
+    CardActionArea, 
+    CardActions, 
+    CardContent, 
+    CardMedia, 
+    createStyles, 
+    Fade, 
+    makeStyles, 
+    Modal, 
+    Theme, 
+    Typography, 
+    useMediaQuery 
+} from '@material-ui/core';
+
 import { YellowLogo } from '../../imgs/logo';
 
 const useStyles = makeStyles((theme: Theme) =>

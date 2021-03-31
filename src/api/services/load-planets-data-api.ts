@@ -8,9 +8,9 @@ export function getCompletePlanetsCollection(): Promise<firebase.firestore.Query
         .collection('planets')
         .get()
 }
+
 /**
  * Lazyloads parts of planets items and provides the destructor function
- *
  * @param last Last document to restrict the batch
  * @param threshholdNumber General number of planets items to display
  */
@@ -23,7 +23,6 @@ export function getChunkOfPlanetsCollection(last: firebase.firestore.QueryDocume
 
 /**
  * Loads a particular planet's entry
- *
  * @param docID Id of the planet's entry
  */
 export const getPlanetItemDoc = (docID: string): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> => DBRef

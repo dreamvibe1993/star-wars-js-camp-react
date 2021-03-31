@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
     Button,
     Checkbox,
-    CircularProgress,
     createStyles,
     FormControl,
     Input,
@@ -27,17 +26,16 @@ import {
 import Paper from '@material-ui/core/Paper';
 
 import { Movie } from '../../../../models/movie';
-import { MovieTransferValueEditForm } from '../../../../models/movie-transfer-value-edit-form'
-import { movieEditYupValScheme } from '../../../../models/yup-validation-schemas';
-import styles from './MovieItemEditForm.module.css'
-import { RootState , setRelevChars, setRelevPlanets, UserSignInStatus } from '../../../../store/reducer';
-
-import { MoviesDTO } from '../../../../api/dtos/MovieDTO';
-import { movieDTOMapper } from '../../../../api/mappers/mapper';
-import { editMovieEntry, loadDataToAddWhenCreating } from '../../../../store/thunks/movies-thunks';
 import { Planet } from '../../../../models/planet';
-import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../../constants/sizing-constants';
 import { Character } from '../../../../models/character';
+import { movieEditYupValScheme } from '../../../../models/yup-validation-schemas';
+import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../../constants/sizing-constants';
+import styles from './MovieItemEditForm.module.css'
+
+import { movieDTOMapper } from '../../../../api/mappers/mapper';
+import { editMovieEntry, loadDataToAddWhenCreating, setRelevChars, setRelevPlanets } from '../../../../store/thunks/movies-thunks';
+import { UserSignInStatus } from '../../../../store/thunks/auth-thunks';
+import { RootState } from '../../../../store/thunks/store';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -96,7 +94,6 @@ const MenuProps = {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
             width: 100,
-            // whiteSpace: 'normal',
         },
     },
 };
@@ -119,11 +116,9 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
     const [newRelevantCharacters, setNewRelevantCharacters] = React.useState<Character[] | null>(relevantCharacters)
     const [newRelevantPlanets, setNewRelevantPlanets] = React.useState<Planet[] | null>(relevantPlanets)
 
-
     useEffect(() => {
         dispatch(loadDataToAddWhenCreating())
     }, [])
-
 
     /** Variable to check if a user's logged in */
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)

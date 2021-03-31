@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Backdrop, CircularProgress, CssBaseline, createMuiTheme, ThemeProvider, useMediaQuery } from '@material-ui/core';
+import { Backdrop, CssBaseline, createMuiTheme, ThemeProvider, useMediaQuery } from '@material-ui/core';
 
 import './App.css';
 import { Navbar } from './components/Navbar/Navbar';
@@ -16,13 +16,13 @@ import { LoginPage } from './components/LoginPage';
 import { CreateMovieItemScreen } from './components/Movies/CreateMovieItemScreen';
 import { NotFoundScreen } from './components/NotFoundScreen';
 import { DRAWER_WIDTH } from './constants/sizing-constants';
-import { ErrorScreen } from './components/ErrorScreen';
-import { UserSignInStatus , RootState } from './store/reducer'
-
-import { getSignInStatus } from './api/services/auth';
 
 import { RegistrationPage } from './components/RegistrationPage';
 import { Sidebar } from './components/Sidebar';
+import { RootState } from './store/thunks/store';
+import { UserSignInStatus } from './store/thunks/auth-thunks';
+
+import { getSignInStatus } from '.';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -127,10 +127,12 @@ export const App: React.FC = () => {
 
   const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
 
-  const { Pending, Authorised, Unauthorised } = UserSignInStatus
+  const { Pending, Authorised } = UserSignInStatus
+
 
   return (
     <div className="App">
+
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <DrawerContext.Provider value={drawerContextValue}>
@@ -164,9 +166,6 @@ export const App: React.FC = () => {
                   </Route>
                   <Route path="/not-found">
                     <NotFoundScreen />
-                  </Route>
-                  <Route path="/error">
-                    <ErrorScreen />
                   </Route>
                   <Route path="/register">
                     <RegistrationPage />

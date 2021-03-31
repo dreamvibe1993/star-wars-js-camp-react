@@ -1,20 +1,18 @@
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
 import {
-    Button,
     Card,
     CardActionArea,
-    CardActions,
     CardContent,
     CardMedia,
     createStyles,
     makeStyles,
-    Paper,
     Theme,
     Typography
 } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
-import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
-import { setMovieLoadingPending } from '../../store/reducer';
+
+import { setMovieLoadingPending } from '../../store/thunks/movies-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

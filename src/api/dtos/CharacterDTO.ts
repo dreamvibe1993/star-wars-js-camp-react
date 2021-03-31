@@ -1,6 +1,5 @@
-/** Camelcase is disabled because It's needed to return the data back to d_base intact */
 /* eslint-disable camelcase */
-/** Person DTO */
+/** Character DTO */
 export interface CharacterDTO {
   fields: {
     /** Person's birth year */

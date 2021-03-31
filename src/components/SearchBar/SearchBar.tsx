@@ -1,9 +1,18 @@
-import { makeStyles, Theme, createStyles, fade, InputBase } from '@material-ui/core';
-import { SearchIcon } from '@material-ui/data-grid';
-import { useFormik } from 'formik';
 import React from 'react'
 import { useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
+
+import { 
+    makeStyles, 
+    Theme, 
+    createStyles, 
+    fade, 
+    InputBase 
+} from '@material-ui/core';
+
+import { SearchIcon } from '@material-ui/data-grid';
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
+
 import { searchMovieEntry } from '../../store/thunks/movies-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const validationSchema = NavbarSearchYupValScheme;
-
 
 export const SearchBar: React.FC = () => {
     const materialUIStyles = useStyles();

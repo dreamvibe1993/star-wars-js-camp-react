@@ -2,39 +2,32 @@ import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFormik } from 'formik';
 
 import {
     makeStyles,
     Theme,
-    createStyles,
-    fade
+    createStyles
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Switch from '@material-ui/core/Switch';
 
 import { IconButton, useMediaQuery } from '@material-ui/core';
 import { MenuIcon } from '@material-ui/data-grid';
-import PublicIcon from '@material-ui/icons/Public';
-import { setCommonBackdropOff, setCommonBackdropOn, setThemingMode, UserSignInStatus , RootState } from '../../store/reducer';
-import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
 
-import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
-import styles from './Navbar.module.css'
-
-import { Logo } from '../../imgs/logo';
-import { searchMovieEntry } from '../../store/thunks/movies-thunks';
-import { DRAWER_WIDTH } from '../../constants/sizing-constants';
 import { DrawerContext } from '../../App';
-import classes from '*.module.scss';
+import { Logo } from '../../imgs/logo';
+import { DRAWER_WIDTH } from '../../constants/sizing-constants';
+import styles from './Navbar.module.css'
 import { SearchBar } from '../SearchBar';
+import { RootState } from '../../store/thunks/store';
+
+import { UserSignInStatus, signCurrentUserOut } from '../../store/thunks/auth-thunks';
+import { setThemingMode, setCommonBackdropOn, setCommonBackdropOff } from '../../store/thunks/components-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,44 +46,6 @@ const useStyles = makeStyles((theme: Theme) =>
                 duration: theme.transitions.duration.enteringScreen,
             }),
         },
-        // searchIcon: {
-        //     padding: theme.spacing(0, 2),
-        //     height: '100%',
-        //     position: 'absolute',
-        //     pointerEvents: 'none',
-        //     display: 'flex',
-        //     alignItems: 'center',
-        //     justifyContent: 'center',
-        // },
-        // search: {
-        //     position: 'relative',
-        //     borderRadius: theme.shape.borderRadius,
-        //     backgroundColor: fade(theme.palette.common.white, 0.15),
-        //     '&:hover': {
-        //         backgroundColor: fade(theme.palette.common.white, 0.25),
-        //     },
-        //     marginLeft: 0,
-        //     width: '100%',
-        //     [theme.breakpoints.up('sm')]: {
-        //         marginLeft: theme.spacing(1),
-        //         width: 'auto',
-        //     },
-        // },
-        // inputInput: {
-        //     padding: theme.spacing(1, 1, 1, 0),
-        //     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-        //     transition: theme.transitions.create('width'),
-        //     width: '100%',
-        //     [theme.breakpoints.up('sm')]: {
-        //         width: '12ch',
-        //         '&:focus': {
-        //             width: '20ch',
-        //         },
-        //     },
-        // },
-        // inputRoot: {
-        //     color: 'inherit',
-        // },
         menuButton: {
             marginRight: theme.spacing(2),
         },
@@ -99,8 +54,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     }),
 );
-
-const validationSchema = NavbarSearchYupValScheme;
 
 type SliderState = number | boolean
 
@@ -117,15 +70,7 @@ export const Navbar: React.FC<Props> = ({
 }) => {
     const history = useHistory()
     const dispatch = useDispatch();
-    // const formik = useFormik({
-    //     initialValues: {
-    //         title: '',
-    //     },
-    //     validationSchema,
-    //     onSubmit: (values) => {
-    //         dispatch(searchMovieEntry(values.title))
-    //     }
-    // })
+
     const [value, setValue] = useState<SliderState>(false);
     const location = useLocation();
 
@@ -136,9 +81,9 @@ export const Navbar: React.FC<Props> = ({
             history.push(redirectLink)
         }
     }, [redirectLink])
+
     /** Hook that checks an url and sets the slider accordingly */
     useEffect(() => {
-
         if (location.pathname.includes('/films')) {
             setValue(0)
             setDrawerState(true)
@@ -191,7 +136,6 @@ export const Navbar: React.FC<Props> = ({
         }
     }, [open, isMediaQueryMatch375])
 
-
     const appbarPersistentMode = clsx(materialUIStyles.appBar, { [materialUIStyles.appBarShift]: open })
     const appbarPermanentMode = clsx(materialUIStyles.appBar)
 
@@ -235,14 +179,14 @@ export const Navbar: React.FC<Props> = ({
                         onChange={handleChange}
                     />
                 </div>
-                {!isMediaQueryMatch375 && 
-                <> 
-                <SearchBar />
-                {isUserSignedIn === UserSignInStatus.Authorised
-                    ? <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())}>Logout</Button>
-                    : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
-                }
-                </>
+                {!isMediaQueryMatch375 &&
+                    <>
+                        <SearchBar />
+                        {isUserSignedIn === UserSignInStatus.Authorised
+                            ? <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())}>Logout</Button>
+                            : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+                        }
+                    </>
                 }
             </Toolbar>
         </AppBar>

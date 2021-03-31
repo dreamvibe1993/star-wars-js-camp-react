@@ -1,6 +1,4 @@
 import { Movie } from '../../models/movie';
-import { MovieTransderValueForUpdate, MovieTransferValueEditForm } from '../../models/movie-transfer-value-edit-form';
-import { MovieTransferValueCreateForm } from '../../models/movies-transfer-value-create-form';
 import { Character } from '../../models/character';
 import { Planet } from '../../models/planet';
 import { MoviesDTO } from '../dtos/MovieDTO';
@@ -32,22 +30,6 @@ export const mapMovie = (payload: MoviesDTO, docID: string): Movie => ({
   docId: docID,
   img: payload.img ?? null
 } as Movie);
-
-/**
- * When editing maps and object with specific fields to update to.
- *
- * @param movie Movie entry which is being edited.
- * @param formValues Values from a form.
- */
-export const mapMovieDTOForEdit = (movie: Movie, formValues: MovieTransferValueEditForm): MovieTransderValueForUpdate => ({
-  'fields.title': formValues.title,
-  'fields.opening_crawl': formValues.openingCrawl,
-  'fields.producer': formValues.producer,
-  'fields.release_date': formValues.releaseDate,
-  'fields.director': formValues.director,
-  'fields.created': movie.created ?? new Date().toISOString(),
-  'fields.edited': new Date().toISOString(),
-})
 
 /**
  * Returns a planet entry to display.
@@ -99,7 +81,6 @@ export const mapCharacter = (payload: CharacterDTO, docID: string): Character =>
 
 /**
  * Returns DTO to send it back to DB.
- * ONLY FOR CREATED BY USER ENTRIES.
  *
  * @param payload Movie's data to map.
  * @param indexNumber Personal key to set.

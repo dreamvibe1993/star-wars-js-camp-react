@@ -1,24 +1,35 @@
 import React, { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
+import { 
+    Divider, 
+    IconButton, 
+    List, 
+    ListItem, 
+    ListItemIcon, 
+    ListItemText, 
+    Theme, 
+    useMediaQuery, 
+    useTheme 
+} from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-
-import { Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Theme, useMediaQuery, useTheme } from '@material-ui/core';
-import { NavLink, useHistory } from 'react-router-dom';
 import PublicIcon from '@material-ui/icons/Public';
 import FaceIcon from '@material-ui/icons/Face';
 import MovieIcon from '@material-ui/icons/Movie';
-import { useDispatch, useSelector } from 'react-redux';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 import { SearchBar } from '../SearchBar';
-import { RootState, UserSignInStatus } from '../../store/reducer';
-import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
 import { DrawerContext } from '../../App';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants'
+import { RootState } from '../../store/thunks/store';
+
+import { signCurrentUserOut, UserSignInStatus } from '../../store/thunks/auth-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -54,7 +65,6 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ children, setDrawerState }: SidebarProps) => {
     const materialUIStyles = useStyles();
     const theme = useTheme();
-    const history = useHistory()
     const dispatch = useDispatch()
     const { open } = useContext(DrawerContext)
     const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
@@ -73,7 +83,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ children, setDrawerState }: Si
                     <div className={materialUIStyles.drawerHeader}>
                         <IconButton onClick={() => {
                             setDrawerState(false)
-                            // history.push('/')
                         }
                         }>
                             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}

@@ -1,4 +1,3 @@
-/** Camelcase is disabled because It's needed to return the data back to d_base intact */
 /* eslint-disable camelcase */
 /** Planet's domain model */
 export interface PlanetDTO {
