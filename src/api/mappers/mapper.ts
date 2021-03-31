@@ -9,6 +9,7 @@ import { PlanetDTO } from '../dtos/PlanetDTO';
 
 /**
  * Returns a movie entry to display.
+ *
  * @param payload Data to map from DB
  * @param docID Document ID of the collection
  */
@@ -34,6 +35,7 @@ export const mapMovie = (payload: MoviesDTO, docID: string): Movie => ({
 
 /**
  * When editing maps and object with specific fields to update to.
+ *
  * @param movie Movie entry which is being edited.
  * @param formValues Values from a form.
  */
@@ -49,6 +51,7 @@ export const mapMovieDTOForEdit = (movie: Movie, formValues: MovieTransferValueE
 
 /**
  * Returns a planet entry to display.
+ *
  * @param payload Data to map from DB
  * @param docID Document ID of the collection
  */
@@ -72,6 +75,7 @@ export const mapPlanet = (payload: PlanetDTO, docID: string): Planet => ({
 
 /**
  * Returns a person entry to display.
+ *
  * @param payload Data to map from DB
  * @param docID Document ID of the collection
  */
@@ -96,6 +100,7 @@ export const mapCharacter = (payload: CharacterDTO, docID: string): Character =>
 /**
  * Returns DTO to send it back to DB.
  * ONLY FOR CREATED BY USER ENTRIES.
+ *
  * @param payload Movie's data to map.
  * @param indexNumber Personal key to set.
  */

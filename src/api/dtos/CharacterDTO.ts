@@ -30,6 +30,6 @@ export interface CharacterDTO {
   };
   /** Person's model prototype */
   model: string;
-  /** Person's  personal key*/
+  /** Person's  personal key */
   pk: number;
 }

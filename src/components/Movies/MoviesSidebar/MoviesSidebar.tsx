@@ -18,8 +18,8 @@ import { Params } from '../../../models/query-params'
 import { Sidebar } from '../../Sidebar';
 
 import styles from './MoviesSidebar.module.css'
-import { RootState } from '../../../store/reducer';
-import { UserSignInStatus } from '../../../store/reducer';
+import { RootState , UserSignInStatus } from '../../../store/reducer';
+
 import { movieSidebarSnapshotTeardown, subscribeToMovies } from '../../../store/thunks/movies-thunks';
 
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,17 +16,13 @@ import {
     makeStyles,
     Paper,
     Theme,
-    Typography,
-    useMediaQuery
-} from '@material-ui/core';
+    Typography} from '@material-ui/core';
 
-import styles from './LoginPage.module.css'
 import { loginPageYupValScheme } from '../../models/yup-validation-schemas';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
-import { UserSignInStatus } from '../../store/reducer';
+import { UserSignInStatus , RootState } from '../../store/reducer';
 import { signCurrentUserOut, signIn } from '../../store/thunks/auth-thunks';
-import { RootState } from '../../store/reducer';
-import { DrawerContext } from '../../App';
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

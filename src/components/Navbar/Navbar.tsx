@@ -20,20 +20,20 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Switch from '@material-ui/core/Switch';
 
-import { setCommonBackdropOff, setCommonBackdropOn, setThemingMode, UserSignInStatus } from '../../store/reducer';
+import { IconButton, useMediaQuery } from '@material-ui/core';
+import { MenuIcon } from '@material-ui/data-grid';
+import PublicIcon from '@material-ui/icons/Public';
+import { setCommonBackdropOff, setCommonBackdropOn, setThemingMode, UserSignInStatus , RootState } from '../../store/reducer';
 import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
 
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 import styles from './Navbar.module.css'
-import { RootState } from '../../store/reducer';
+
 import { Logo } from '../../imgs/logo';
 import { searchMovieEntry } from '../../store/thunks/movies-thunks';
-import { IconButton, useMediaQuery } from '@material-ui/core';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
 import { DrawerContext } from '../../App';
 import classes from '*.module.scss';
-import { MenuIcon } from '@material-ui/data-grid';
-import PublicIcon from '@material-ui/icons/Public';
 import { SearchBar } from '../SearchBar';
 
 const useStyles = makeStyles((theme: Theme) =>

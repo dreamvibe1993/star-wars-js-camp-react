@@ -115,7 +115,7 @@ export const WelcomeScreen: React.FC = () => {
                         title="Welcome"
                     />
                     <CardContent>
-                        <YellowLogo width={isMediaQueryMatch375 ? "70%" : "40%"} height={isMediaQueryMatch375 ? "70%" : "40%"} />
+                        <YellowLogo height={isMediaQueryMatch375 ? "70%" : "40%"} width={isMediaQueryMatch375 ? "70%" : "40%"} />
                     </CardContent>
                 </CardActionArea>
                 <CardActions>

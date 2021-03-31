@@ -30,8 +30,8 @@ import { Movie } from '../../../../models/movie';
 import { MovieTransferValueEditForm } from '../../../../models/movie-transfer-value-edit-form'
 import { movieEditYupValScheme } from '../../../../models/yup-validation-schemas';
 import styles from './MovieItemEditForm.module.css'
-import { RootState } from '../../../../store/reducer';
-import { setRelevChars, setRelevPlanets, UserSignInStatus } from '../../../../store/reducer';
+import { RootState , setRelevChars, setRelevPlanets, UserSignInStatus } from '../../../../store/reducer';
+
 import { MoviesDTO } from '../../../../api/dtos/MovieDTO';
 import { movieDTOMapper } from '../../../../api/mappers/mapper';
 import { editMovieEntry, loadDataToAddWhenCreating } from '../../../../store/thunks/movies-thunks';
@@ -84,6 +84,7 @@ interface EditFormProps {
 
 /**
  * Function that returns an op. crawl without line breakages
+ *
  * @param openingCrawl Text that follows before every sw movie.
  */
 function getRidOfLineBreaks(openingCrawl: string): string {
@@ -213,9 +214,9 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             helperText={formik.touched.title && formik.errors.title}
                                             name="title"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             value={formik.values.title}
                                             variant="outlined"
-                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -226,9 +227,9 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             helperText={formik.touched.producer && formik.errors.producer}
                                             name="producer"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             value={formik.values.producer}
                                             variant="outlined"
-                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -239,10 +240,10 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             helperText={formik.touched.releaseDate && formik.errors.releaseDate}
                                             name="releaseDate"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             type="date"
                                             value={formik.values.releaseDate}
                                             variant="outlined"
-                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -253,9 +254,9 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             helperText={formik.touched.director && formik.errors.director}
                                             name="director"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             value={formik.values.director}
                                             variant="outlined"
-                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -265,10 +266,10 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                         <TextField error={formik.touched.openingCrawl && Boolean(formik.errors.openingCrawl)}
                                             helperText={formik.touched.openingCrawl && formik.errors.openingCrawl}
                                             name="openingCrawl"
-                                            onChange={formik.handleChange} value={formik.values.openingCrawl}
+                                            onChange={formik.handleChange} size={isMediaQueryMatch375 ? 'small' : 'medium'}
+                                            value={formik.values.openingCrawl}
                                             variant="outlined"
                                             fullWidth
-                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             multiline />
                                     </TableCell>
                                 </TableRow>
@@ -277,10 +278,10 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                     <TableCell>
                                         <TextField
                                             name="img"
-                                            onChange={formik.handleChange} value={formik.values.img}
+                                            onChange={formik.handleChange} size={isMediaQueryMatch375 ? 'small' : 'medium'}
+                                            value={formik.values.img}
                                             variant="outlined"
                                             fullWidth
-                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             multiline />
                                     </TableCell>
                                 </TableRow>

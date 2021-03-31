@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { App } from './App';
-import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import { store } from './store/reducer';
 import { BrowserRouter } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { App } from './App';
+import reportWebVitals from './reportWebVitals';
+import { store } from './store/reducer';
 
 /** Sidebar state to dispatch to context */
 const sidebar = {

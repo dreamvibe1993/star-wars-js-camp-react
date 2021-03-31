@@ -8,6 +8,7 @@ export function getMoviesCollection(): firebase.firestore.CollectionReference<fi
 
 /**
  * Loads a particular movie entry
+ *
  * @param docID Id of the movie entry
  */
 export function getMovieItemData(docID: string): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> {

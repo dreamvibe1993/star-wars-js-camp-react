@@ -17,10 +17,10 @@ import { CreateMovieItemScreen } from './components/Movies/CreateMovieItemScreen
 import { NotFoundScreen } from './components/NotFoundScreen';
 import { DRAWER_WIDTH } from './constants/sizing-constants';
 import { ErrorScreen } from './components/ErrorScreen';
-import { UserSignInStatus } from './store/reducer'
+import { UserSignInStatus , RootState } from './store/reducer'
 
 import { getSignInStatus } from './api/services/auth';
-import { RootState } from './store/reducer';
+
 import { RegistrationPage } from './components/RegistrationPage';
 import { Sidebar } from './components/Sidebar';
 
@@ -140,7 +140,7 @@ export const App: React.FC = () => {
                 [materialUIStyles.contentShift]: open,
               })}
             >
-              {(isMediaQueryMatch375 && isCanShowMobileSidebar) && <Sidebar setDrawerState={changeDrawerState}><div></div></Sidebar>}
+              {(isMediaQueryMatch375 && isCanShowMobileSidebar) && <Sidebar setDrawerState={changeDrawerState}><div /></Sidebar>}
               <div className={materialUIStyles.drawerHeader} />
               <React.Fragment>
                 <Switch>

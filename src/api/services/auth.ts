@@ -1,8 +1,8 @@
 import firebase from "firebase/app";
 import { firebaseApp } from '../firebase';
 
-import { signUserIn, setUserEmailString, signUserOut, flushAllErrCodes } from "../../store/reducer";
-import { store } from '../../store/reducer';
+import { signUserIn, setUserEmailString, signUserOut, flushAllErrCodes , store } from "../../store/reducer";
+
 
 export const createUser = (email: string, password: string): Promise<firebase.auth.UserCredential> => firebaseApp.auth().createUserWithEmailAndPassword(email, password)
 
@@ -21,6 +21,7 @@ export const getSignInStatus = (): firebase.Unsubscribe => firebaseApp.auth().on
 
 /**
  * Signs in or doesn't a user.
+ *
  * @param email User's email
  * @param password User's password
  */

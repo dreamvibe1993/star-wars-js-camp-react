@@ -5,8 +5,8 @@ import * as MoviesDataAPI from '../../api/services/load-movies-data-api'
 import * as CharactersDataAPI from '../../api/services/load-characters-data-api'
 import * as PlanetsDataAPI from '../../api/services/load-planets-data-api'
 
-import { setCharacters, setMovies, setPlanets } from "../reducer";
-import { RootState } from "../reducer";
+import { setCharacters, setMovies, setPlanets , RootState } from "../reducer";
+
 import { PlanetDTO } from "../../api/dtos/PlanetDTO";
 import { CharacterDTO } from "../../api/dtos/CharacterDTO";
 

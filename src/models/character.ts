@@ -6,7 +6,7 @@ export interface Character {
   created: string;
   /** Timestamp when the entry was edited */
   edited: string;
-  /** Person's eyes' color*/
+  /** Person's eyes' color */
   eyeColor: string;
   /** Person's gender */
   gender: string;
@@ -18,13 +18,13 @@ export interface Character {
   homeworld: number;
   /** Person's image */
   image: string | null;
-  /** Person's weight. Measured in kilograms*/
+  /** Person's weight. Measured in kilograms */
   mass: number;
   /** Person's name */
   name: string;
   /** Person's skin color */
   skinColor: string;
-  /** Person's  personal key*/
+  /** Person's  personal key */
   pk: number;
     /** 
    * Document identificator (here in case of displaying 

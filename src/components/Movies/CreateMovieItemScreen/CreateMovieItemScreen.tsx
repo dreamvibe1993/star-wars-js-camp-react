@@ -26,20 +26,17 @@ import {
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
-import { getMovieItemData } from '../../../api/services/load-movies-data-api';
 
 import { Character } from '../../../models/character';
 import { Planet } from '../../../models/planet';
 import styles from './CreateMovieItemScreen.module.css';
 import { createMovieItemYupValScheme } from '../../../models/yup-validation-schemas';
 import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../constants/sizing-constants';
-import { MovieTransferValueCreateForm } from '../../../models/movies-transfer-value-create-form';
-import { RootState , setCommonBackdropOff, setCommonBackdropOn } from '../../../store/reducer';
+import { RootState } from '../../../store/reducer';
 
 import { addMovieEntry, loadDataToAddWhenCreating } from '../../../store/thunks/movies-thunks';
 import { movieDTOMapper } from '../../../api/mappers/mapper';
 import { Movie } from '../../../models/movie';
-// import classes from "../../index.css"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

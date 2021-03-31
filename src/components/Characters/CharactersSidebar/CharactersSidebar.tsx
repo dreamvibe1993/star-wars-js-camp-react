@@ -18,17 +18,16 @@ import { WelcomeScreen } from '../../WelcomeScreen';
 import { Sidebar } from '../../Sidebar';
 import { CharacterItemScreen } from '../CharacterItemScreen';
 import { Params } from '../../../models/query-params'
-import styles from './CharactersSidebar.module.css'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
-import { RootState } from '../../../store/reducer';
-import {
+import { RootState ,
     setCommonBackdropOn,
     setCommonBackdropOff,
     setNumberOfItemsDisplayCharacters,
     addItemsToDisplayCharacters,
     discardCharactersItemsAmmount,
 } from '../../../store/reducer';
+
 import { lazyloadMoreCharacters } from '../../../store/thunks/characters-thunks'
 import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';
 
@@ -41,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         activeLink: {
             backgroundColor: 'rgba(0,0,0, .1)'
+        },
+        drawerContainer: {
+            overflow: 'auto'
         }
     }),
 );
@@ -115,7 +117,7 @@ export const CharactersSidebar: React.FC<Props> = ({setDrawerState}) => {
     return (
         < >
             <Sidebar setDrawerState={setDrawerState}>
-                <div ref={scrollRef} className={styles.drawerContainer}>
+                <div ref={scrollRef} className={materialUIStyles.drawerContainer}>
                     <List>
                         {listItems}
                     </List>

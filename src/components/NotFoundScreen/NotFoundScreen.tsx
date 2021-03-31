@@ -12,9 +12,9 @@ import {
     Theme,
     Typography
 } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
 import { setMovieLoadingPending } from '../../store/reducer';
-import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

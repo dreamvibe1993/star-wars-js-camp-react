@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
 
@@ -13,31 +13,23 @@ import {
     CardMedia,
     CircularProgress,
     createStyles,
-    FormControl,
     Grid,
-    InputLabel,
     makeStyles,
     Paper,
-    Select,
-    TableCell,
     Theme,
     Typography,
-    useMediaQuery
+    Card
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { MovieItemEditForm } from './MovieItemEditForm'
-import { Character } from '../../../models/character';
-import { Planet } from '../../../models/planet';
 import { Params } from '../../../models/query-params'
 
-import { getMovieItemData } from '../../../api/services/load-movies-data-api';
 import { MovieItemDisplayComponent } from './MovieItemDisplayComponent';
-import { RootState, setMovieLoadingPending } from '../../../store/reducer';
-import { UserSignInStatus } from '../../../store/reducer';
+import { RootState, UserSignInStatus } from '../../../store/reducer';
+
 import { loadMovieItem } from '../../../store/thunks/movies-thunks';
-import { CharacterItemScreen } from '../../Characters/CharacterItemScreen';
-import { Card } from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -78,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 200,
         },
         jsxAccorderons: {
-            width: '100%', 
+            width: '100%',
             marginTop: '15px',
             [theme.breakpoints.down('sm')]: {
                 minWidth: '300px',
@@ -100,19 +92,19 @@ export const MovieItemScreen: React.FC = () => {
     /** Variable to check if there's any relevant planets */
     const relevantPlanets = useSelector((state: RootState) => state.moviesStore.relevantPlanets)
 
-    
+
     /** Variable to check if there's any relevant characters */
     const relevantCharacters = useSelector((state: RootState) => state.moviesStore.relevantCharacters)
-    
+
     const queryParam = useParams<Params>()
     const queries = new URLSearchParams(location.search)
-    
+
     /** Query in case of a user decides to edit an entry */
     const edit: string | null = queries.get('edit')
-    
+
     const movie = useSelector((state: RootState) => state.moviesStore.movieItem)
     const isMovieLoadingPending = useSelector((state: RootState) => state.moviesStore.isMovieLoadingPending)
-    
+
     /** If a user got back from another tab pastes an ID of a current entry */
     useEffect(() => {
         if (movie && movie.docId && !queryParam.id) {
@@ -120,7 +112,7 @@ export const MovieItemScreen: React.FC = () => {
         }
         dispatch(loadMovieItem(queryParam.id))
     }, [queryParam.id])
-    
+
 
     if (isMovieLoadingPending) {
         return (
@@ -147,16 +139,11 @@ export const MovieItemScreen: React.FC = () => {
         history.push(`/planets/${planetID}`);
     }
 
-    // const [mq, setMq] = useState<boolean>(false)
-    // const isMediaQueryMatch375 = useMediaQuery('(max-width:375px)')
-    // useEffect(() => setMq(isMediaQueryMatch375), [isMediaQueryMatch375])
-
-
     const relevantCharactersJSX = (
         <Accordion className={materialUIStyles.jsxAccorderons}>
             <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
+                expandIcon={<ExpandMoreIcon />}
                 id="panel1a-header"
             >
                 <Typography align='center' variant="h6" gutterBottom>LIST OF THE MOVIE CHARACTERS</Typography>
@@ -181,7 +168,7 @@ export const MovieItemScreen: React.FC = () => {
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>
-                                <CardActions style={{display: 'flex', justifyContent: 'space-around'}}>
+                                <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
                                     <Button color="inherit" size="small">
                                         Learn More
                                     </Button>
@@ -199,8 +186,8 @@ export const MovieItemScreen: React.FC = () => {
 
         <Accordion className={materialUIStyles.jsxAccorderons}>
             <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
+                expandIcon={<ExpandMoreIcon />}
                 id="panel1a-header"
             >
                 <Typography align='center' variant="h6" gutterBottom>LIST OF THE MOVIE PLANETS</Typography>
@@ -225,7 +212,7 @@ export const MovieItemScreen: React.FC = () => {
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>
-                                <CardActions style={{display: 'flex', justifyContent: 'space-around'}}>
+                                <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
                                     <Button color="inherit" size="small">
                                         Learn More
                                     </Button>
@@ -250,7 +237,7 @@ export const MovieItemScreen: React.FC = () => {
         return (
             <>
                 <h3>Only logged users can edit entries</h3>
-                <Link to="/login">Login</Link>
+                <Link style={{ color: 'red' }} to="/login">Login</Link>
             </>
         )
     }
