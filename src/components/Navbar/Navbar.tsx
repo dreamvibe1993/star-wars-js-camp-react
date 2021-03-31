@@ -181,7 +181,7 @@ export const Navbar: React.FC<Props> = ({
 
     const { open } = useContext(DrawerContext)
 
-    const isMediaQueryMatch375 = useMediaQuery('(max-width:375px)')
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
 
     const appbarPersistentMode = clsx(materialUIStyles.appBar, { [materialUIStyles.appBarShift]: open })
     const appbarPermanentMode = clsx(materialUIStyles.appBar)
@@ -211,6 +211,7 @@ export const Navbar: React.FC<Props> = ({
                             }}
                         >
                             <MenuIcon />
+                            {/* {!location.pathname.includes('/create-film-entry') || !location.pathname.includes('?edit=1')) && } */}
                         </IconButton>
                 }
                 <Typography className={styles.title} variant="h6">

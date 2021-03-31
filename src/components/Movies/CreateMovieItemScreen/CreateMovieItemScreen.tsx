@@ -21,6 +21,7 @@ import {
     TableRow,
     TextField,
     Theme,
+    useMediaQuery,
     useTheme
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
@@ -33,8 +34,8 @@ import styles from './CreateMovieItemScreen.module.css';
 import { createMovieItemYupValScheme } from '../../../models/yup-validation-schemas';
 import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../constants/sizing-constants';
 import { MovieTransferValueCreateForm } from '../../../models/movies-transfer-value-create-form';
-import { RootState } from '../../../store/reducer';
-import { setCommonBackdropOff, setCommonBackdropOn } from '../../../store/reducer';
+import { RootState , setCommonBackdropOff, setCommonBackdropOn } from '../../../store/reducer';
+
 import { addMovieEntry, loadDataToAddWhenCreating } from '../../../store/thunks/movies-thunks';
 import { movieDTOMapper } from '../../../api/mappers/mapper';
 import { Movie } from '../../../models/movie';
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             '& > *': {
                 margin: theme.spacing(1),
+                [theme.breakpoints.down('sm')]: {
+                    margin: theme.spacing(0),
+                },
             },
         },
         formControl: {
@@ -60,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-        }
+        },
     })
 );
 
@@ -122,6 +126,7 @@ export const CreateMovieItemScreen: React.FC = () => {
     const [planetNames, setPlanetNames] = React.useState<string[]>([]);
     /**
      * Adds names of chosen characters
+     *
      * @param event Change event of a node
      */
     const handleChangeCharacters = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -129,6 +134,7 @@ export const CreateMovieItemScreen: React.FC = () => {
     };
     /**
      * Adds names of chosen planets to state
+     *
      * @param event Change event of a node
      */
     const handleChangePlanets = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -167,12 +173,14 @@ export const CreateMovieItemScreen: React.FC = () => {
         return <Redirect to="/films" />
     }
 
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
+
     return (
         <>
             <div className={materialUIStyles.root}>
                 <form onSubmit={formik.handleSubmit}>
                     <TableContainer component={Paper}>
-                        <Table className={styles.table} size="medium">
+                        <Table size="medium">
                             <TableBody>
                                 <TableRow >
                                     <TableCell align="left" className={styles.tenthWidth} ><strong>Title: </strong></TableCell>
@@ -181,9 +189,11 @@ export const CreateMovieItemScreen: React.FC = () => {
                                             helperText={formik.touched.title && formik.errors.title}
                                             name="title"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             value={formik.values.title}
                                             variant="outlined"
-                                            fullWidth />
+                                            fullWidth
+                                            />
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -193,9 +203,11 @@ export const CreateMovieItemScreen: React.FC = () => {
                                             helperText={formik.touched.producer && formik.errors.producer}
                                             name="producer"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             value={formik.values.producer}
                                             variant="outlined"
-                                            fullWidth />
+                                            fullWidth
+                                            />
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -205,11 +217,12 @@ export const CreateMovieItemScreen: React.FC = () => {
                                             helperText={formik.touched.releaseDate && formik.errors.releaseDate}
                                             name="releaseDate"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             type="date"
                                             value={formik.values.releaseDate}
                                             variant="outlined"
                                             fullWidth
-                                        />
+                                            />
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -219,9 +232,11 @@ export const CreateMovieItemScreen: React.FC = () => {
                                             helperText={formik.touched.director && formik.errors.director}
                                             name="director"
                                             onChange={formik.handleChange}
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             value={formik.values.director}
                                             variant="outlined"
-                                            fullWidth />
+                                            fullWidth
+                                            />
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -230,10 +245,12 @@ export const CreateMovieItemScreen: React.FC = () => {
                                         <TextField error={formik.touched.openingCrawl && Boolean(formik.errors.openingCrawl)}
                                             helperText={formik.touched.openingCrawl && formik.errors.openingCrawl}
                                             name="openingCrawl"
-                                            onChange={formik.handleChange} value={formik.values.openingCrawl}
-                                            variant="outlined"
+                                            onChange={formik.handleChange} size={isMediaQueryMatch375 ? 'small' : 'medium'}
+                                            value={formik.values.openingCrawl}
+                                            variant="outlined" 
                                             fullWidth
-                                            multiline />
+                                            multiline
+                                            />
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -241,10 +258,12 @@ export const CreateMovieItemScreen: React.FC = () => {
                                     <TableCell>
                                         <TextField
                                             name="img"
-                                            onChange={formik.handleChange} value={formik.values.img}
-                                            variant="outlined"
+                                            onChange={formik.handleChange} size={isMediaQueryMatch375 ? 'small' : 'medium'}
+                                            value={formik.values.img}
+                                            variant="outlined" 
                                             fullWidth
-                                            multiline />
+                                            multiline
+                                            />
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -311,26 +330,32 @@ export const CreateMovieItemScreen: React.FC = () => {
                                         </div>
                                     }
                                 </TableRow>
+                                <TableRow />
+                                <TableRow >
+                                    <TableCell align="left" />
+                                    <TableCell align="right">
+                                        <div className={styles.buttonContainer}>
+                                            <Link className={styles.link} to="/films">
+                                                <Button
+                                                    className={materialUIStyles.cancelButton}
+                                                    color="primary"
+                                                    type="button"
+                                                    variant="contained">
+                                                    CANCEL
+                                            </Button>
+                                            </Link>
+                                            <Button
+                                                color="primary"
+                                                type="submit"
+                                                variant="contained">
+                                                SAVE
+                                        </Button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <div className={styles.buttonContainer}>
-                        <Link className={styles.link} to="/films">
-                            <Button
-                                className={materialUIStyles.cancelButton}
-                                color="primary"
-                                type="button"
-                                variant="contained">
-                                CANCEL
-                        </Button>
-                        </Link>
-                        <Button
-                            color="primary"
-                            type="submit"
-                            variant="contained">
-                            SAVE
-                    </Button>
-                    </div>
                 </form>
             </div>
         </>

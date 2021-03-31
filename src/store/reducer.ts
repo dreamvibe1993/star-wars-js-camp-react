@@ -9,6 +9,7 @@ import { lazyloadMoreCharacters, loadCharacterItem } from './thunks/characters-t
 import { addMovieEntry, deleteMovieEntry, editMovieEntry, loadDataToAddWhenCreating, loadMovieItem, searchMovieEntry } from './thunks/movies-thunks';
 import { lazyloadMorePlanets, loadPlanetItem } from './thunks/planets-thunks';
 import { signIn, signCurrentUserOut } from './thunks/auth-thunks';
+import { getSignInStatus } from '../api/services/auth';
 
 
 const moviesStoreReducer = createSlice({
@@ -319,7 +320,8 @@ const authStateReducer = createSlice({
     extraReducers: builder => {
         builder
             .addCase(signIn.fulfilled, (state) => {
-                state.isUserSignedIn = UserSignInStatus.Authorised
+                
+                // state.isUserSignedIn = UserSignInStatus.Authorised
             })
             .addCase(signIn.rejected, (state) => {
                 state.isUserSignedIn = UserSignInStatus.Unauthorised

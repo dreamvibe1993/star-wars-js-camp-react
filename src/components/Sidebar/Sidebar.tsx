@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children, setDrawerState }: Si
     const history = useHistory()
     const dispatch = useDispatch()
     const { open } = useContext(DrawerContext)
-    const isMediaQueryMatch375 = useMediaQuery('(max-width:375px)')
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
     return (
         <Drawer

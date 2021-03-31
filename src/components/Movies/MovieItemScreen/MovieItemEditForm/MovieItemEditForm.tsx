@@ -21,7 +21,8 @@ import {
     TableContainer,
     TableRow,
     TextField,
-    Theme
+    Theme,
+    useMediaQuery
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
@@ -43,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             '& > *': {
                 margin: theme.spacing(1),
+                [theme.breakpoints.down('xs')]: {
+                    margin: theme.spacing(0),
+                },
             },
         },
         cancelButton: {
@@ -51,10 +55,18 @@ const useStyles = makeStyles((theme: Theme) =>
         formControl: {
             margin: theme.spacing(1),
             width: '100%',
+            [theme.breakpoints.down('xs')]: {
+                margin: theme.spacing(0),
+                minWidth: 120,
+                maxWidth: 180,
+            },
+        },
+        loseWrap: {
+            whiteSpace: 'normal'
         },
         spinnerContainer: {
             width: '100%',
-            minHeight: "550px",
+            minHeight: "100px",
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -82,7 +94,8 @@ const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
+            width: 100,
+            // whiteSpace: 'normal',
         },
     },
 };
@@ -183,13 +196,15 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
         }
         formik.setFieldValue('planetsPKs', planetsPersonalKeys)
     }, [planetsNames, planetsCollection])
+
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
     
     return (
         <>
             <div className={materialUIStyles.root}>
                 <form onSubmit={formik.handleSubmit}>
                     <TableContainer component={Paper}>
-                        <Table className={styles.table} size="medium">
+                        <Table size="medium">
                             <TableBody>
                                 <TableRow >
                                     <TableCell align="left" className={styles.tenthWidth} ><strong>Title: </strong></TableCell>
@@ -200,6 +215,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             onChange={formik.handleChange}
                                             value={formik.values.title}
                                             variant="outlined"
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -212,6 +228,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             onChange={formik.handleChange}
                                             value={formik.values.producer}
                                             variant="outlined"
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -225,6 +242,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             type="date"
                                             value={formik.values.releaseDate}
                                             variant="outlined"
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -237,6 +255,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             onChange={formik.handleChange}
                                             value={formik.values.director}
                                             variant="outlined"
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             fullWidth />
                                     </TableCell>
                                 </TableRow>
@@ -249,6 +268,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             onChange={formik.handleChange} value={formik.values.openingCrawl}
                                             variant="outlined"
                                             fullWidth
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             multiline />
                                     </TableCell>
                                 </TableRow>
@@ -260,6 +280,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                             onChange={formik.handleChange} value={formik.values.img}
                                             variant="outlined"
                                             fullWidth
+                                            size={isMediaQueryMatch375 ? 'small' : 'medium'}
                                             multiline />
                                     </TableCell>
                                 </TableRow>
@@ -267,9 +288,9 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                     <TableCell align="left" className={styles.tenthWidth}><strong>Characters: </strong></TableCell>
                                     <TableCell>
                                         <FormControl className={materialUIStyles.formControl}>
-                                            <InputLabel id="characters">Add or remove characters</InputLabel>
+                                            <InputLabel id="characters">Add or remove</InputLabel>
                                             <Select
-                                                id="demo-mutiple-checkbox"
+                                                id="characters"
                                                 input={<Input />}
                                                 labelId="characters"
                                                 MenuProps={MenuProps}
@@ -292,9 +313,9 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
                                     <TableCell align="left" className={styles.tenthWidth}><strong>Planets: </strong></TableCell>
                                     <TableCell>
                                         <FormControl className={materialUIStyles.formControl}>
-                                            <InputLabel id="planets">Add or remove planets</InputLabel>
+                                            <InputLabel id="planets">Add or remove</InputLabel>
                                             <Select
-                                                id="demo-mutiple-checkbox"
+                                                id="planets"
                                                 input={<Input />}
                                                 labelId="planets"
                                                 MenuProps={MenuProps}

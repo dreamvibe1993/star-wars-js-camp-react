@@ -1,6 +1,6 @@
 import React from 'react';
-import { Backdrop, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, createStyles, Fade, makeStyles, Modal, Paper, Theme, Typography } from '@material-ui/core';
-import { yellowLogo } from '../../imgs/logo';
+import { Backdrop, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, createStyles, Fade, makeStyles, Modal, Paper, Theme, Typography, useMediaQuery } from '@material-ui/core';
+import { YellowLogo } from '../../imgs/logo';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,6 +38,9 @@ export const WelcomeScreen: React.FC = () => {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
+
     return (
         <>
             <div>
@@ -112,10 +115,7 @@ export const WelcomeScreen: React.FC = () => {
                         title="Welcome"
                     />
                     <CardContent>
-                        <Typography component="h2" variant="h5" gutterBottom>
-                            {yellowLogo}
-                        </Typography>
-
+                        <YellowLogo width={isMediaQueryMatch375 ? "70%" : "40%"} height={isMediaQueryMatch375 ? "70%" : "40%"} />
                     </CardContent>
                 </CardActionArea>
                 <CardActions>

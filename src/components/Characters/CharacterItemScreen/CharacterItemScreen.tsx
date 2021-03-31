@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: '5px',
             backgroundSize: 'cover',
             boxShadow: 'none',
+            overflow: 'hidden',
         },
     }),
 );

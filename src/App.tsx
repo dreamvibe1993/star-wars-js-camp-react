@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -110,8 +110,14 @@ export const App: React.FC = () => {
   const areCharactersLoaded = useSelector((state: RootState) => state.charactersStore.areCharacterEntitiesLoaded) 
   const arePlanetsLoaded = useSelector((state: RootState) => state.planetsStore.arePlanetEntitiesLoaded) 
 
-  const loadingStatus = (areMoviesLoaded || areCharactersLoaded || arePlanetsLoaded)
-  const isMediaQueryMatch375 = useMediaQuery('(max-width:375px)')
+  const location = useLocation()
+  const checkStatus = (): boolean => (areMoviesLoaded || areCharactersLoaded || arePlanetsLoaded || location.pathname.includes('/create-film-entry') || location.pathname.includes('edit=1'))
+  const [loadingStatus, setStatus] = useState<boolean>(checkStatus())
+  useEffect(() => {
+    setStatus(checkStatus())
+  }, [areMoviesLoaded, areCharactersLoaded, arePlanetsLoaded, location.pathname])
+
+  const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
 
   // useEffect(() => {
   //   changeDrawerState(!isMediaQueryMatch375)
@@ -128,7 +134,7 @@ export const App: React.FC = () => {
                 [materialUIStyles.contentShift]: open,
               })}
             >
-              {(isMediaQueryMatch375 && !loadingStatus) && <Sidebar setDrawerState={changeDrawerState}><div></div></Sidebar>}
+              {(isMediaQueryMatch375 && loadingStatus) && <Sidebar setDrawerState={changeDrawerState}><div></div></Sidebar>}
               <div className={materialUIStyles.drawerHeader} />
               {isUserSignedIn !== UserSignInStatus.Pending &&
                 <React.Fragment>
