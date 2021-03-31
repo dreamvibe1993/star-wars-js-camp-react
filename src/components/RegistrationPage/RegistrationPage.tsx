@@ -1,6 +1,6 @@
 import { makeStyles, Theme, createStyles, Paper, TextField, Button, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
@@ -53,6 +53,7 @@ export const RegistrationPage: React.FC = () => {
     const materialUIStyles = useStyles();
     const dispatch = useDispatch();
     const isUserAuthorized = useSelector((state: RootState) => state.authState.isUserSignedIn)
+    const emailErrorMessage = useSelector((state: RootState) => state.authState.emailErrorCodeMsg)
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -63,59 +64,65 @@ export const RegistrationPage: React.FC = () => {
         onSubmit: (values) => {
             if (values.password !== values.repeatPassword) {
                 formik.setFieldError('password', 'Passwords don\'t match!')
+            } else {
+                dispatch(createUserAccount({ email: values.email, password: values.password }))
             }
-            dispatch(createUserAccount({ email: values.email, password: values.password }))
         },
     });
+    useEffect(() => {
+        if (emailErrorMessage) {
+            formik.setFieldError('email', emailErrorMessage)
+        }
+    }, [emailErrorMessage])
     if (isUserAuthorized === UserSignInStatus.Authorised) {
         return <Redirect to="/login" />
     }
     return (
-            <form className={materialUIStyles.modalAlike} onSubmit={formik.handleSubmit}>
-                <Paper className={styles.flexColumn}>
-                    <Typography component="h2" style={{marginTop: '15px'}} variant="h4">Create an account</Typography>
-                    <TextField
-                        className={materialUIStyles.spacing}
-                        error={formik.touched.email && Boolean(formik.errors.email)}
-                        helperText={formik.touched.email && formik.errors.email}
-                        id="email"
-                        label="Type your email"
-                        name="email"
-                        onChange={formik.handleChange}
-                        value={formik.values.email}
-                        variant="outlined"
-                    />
-                    <TextField
-                        className={materialUIStyles.spacing}
-                        error={formik.touched.password && Boolean(formik.errors.password)}
-                        helperText={formik.touched.password && formik.errors.password}
-                        id="password"
-                        label="Type your password"
-                        name="password"
-                        onChange={formik.handleChange}
-                        type="password"
-                        value={formik.values.password}
-                        variant="outlined"
-                    />
-                    <TextField
-                        className={materialUIStyles.spacing}
-                        error={formik.touched.repeatPassword && Boolean(formik.errors.repeatPassword)}
-                        helperText={formik.touched.repeatPassword && formik.errors.repeatPassword}
-                        id="repeatPassword"
-                        label="Repeat your password"
-                        name="repeatPassword"
-                        onChange={formik.handleChange}
-                        type="password"
-                        value={formik.values.repeatPassword}
-                        variant="outlined"
-                    />
-                    <Button className={materialUIStyles.spacing} color="primary" type="submit" variant="contained">
+        <form className={materialUIStyles.modalAlike} onSubmit={formik.handleSubmit}>
+            <Paper className={styles.flexColumn}>
+                <Typography component="h2" style={{ marginTop: '15px' }} variant="h4">Create an account</Typography>
+                <TextField
+                    className={materialUIStyles.spacing}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
+                    id="email"
+                    label="Type your email"
+                    name="email"
+                    onChange={formik.handleChange}
+                    value={formik.values.email}
+                    variant="outlined"
+                />
+                <TextField
+                    className={materialUIStyles.spacing}
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
+                    id="password"
+                    label="Type your password"
+                    name="password"
+                    onChange={formik.handleChange}
+                    type="password"
+                    value={formik.values.password}
+                    variant="outlined"
+                />
+                <TextField
+                    className={materialUIStyles.spacing}
+                    error={formik.touched.repeatPassword && Boolean(formik.errors.repeatPassword)}
+                    helperText={formik.touched.repeatPassword && formik.errors.repeatPassword}
+                    id="repeatPassword"
+                    label="Repeat your password"
+                    name="repeatPassword"
+                    onChange={formik.handleChange}
+                    type="password"
+                    value={formik.values.repeatPassword}
+                    variant="outlined"
+                />
+                <Button className={materialUIStyles.spacing} color="primary" type="submit" variant="contained">
                     Submit
                 </Button>
-                </Paper>
+            </Paper>
             <Typography color="textSecondary" variant="subtitle1">
-            Already have an account? <NavLink style={{ color: "red" }} to="/login">Log in!</NavLink>
+                Already have an account? <NavLink style={{ color: "red" }} to="/login">Log in!</NavLink>
             </Typography>
-            </form>
+        </form>
     )
 }

@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
             width: "100%",
-            minHeight: "550px"
+            minHeight: "550px",
+            height: "auto",
         },
         tenthWidth: {
             width: "10%",
@@ -47,12 +48,18 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
         },
         imgContainer: {
-            height: '600px',
-            width: '400px',
+            height: '450px',
+            width: '450px',
             margin: '5px',
-            backgroundSize: 'cover',
-            boxShadow: 'none',
-            overflow: 'hidden',
+            backgroundPosition: 'left',
+            backgroundSize: '70%',
+        },
+        card: {
+            width: 'auto',
+            maxHeight: '600px',
+            maxWidth: '350px',
+            height: 'auto',
+            boxShadow: 'none'
         },
     }),
 );
@@ -90,9 +97,8 @@ export const CharacterItemScreen: React.FC = () => {
         )
     }
     return character && (
-        <>
             <TableContainer className={materialUIStyles.tableContainer} component={Paper}>
-                <Card>
+                <Card className={materialUIStyles.card}>
                     <CardActionArea>
                         <CardMedia
                             className={materialUIStyles.imgContainer}
@@ -132,14 +138,13 @@ export const CharacterItemScreen: React.FC = () => {
                             <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Weight: </strong></TableCell>
                             <TableCell align="center">{character.mass}</TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell align="left" className={materialUIStyles.tenthWidth}><strong>Skincolor: </strong></TableCell>
-                            <TableCell align="center">{character.skinColor}</TableCell>
+                        <TableRow >
+                            <TableCell align="left"  className={materialUIStyles.tenthWidth} style={{borderBottom: 'none'}}><strong>Skincolor: </strong></TableCell>
+                            <TableCell align="center" style={{borderBottom: 'none'}}>{character.skinColor}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
-        </>
     );
 
 }

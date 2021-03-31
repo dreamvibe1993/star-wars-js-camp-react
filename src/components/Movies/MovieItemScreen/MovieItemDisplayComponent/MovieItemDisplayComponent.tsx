@@ -6,7 +6,6 @@ import {
     Button,
     Card,
     CardActionArea,
-    CardContent,
     CardMedia,
     createStyles,
     makeStyles,
@@ -22,9 +21,9 @@ import {
 import { Movie } from '../../../../models/movie';
 import { DeletionConfirmationModal } from '../../DeletionConfirmationModal';
 import styles from '../MovieItemScreen.module.css'
-import { RootState } from '../../../../store/reducer';
+import { RootState , UserSignInStatus, setDeletionModalOpen } from '../../../../store/reducer';
 
-import { UserSignInStatus, setDeletionModalOpen } from '../../../../store/reducer';
+
 
 
 interface Props {
@@ -40,7 +39,8 @@ const useStyles = makeStyles((theme: Theme) =>
         tableContainer: {
             display: 'flex',
             [theme.breakpoints.down('sm')]: {
-                flexDirection: 'column'
+                flexDirection: 'column',
+                minWidth: '300px',
             },
         },
         imgContainer: {
@@ -57,15 +57,18 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 'auto',
             boxShadow: 'none'
         },
-        buttonContainer: {
-            marginBottom: '15px',
-            textAlign: 'right',
+        buttonTableCell: {
+            borderBottom: 'none',
+            [theme.breakpoints.down('sm')]: {
+                width: '500px'
+            },
         },
     }),
 );
 
 /**
  * Component to display a movie data.
+ *
  * @param movie Movie entity object to display
  * @param relevantEntitiesBlock JSX Element to display relevant entities.
  */
@@ -123,7 +126,7 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
                             </TableRow>
                             <TableRow >
                                 <TableCell style={{ borderBottom: 'none' }} />
-                                <TableCell align="right" style={{ borderBottom: 'none' }}>
+                                <TableCell align="right" className={materialUIStyles.buttonTableCell}>
                                     {isUserSignedIn === UserSignInStatus.Authorised &&
                                         <div>
                                             <Button

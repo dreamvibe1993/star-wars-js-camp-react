@@ -1,9 +1,8 @@
 import firebase from "firebase/app";
 import { firebaseApp } from '../firebase';
 
-import { signUserIn, setCommonBackdropOn, setUserEmailString } from "../../store/reducer";
+import { signUserIn, setUserEmailString, signUserOut, flushAllErrCodes } from "../../store/reducer";
 import { store } from '../../store/reducer';
-import { signCurrentUserOut } from "../../store/thunks/auth-thunks";
 
 export const createUser = (email: string, password: string): Promise<firebase.auth.UserCredential> => firebaseApp.auth().createUserWithEmailAndPassword(email, password)
 
@@ -14,7 +13,7 @@ export const getSignInStatus = (): firebase.Unsubscribe => firebaseApp.auth().on
     store.dispatch(signUserIn());
     store.dispatch(setUserEmailString(user.email))
   } else {
-    store.dispatch(signCurrentUserOut());
+    store.dispatch(signUserOut());
     store.dispatch(setUserEmailString(null))
   }
 })

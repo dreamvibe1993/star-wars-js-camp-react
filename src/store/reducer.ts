@@ -315,21 +315,26 @@ const authStateReducer = createSlice({
         },
         setUserEmailString: (state, action) => {
             state.userEmail = action.payload
-        }
+        },
+        flushAllErrCodes: (state) => {
+            state.emailErrorCodeMsg = null
+            state.passwordErrorCodeMsg = null
+            state.userEmail = null
+        },
     },
-    extraReducers: builder => {
-        builder
-            .addCase(signIn.fulfilled, (state) => {
+    // extraReducers: builder => {
+    //     builder
+    //         .addCase(signIn.fulfilled, (state) => {
                 
-                // state.isUserSignedIn = UserSignInStatus.Authorised
-            })
-            .addCase(signIn.rejected, (state) => {
-                state.isUserSignedIn = UserSignInStatus.Unauthorised
-            })
-            .addCase(signCurrentUserOut.fulfilled, state => {
-                state.isUserSignedIn = UserSignInStatus.Unauthorised
-            })
-    }
+    //             state.isUserSignedIn = UserSignInStatus.Authorised
+    //         })
+    //         .addCase(signIn.rejected, (state) => {
+    //             state.isUserSignedIn = UserSignInStatus.Unauthorised
+    //         })
+    //         .addCase(signCurrentUserOut.fulfilled, state => {
+    //             state.isUserSignedIn = UserSignInStatus.Unauthorised
+    //         })
+    // }
 })
 
 export const {
@@ -337,7 +342,8 @@ export const {
     signUserOut,
     setPassErrMsg,
     setEmailErrMsg,
-    setUserEmailString
+    setUserEmailString,
+    flushAllErrCodes
 } = authStateReducer.actions;
 
 export const reducer = combineReducers({

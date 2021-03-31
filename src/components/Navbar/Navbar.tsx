@@ -20,7 +20,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Switch from '@material-ui/core/Switch';
 
-import { setThemingMode, UserSignInStatus } from '../../store/reducer';
+import { setCommonBackdropOff, setCommonBackdropOn, setThemingMode, UserSignInStatus } from '../../store/reducer';
 import { signCurrentUserOut } from '../../store/thunks/auth-thunks';
 
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
@@ -182,6 +182,15 @@ export const Navbar: React.FC<Props> = ({
     const { open } = useContext(DrawerContext)
 
     const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
+
+    useEffect(() => {
+        if (open && isMediaQueryMatch375) {
+            dispatch(setCommonBackdropOn())
+        } else {
+            dispatch(setCommonBackdropOff())
+        }
+    }, [open, isMediaQueryMatch375])
+
 
     const appbarPersistentMode = clsx(materialUIStyles.appBar, { [materialUIStyles.appBarShift]: open })
     const appbarPermanentMode = clsx(materialUIStyles.appBar)

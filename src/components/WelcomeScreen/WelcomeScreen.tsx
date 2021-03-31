@@ -68,6 +68,7 @@ export const WelcomeScreen: React.FC = () => {
                             </Typography>
                             <Typography>
                                 Stack:
+                            </Typography>
                                 <ul>
                                     <li>
                                         <a href="https://www.typescriptlang.org/">TypeScript</a>
@@ -88,9 +89,9 @@ export const WelcomeScreen: React.FC = () => {
                                         <a href="https://formik.org/docs/overview">Formik & Yup</a>
                                     </li>
                                 </ul>
-                            </Typography>
                             <Typography component="p" variant="body2">
                                 My other portfolio and whatnots:
+                            </Typography>
                                 <ul>
                                     <li>
                                         <a href="https://github.com/dreamvibe1993">Git Hub</a>
@@ -99,7 +100,6 @@ export const WelcomeScreen: React.FC = () => {
                                         <a href="https://soundcloud.com/mister-dreamvibe">SoundCloud</a>
                                     </li>
                                 </ul>
-                            </Typography>
                             <Typography>
                                 <a href="https://ekaterinburg.hh.ru/resume/416ea42dff089785ce0039ed1f345831765647">Hire me</a>🤩
                             </Typography>

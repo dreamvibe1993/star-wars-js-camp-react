@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            [theme.breakpoints.down('sm')]: {
+                minWidth: '300px',
+            },
         },
         grid: {
             flexGrow: 1,
@@ -73,7 +76,13 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         media: {
             height: 200,
-
+        },
+        jsxAccorderons: {
+            width: '100%', 
+            marginTop: '15px',
+            [theme.breakpoints.down('sm')]: {
+                minWidth: '300px',
+            },
         }
     }),
 );
@@ -144,7 +153,7 @@ export const MovieItemScreen: React.FC = () => {
 
 
     const relevantCharactersJSX = (
-        <Accordion style={{ width: '100%', marginTop: '15px' }}>
+        <Accordion className={materialUIStyles.jsxAccorderons}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -188,7 +197,7 @@ export const MovieItemScreen: React.FC = () => {
     )
     const relevantPlanetsJSX = (
 
-        <Accordion style={{ width: '100%', marginTop: '15px' }}>
+        <Accordion className={materialUIStyles.jsxAccorderons}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

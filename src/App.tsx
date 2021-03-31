@@ -50,8 +50,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: DRAWER_WIDTH,
     },
     backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
+      zIndex: theme.zIndex.drawer - 1,
       color: '#fff',
+      overflow: 'hidden'
     },
   })
 );
@@ -106,22 +107,27 @@ export const App: React.FC = () => {
     },
   });
 
-  const areMoviesLoaded = useSelector((state: RootState) => state.moviesStore.areMovieEntitiesLoaded) 
-  const areCharactersLoaded = useSelector((state: RootState) => state.charactersStore.areCharacterEntitiesLoaded) 
-  const arePlanetsLoaded = useSelector((state: RootState) => state.planetsStore.arePlanetEntitiesLoaded) 
+  const areMoviesLoaded = useSelector((state: RootState) => state.moviesStore.areMovieEntitiesLoaded)
+  const areCharactersLoaded = useSelector((state: RootState) => state.charactersStore.areCharacterEntitiesLoaded)
+  const arePlanetsLoaded = useSelector((state: RootState) => state.planetsStore.arePlanetEntitiesLoaded)
 
   const location = useLocation()
-  const checkStatus = (): boolean => (areMoviesLoaded || areCharactersLoaded || arePlanetsLoaded || location.pathname.includes('/create-film-entry') || location.pathname.includes('edit=1'))
-  const [loadingStatus, setStatus] = useState<boolean>(checkStatus())
+  const addresses = ['/create-film-entry', 'edit=1', '/login', '/register', '/', '/not-found']
+  const checkAddress = (): boolean => addresses.includes(location.pathname)
+  const checkStatus = (): boolean => {
+    if (!(areMoviesLoaded || areCharactersLoaded || arePlanetsLoaded)) {
+      return checkAddress()
+    }
+    return true
+  }
+  const [isCanShowMobileSidebar, setMobileSidebarStatus] = useState<boolean>(checkStatus())
   useEffect(() => {
-    setStatus(checkStatus())
+    setMobileSidebarStatus(checkStatus())
   }, [areMoviesLoaded, areCharactersLoaded, arePlanetsLoaded, location.pathname])
 
   const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
 
-  // useEffect(() => {
-  //   changeDrawerState(!isMediaQueryMatch375)
-  // }, [isMediaQueryMatch375])
+  const { Pending, Authorised, Unauthorised } = UserSignInStatus
 
   return (
     <div className="App">
@@ -134,48 +140,45 @@ export const App: React.FC = () => {
                 [materialUIStyles.contentShift]: open,
               })}
             >
-              {(isMediaQueryMatch375 && loadingStatus) && <Sidebar setDrawerState={changeDrawerState}><div></div></Sidebar>}
+              {(isMediaQueryMatch375 && isCanShowMobileSidebar) && <Sidebar setDrawerState={changeDrawerState}><div></div></Sidebar>}
               <div className={materialUIStyles.drawerHeader} />
-              {isUserSignedIn !== UserSignInStatus.Pending &&
-                <React.Fragment>
-                  <Switch>
-                    <Route path="/" exact>
-                      <WelcomeScreen />
-                    </Route>
-                    <Route path="/films/:id?">
-                      <MoviesSidebar setDrawerState={changeDrawerState} />
-                    </Route>
-                    <Route path="/people/:id?">
-                      <CharactersSidebar setDrawerState={changeDrawerState} />
-                    </Route>
-                    <Route path="/planets/:id?">
-                      <PlanetsSidebar setDrawerState={changeDrawerState} />
-                    </Route>
-                    <Route path="/login">
-                      <LoginPage />
-                    </Route>
-                    <Route path="/create-film-entry">
-                      {isUserSignedIn === UserSignInStatus.Authorised ? <CreateMovieItemScreen /> : <Redirect to="/login" />}
-                    </Route>
-                    <Route path="/not-found">
-                      <NotFoundScreen />
-                    </Route>
-                    <Route path="/error">
-                      <ErrorScreen />
-                    </Route>
-                    <Route path="/register">
-                      <RegistrationPage />
-                    </Route>
-                    <Route path="*">
-                      <Redirect to="/not-found" />
-                    </Route>
-                  </Switch>
-                </React.Fragment>}
+              <React.Fragment>
+                <Switch>
+                  <Route path="/" exact>
+                    <WelcomeScreen />
+                  </Route>
+                  <Route path="/films/:id?">
+                    <MoviesSidebar setDrawerState={changeDrawerState} />
+                  </Route>
+                  <Route path="/people/:id?">
+                    <CharactersSidebar setDrawerState={changeDrawerState} />
+                  </Route>
+                  <Route path="/planets/:id?">
+                    <PlanetsSidebar setDrawerState={changeDrawerState} />
+                  </Route>
+                  <Route path="/login">
+                    <LoginPage />
+                  </Route>
+                  <Route path="/create-film-entry">
+                    {isUserSignedIn !== Pending && (isUserSignedIn === Authorised ? <CreateMovieItemScreen /> : <Redirect to="/login" />)}
+                  </Route>
+                  <Route path="/not-found">
+                    <NotFoundScreen />
+                  </Route>
+                  <Route path="/error">
+                    <ErrorScreen />
+                  </Route>
+                  <Route path="/register">
+                    <RegistrationPage />
+                  </Route>
+                  <Route path="*">
+                    <Redirect to="/not-found" />
+                  </Route>
+                </Switch>
+              </React.Fragment>
             </main>
           </DrawerContext.Provider>
-          <Backdrop className={materialUIStyles.backdrop} open={isCommonLoadingBackDropOn}>
-            <CircularProgress color="inherit" />
-          </Backdrop>
+          <Backdrop className={materialUIStyles.backdrop} open={isCommonLoadingBackDropOn} />
 
         </CssBaseline>
 

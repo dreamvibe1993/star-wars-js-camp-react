@@ -169,12 +169,12 @@ export const CreateMovieItemScreen: React.FC = () => {
 
     const isEntityBeingAdded = useSelector((state: RootState) => state.moviesStore.isEntityBeingAdded)
 
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
+    
     if (isEntityBeingAdded) {
         return <Redirect to="/films" />
     }
-
-    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
-
+    
     return (
         <>
             <div className={materialUIStyles.root}>
@@ -275,9 +275,9 @@ export const CreateMovieItemScreen: React.FC = () => {
                                                 <InputLabel id="mutiple-chip-label">Characters to add</InputLabel>
 
                                                 <Select
-                                                    id="mutiple-chip"
-                                                    input={<Input id="select-multiple-chip" />}
-                                                    labelId="mutiple-chip-label"
+                                                    id="select-characters-to-add"
+                                                    input={<Input id="select-characters-to-add" />}
+                                                    labelId="select-characters-to-add-label"
                                                     MenuProps={MenuProps}
                                                     onChange={handleChangeCharacters}
                                                     renderValue={(selected) => (
@@ -303,9 +303,9 @@ export const CreateMovieItemScreen: React.FC = () => {
                                                 <InputLabel id="mutiple-chip-label">Planets to add</InputLabel>
 
                                                 <Select
-                                                    id="mutiple-chip"
-                                                    input={<Input id="select-multiple-chip" />}
-                                                    labelId="mutiple-chip-label"
+                                                    id="select-planets-to-add"
+                                                    input={<Input id="select-planets-to-add" />}
+                                                    labelId="select-planets-to-add-label"
                                                     MenuProps={MenuProps}
                                                     onChange={handleChangePlanets}
                                                     renderValue={(selected) => (
@@ -325,16 +325,15 @@ export const CreateMovieItemScreen: React.FC = () => {
                                             </FormControl>
                                         </TableCell>
                                         :
-                                        <div className={materialUIStyles.spinnerContainer}>
+                                        <TableCell className={materialUIStyles.spinnerContainer}>
                                             <CircularProgress />
-                                        </div>
+                                        </TableCell>
                                     }
                                 </TableRow>
                                 <TableRow />
                                 <TableRow >
                                     <TableCell align="left" />
                                     <TableCell align="right">
-                                        <div className={styles.buttonContainer}>
                                             <Link className={styles.link} to="/films">
                                                 <Button
                                                     className={materialUIStyles.cancelButton}
@@ -350,7 +349,6 @@ export const CreateMovieItemScreen: React.FC = () => {
                                                 variant="contained">
                                                 SAVE
                                         </Button>
-                                        </div>
                                     </TableCell>
                                 </TableRow>
                             </TableBody>
