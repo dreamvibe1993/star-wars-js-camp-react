@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         media: {
             height: 400,
+        },
+        modalAlike: {
+            width: '330px',
+            margin: '0 auto',
         }
     }),
 );
@@ -67,8 +71,7 @@ export const RegistrationPage: React.FC = () => {
         return <Redirect to="/login" />
     }
     return (
-        <div className={styles.fullWidth}>
-            <form className={styles.thirdWidth} onSubmit={formik.handleSubmit}>
+            <form className={materialUIStyles.modalAlike} onSubmit={formik.handleSubmit}>
                 <Paper className={styles.flexColumn}>
                     <Typography component="h2" style={{marginTop: '15px'}} variant="h4">Create an account</Typography>
                     <TextField
@@ -107,13 +110,12 @@ export const RegistrationPage: React.FC = () => {
                         variant="outlined"
                     />
                     <Button className={materialUIStyles.spacing} color="primary" type="submit" variant="contained">
-                        Submit
+                    Submit
                 </Button>
                 </Paper>
-            </form>
             <Typography color="textSecondary" variant="subtitle1">
-                Already have an account? <NavLink style={{ color: "red" }} to="/login">Log in!</NavLink>
+            Already have an account? <NavLink style={{ color: "red" }} to="/login">Log in!</NavLink>
             </Typography>
-        </div>
+            </form>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,11 +11,13 @@ import {
     CardActions,
     CardContent,
     CardMedia,
+    Container,
     createStyles,
     makeStyles,
     Paper,
     Theme,
-    Typography
+    Typography,
+    useMediaQuery
 } from '@material-ui/core';
 
 import styles from './LoginPage.module.css'
@@ -24,6 +26,7 @@ import { DRAWER_WIDTH } from '../../constants/sizing-constants';
 import { UserSignInStatus } from '../../store/reducer';
 import { signCurrentUserOut, signIn } from '../../store/thunks/auth-thunks';
 import { RootState } from '../../store/reducer';
+import { DrawerContext } from '../../App';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -55,6 +58,14 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         media: {
             height: 400,
+        },
+        flexColumn: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        modalAlike: {
+            width: '295px',
+            margin: '0 auto',
         }
     }),
 );
@@ -92,9 +103,10 @@ export const LoginPage: React.FC = () => {
         }
     }, [passwordErrorMessage, emailErrorMessage])
 
+
     if (isUserAuthorized === UserSignInStatus.Authorised) {
         return (
-            <div className={styles.thirdWidth}>
+            <div className={materialUIStyles.modalAlike}>
                 <Card>
                     <CardActionArea>
                         <CardMedia
@@ -122,9 +134,9 @@ export const LoginPage: React.FC = () => {
     }
 
     return (
-        <div className={styles.fullWidth}>
-            <form className={styles.thirdWidth} onSubmit={formik.handleSubmit}>
-                <Paper className={styles.flexColumn}>
+        <Container>
+            <form className={materialUIStyles.modalAlike} onSubmit={formik.handleSubmit}>
+                <Paper className={materialUIStyles.flexColumn}>
                     <TextField
                         className={materialUIStyles.spacing}
                         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -152,10 +164,12 @@ export const LoginPage: React.FC = () => {
                         Submit
                     </Button>
                 </Paper>
-            </form>
             <Typography color="textSecondary" variant="subtitle1">
                 Don't have an account yet? <NavLink style={{ color: "red" }} to="/register">Create an account!</NavLink>
             </Typography>
-        </div>
+            </form>
+        </Container>
+
+        // </div>
     )
 }

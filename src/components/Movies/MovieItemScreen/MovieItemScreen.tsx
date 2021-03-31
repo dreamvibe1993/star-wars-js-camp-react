@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
 
@@ -21,17 +21,18 @@ import {
     Select,
     TableCell,
     Theme,
-    Typography
+    Typography,
+    useMediaQuery
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { MovieItemEditForm } from '../MovieItemEditForm'
+import { MovieItemEditForm } from './MovieItemEditForm'
 import { Character } from '../../../models/character';
 import { Planet } from '../../../models/planet';
 import { Params } from '../../../models/query-params'
 
 import { getMovieItemData } from '../../../api/services/load-movies-data-api';
-import { MovieItemDisplayComponent } from '../MovieItemDisplayComponent';
+import { MovieItemDisplayComponent } from './MovieItemDisplayComponent';
 import { RootState, setMovieLoadingPending } from '../../../store/reducer';
 import { UserSignInStatus } from '../../../store/reducer';
 import { loadMovieItem } from '../../../store/thunks/movies-thunks';
@@ -63,10 +64,16 @@ const useStyles = makeStyles((theme: Theme) =>
         grid: {
             flexGrow: 1,
             backgroundColor: 'rgb(0,0,0,.05)',
-            borderRadius: '5px'
+            borderRadius: '5px',
+        },
+        gridItem: {
+            [theme.breakpoints.down('sm')]: {
+                width: 150
+            },
         },
         media: {
             height: 200,
+
         }
     }),
 );
@@ -131,6 +138,11 @@ export const MovieItemScreen: React.FC = () => {
         history.push(`/planets/${planetID}`);
     }
 
+    // const [mq, setMq] = useState<boolean>(false)
+    // const isMediaQueryMatch375 = useMediaQuery('(max-width:375px)')
+    // useEffect(() => setMq(isMediaQueryMatch375), [isMediaQueryMatch375])
+
+
     const relevantCharactersJSX = (
         <Accordion style={{ width: '100%', marginTop: '15px' }}>
             <AccordionSummary
@@ -143,7 +155,7 @@ export const MovieItemScreen: React.FC = () => {
             <AccordionDetails>
                 <Grid className={materialUIStyles.grid} spacing={2} container>
                     {relevantCharacters && relevantCharacters.map(character => (
-                        <Grid key={character.docId} onClick={() => renderCharacInfo(character.docId)} xs={2} item>
+                        <Grid key={character.docId} className={materialUIStyles.gridItem} onClick={() => renderCharacInfo(character.docId)} xs="auto" item>
                             <Card>
                                 <CardActionArea>
                                     <CardMedia
@@ -187,7 +199,7 @@ export const MovieItemScreen: React.FC = () => {
             <AccordionDetails>
                 <Grid className={materialUIStyles.grid} spacing={2} container>
                     {relevantPlanets && relevantPlanets.map(planet => (
-                        <Grid key={planet.docId} onClick={() => renderPlanetInfo(planet.docId)} xs={2} item>
+                        <Grid key={planet.docId} className={materialUIStyles.gridItem} onClick={() => renderPlanetInfo(planet.docId)} xs="auto" item>
                             <Card>
                                 <CardActionArea>
                                     <CardMedia

@@ -25,18 +25,18 @@ import {
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
-import { Movie } from '../../../models/movie';
-import { MovieTransferValueEditForm } from '../../../models/movie-transfer-value-edit-form'
-import { movieEditYupValScheme } from '../../../models/yup-validation-schemas';
+import { Movie } from '../../../../models/movie';
+import { MovieTransferValueEditForm } from '../../../../models/movie-transfer-value-edit-form'
+import { movieEditYupValScheme } from '../../../../models/yup-validation-schemas';
 import styles from './MovieItemEditForm.module.css'
-import { RootState } from '../../../store/reducer';
-import { setRelevChars, setRelevPlanets, UserSignInStatus } from '../../../store/reducer';
-import { MoviesDTO } from '../../../api/dtos/MovieDTO';
-import { movieDTOMapper } from '../../../api/mappers/mapper';
-import { editMovieEntry, loadDataToAddWhenCreating } from '../../../store/thunks/movies-thunks';
-import { Planet } from '../../../models/planet';
-import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../constants/sizing-constants';
-import { Character } from '../../../models/character';
+import { RootState } from '../../../../store/reducer';
+import { setRelevChars, setRelevPlanets, UserSignInStatus } from '../../../../store/reducer';
+import { MoviesDTO } from '../../../../api/dtos/MovieDTO';
+import { movieDTOMapper } from '../../../../api/mappers/mapper';
+import { editMovieEntry, loadDataToAddWhenCreating } from '../../../../store/thunks/movies-thunks';
+import { Planet } from '../../../../models/planet';
+import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../../constants/sizing-constants';
+import { Character } from '../../../../models/character';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

@@ -19,7 +19,7 @@ import { Sidebar } from '../../Sidebar';
 import { PlanetsItemScreen } from '../PlanetsItemScreen';
 import { Params } from '../../../models/query-params'
 import styles from './PlanetsSidebar.module.css'
-import { NAVBAR_HEIGHT , ITEM_HEIGHT } from '../../../constants/sizing-constants';
+import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
 import { RootState } from '../../../store/reducer';
 import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, discardPlanetsItemsAmmount } from '../../../store/reducer';
@@ -39,8 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+interface Props {
+    setDrawerState: (isOpen: boolean) => void
+}
 /** Sidebar (or a drawer) where the planets items are displayed */
-export const PlanetsSidebar: React.FC = () => {
+export const PlanetsSidebar: React.FC<Props> = ({ setDrawerState }) => {
     const materialUIStyles = useStyles();
     const dispatch = useDispatch();
     const queryParams = useParams<Params>();
@@ -57,7 +60,7 @@ export const PlanetsSidebar: React.FC = () => {
             <ListItemText primary={planetItem.name} />
         </ListItem>
     ))
-    
+
     useEffect(() => {
         if (movieSidebarSnapshotTeardown) {
             movieSidebarSnapshotTeardown()
@@ -101,7 +104,7 @@ export const PlanetsSidebar: React.FC = () => {
 
     return (
         <>
-            <Sidebar >
+            <Sidebar setDrawerState={setDrawerState}>
                 <div ref={scrollRef} className={styles.drawerContainer}>
                     <List>
                         {listItems}

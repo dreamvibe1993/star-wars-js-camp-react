@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,8 +28,13 @@ import styles from './Navbar.module.css'
 import { RootState } from '../../store/reducer';
 import { Logo } from '../../imgs/logo';
 import { searchMovieEntry } from '../../store/thunks/movies-thunks';
-import { useMediaQuery } from '@material-ui/core';
-
+import { IconButton, useMediaQuery } from '@material-ui/core';
+import { DRAWER_WIDTH } from '../../constants/sizing-constants';
+import { DrawerContext } from '../../App';
+import classes from '*.module.scss';
+import { MenuIcon } from '@material-ui/data-grid';
+import PublicIcon from '@material-ui/icons/Public';
+import { SearchBar } from '../SearchBar';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -40,45 +45,58 @@ const useStyles = makeStyles((theme: Theme) =>
             }),
             zIndex: theme.zIndex.drawer + 1,
         },
-
-        searchIcon: {
-            padding: theme.spacing(0, 2),
-            height: '100%',
-            position: 'absolute',
-            pointerEvents: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+        appBarShift: {
+            width: `calc(100% - ${DRAWER_WIDTH}px)`,
+            marginLeft: DRAWER_WIDTH,
+            transition: theme.transitions.create(['margin', 'width'], {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
         },
-        search: {
-            position: 'relative',
-            borderRadius: theme.shape.borderRadius,
-            backgroundColor: fade(theme.palette.common.white, 0.15),
-            '&:hover': {
-                backgroundColor: fade(theme.palette.common.white, 0.25),
-            },
-            marginLeft: 0,
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                marginLeft: theme.spacing(1),
-                width: 'auto',
-            },
+        // searchIcon: {
+        //     padding: theme.spacing(0, 2),
+        //     height: '100%',
+        //     position: 'absolute',
+        //     pointerEvents: 'none',
+        //     display: 'flex',
+        //     alignItems: 'center',
+        //     justifyContent: 'center',
+        // },
+        // search: {
+        //     position: 'relative',
+        //     borderRadius: theme.shape.borderRadius,
+        //     backgroundColor: fade(theme.palette.common.white, 0.15),
+        //     '&:hover': {
+        //         backgroundColor: fade(theme.palette.common.white, 0.25),
+        //     },
+        //     marginLeft: 0,
+        //     width: '100%',
+        //     [theme.breakpoints.up('sm')]: {
+        //         marginLeft: theme.spacing(1),
+        //         width: 'auto',
+        //     },
+        // },
+        // inputInput: {
+        //     padding: theme.spacing(1, 1, 1, 0),
+        //     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        //     transition: theme.transitions.create('width'),
+        //     width: '100%',
+        //     [theme.breakpoints.up('sm')]: {
+        //         width: '12ch',
+        //         '&:focus': {
+        //             width: '20ch',
+        //         },
+        //     },
+        // },
+        // inputRoot: {
+        //     color: 'inherit',
+        // },
+        menuButton: {
+            marginRight: theme.spacing(2),
         },
-        inputInput: {
-            padding: theme.spacing(1, 1, 1, 0),
-            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                width: '12ch',
-                '&:focus': {
-                    width: '20ch',
-                },
-            },
+        hide: {
+            display: 'none',
         },
-        inputRoot: {
-            color: 'inherit',
-        }
     }),
 );
 
@@ -99,15 +117,15 @@ export const Navbar: React.FC<Props> = ({
 }) => {
     const history = useHistory()
     const dispatch = useDispatch();
-    const formik = useFormik({
-        initialValues: {
-            title: '',
-        },
-        validationSchema,
-        onSubmit: (values) => {
-            dispatch(searchMovieEntry(values.title))
-        }
-    })
+    // const formik = useFormik({
+    //     initialValues: {
+    //         title: '',
+    //     },
+    //     validationSchema,
+    //     onSubmit: (values) => {
+    //         dispatch(searchMovieEntry(values.title))
+    //     }
+    // })
     const [value, setValue] = useState<SliderState>(false);
     const location = useLocation();
 
@@ -161,18 +179,40 @@ export const Navbar: React.FC<Props> = ({
 
     const themingMode = useSelector((state: RootState) => state.componentsState.mode)
 
+    const { open } = useContext(DrawerContext)
+
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:375px)')
+
+    const appbarPersistentMode = clsx(materialUIStyles.appBar, { [materialUIStyles.appBarShift]: open })
+    const appbarPermanentMode = clsx(materialUIStyles.appBar)
 
     return (
         <AppBar
-            className={clsx(materialUIStyles.appBar)}
+            className={isMediaQueryMatch375 ? appbarPersistentMode : appbarPermanentMode}
             position="fixed"
         >
             <Toolbar>
-                <Tabs aria-label="simple tabs" onChange={setSliderPosition} value={value}>
-                    <Tab component={NavLink} label="Films" to="/films" {...a11yProps(0)} />
-                    <Tab component={NavLink} label="Characters" to="/people" {...a11yProps(1)} />
-                    <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
-                </Tabs>
+                {
+                    !isMediaQueryMatch375 ?
+                        <Tabs aria-label="simple tabs" onChange={setSliderPosition} value={value}>
+                            <Tab component={NavLink} label="Films" to="/films" {...a11yProps(0)} />
+                            <Tab component={NavLink} label="Characters" to="/people" {...a11yProps(1)} />
+                            <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
+                        </Tabs>
+                        :
+                        <IconButton
+                            aria-label="open drawer"
+                            className={clsx(materialUIStyles.menuButton, open && materialUIStyles.hide)}
+                            color="inherit"
+                            edge="start"
+                            onClick={() => {
+                                setDrawerState(true)
+                                // history.push('/films') 
+                            }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                }
                 <Typography className={styles.title} variant="h6">
                     <Link className={styles.cancelLinkStyles} to="/"><Logo color={themingMode ? '#fff200' : '#fff'} /></Link>
                 </Typography>
@@ -185,27 +225,14 @@ export const Navbar: React.FC<Props> = ({
                         onChange={handleChange}
                     />
                 </div>
-
-                <form onSubmit={formik.handleSubmit}>
-                    <div className={materialUIStyles.search}>
-                        <div className={materialUIStyles.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            classes={{
-                                root: materialUIStyles.inputRoot,
-                                input: materialUIStyles.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            name="title"
-                            onChange={formik.handleChange}
-                            placeholder="Search..."
-                        />
-                    </div>
-                </form>
+                {!isMediaQueryMatch375 && 
+                <> 
+                <SearchBar />
                 {isUserSignedIn === UserSignInStatus.Authorised
                     ? <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())}>Logout</Button>
                     : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+                }
+                </>
                 }
             </Toolbar>
         </AppBar>

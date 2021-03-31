@@ -23,6 +23,8 @@ export interface MoviesStore {
     isEntityBeingDeleted: boolean;
 
     redirectLink: string | null;
+
+    areMovieEntitiesLoaded: boolean;
 }
 
 /** Planets store */
@@ -37,6 +39,8 @@ export interface PlanetsStore {
     numberOfItemsDisplayPlanets: number;
 
     isPlanetLoadingPending: boolean;
+
+    arePlanetEntitiesLoaded: boolean;
 }
 
 
@@ -53,6 +57,8 @@ export interface CharactersStore {
     numberOfItemsDisplayCharacters: number;
 
     isCharacterLoadingPending: boolean;
+
+    areCharacterEntitiesLoaded: boolean;    
 }
 
 /** Components state store */

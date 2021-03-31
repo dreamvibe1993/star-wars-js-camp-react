@@ -31,8 +31,12 @@ const useStyles = makeStyles(() =>
     }),
 );
 
+interface Props {
+    setDrawerState: (isOpen: boolean) => void
+}
+
 /** Sidebar (or drawer) where the movie items are displayed */
-export const MoviesSidebar: React.FC = () => {
+export const MoviesSidebar: React.FC<Props> = ({setDrawerState}) => {
     const materialUIStyles = useStyles();
 
     const dispatch = useDispatch();
@@ -69,7 +73,7 @@ export const MoviesSidebar: React.FC = () => {
 
     return (
         <>
-            <Sidebar>
+            <Sidebar setDrawerState={setDrawerState}>
                 <div className={styles.drawerContainer}>
                     <List>
                         {listItems}

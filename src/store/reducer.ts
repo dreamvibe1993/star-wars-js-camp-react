@@ -23,10 +23,15 @@ const moviesStoreReducer = createSlice({
         isEntityBeingAdded: false,
         isEntityBeingDeleted: false,
         redirectLink: null,
+        areMovieEntitiesLoaded: false,
     } as MoviesStore,
     reducers: {
         setMovies: (state, action: PayloadAction<Movie[]>) => {
-            state.movies = action.payload;
+            if (action.payload) {
+                state.movies = action.payload;
+                state.areMovieEntitiesLoaded = true;
+            }
+            
         },
         setRelevChars: (state, action: PayloadAction<Character[] | null>) => {
             state.relevantCharacters = action.payload;
@@ -103,7 +108,8 @@ const charactersStoreReducer = createSlice({
         characterItem: null,
         numberOfItemsDisplayCharacters: 1,
         itemsToDispCharacters: 1,
-        isCharacterLoadingPending: true
+        isCharacterLoadingPending: true,
+        areCharacterEntitiesLoaded: false,
     } as CharactersStore,
     reducers: {
         setCharacters: (state, action: PayloadAction<Character[]>) => {
@@ -126,6 +132,7 @@ const charactersStoreReducer = createSlice({
         builder
             .addCase(lazyloadMoreCharacters.fulfilled, (state, action) => {
                 if (action.payload) {
+                    state.areCharacterEntitiesLoaded = true;
                     state.characters = action.payload;
                 }
             })
@@ -160,7 +167,8 @@ const planetsStoreReducer = createSlice({
         planetItem: null,
         numberOfItemsDisplayPlanets: 1,
         itemsToDispPlanets: 1,
-        isPlanetLoadingPending: true
+        isPlanetLoadingPending: true,
+        arePlanetEntitiesLoaded: false,
     } as PlanetsStore,
     reducers: {
         setPlanets: (state, action: PayloadAction<Planet[]>) => {
@@ -183,6 +191,7 @@ const planetsStoreReducer = createSlice({
         builder
             .addCase(lazyloadMorePlanets.fulfilled, (state, action) => {
                 if (action.payload) {
+                    state.arePlanetEntitiesLoaded = true;
                     state.planets = action.payload;
                 }
             })

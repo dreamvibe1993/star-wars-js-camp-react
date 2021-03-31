@@ -19,12 +19,12 @@ import {
     Theme
 } from '@material-ui/core';
 
-import { Movie } from '../../../models/movie';
-import { DeletionConfirmationModal } from '../DeletionConfirmationModal';
-import styles from '../MovieItemScreen/MovieItemScreen.module.css'
-import { RootState } from '../../../store/reducer';
+import { Movie } from '../../../../models/movie';
+import { DeletionConfirmationModal } from '../../DeletionConfirmationModal';
+import styles from '../MovieItemScreen.module.css'
+import { RootState } from '../../../../store/reducer';
 
-import { UserSignInStatus, setDeletionModalOpen } from '../../../store/reducer';
+import { UserSignInStatus, setDeletionModalOpen } from '../../../../store/reducer';
 
 
 interface Props {
@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         tableContainer: {
             display: 'flex',
+            [theme.breakpoints.down('sm')]: {
+                flexDirection: 'column'
+            },
         },
         imgContainer: {
             height: '450px',

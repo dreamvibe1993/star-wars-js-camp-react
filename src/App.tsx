@@ -22,6 +22,7 @@ import { UserSignInStatus } from './store/reducer'
 import { getSignInStatus } from './api/services/auth';
 import { RootState } from './store/reducer';
 import { RegistrationPage } from './components/RegistrationPage';
+import { Sidebar } from './components/Sidebar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,13 +106,21 @@ export const App: React.FC = () => {
     },
   });
 
+  const areMoviesLoaded = useSelector((state: RootState) => state.moviesStore.areMovieEntitiesLoaded) 
+  const areCharactersLoaded = useSelector((state: RootState) => state.charactersStore.areCharacterEntitiesLoaded) 
+  const arePlanetsLoaded = useSelector((state: RootState) => state.planetsStore.arePlanetEntitiesLoaded) 
 
+  const loadingStatus = (areMoviesLoaded || areCharactersLoaded || arePlanetsLoaded)
+  const isMediaQueryMatch375 = useMediaQuery('(max-width:375px)')
+
+  // useEffect(() => {
+  //   changeDrawerState(!isMediaQueryMatch375)
+  // }, [isMediaQueryMatch375])
 
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
         <CssBaseline>
-
           <DrawerContext.Provider value={drawerContextValue}>
             <Navbar setDrawerState={changeDrawerState} />
             <main
@@ -119,6 +128,7 @@ export const App: React.FC = () => {
                 [materialUIStyles.contentShift]: open,
               })}
             >
+              {(isMediaQueryMatch375 && !loadingStatus) && <Sidebar setDrawerState={changeDrawerState}><div></div></Sidebar>}
               <div className={materialUIStyles.drawerHeader} />
               {isUserSignedIn !== UserSignInStatus.Pending &&
                 <React.Fragment>
@@ -127,13 +137,13 @@ export const App: React.FC = () => {
                       <WelcomeScreen />
                     </Route>
                     <Route path="/films/:id?">
-                      <MoviesSidebar />
+                      <MoviesSidebar setDrawerState={changeDrawerState} />
                     </Route>
                     <Route path="/people/:id?">
-                      <CharactersSidebar />
+                      <CharactersSidebar setDrawerState={changeDrawerState} />
                     </Route>
                     <Route path="/planets/:id?">
-                      <PlanetsSidebar />
+                      <PlanetsSidebar setDrawerState={changeDrawerState} />
                     </Route>
                     <Route path="/login">
                       <LoginPage />

@@ -13,6 +13,7 @@ import {
     TableCell,
     TableContainer,
     TableRow,
+    Theme,
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -23,7 +24,7 @@ import { Params } from '../../../models/query-params'
 import { RootState } from '../../../store/reducer';
 import { loadCharacterItem } from '../../../store/thunks/characters-thunks';
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         table: {
             width: "100%",
@@ -34,6 +35,9 @@ const useStyles = makeStyles(() =>
         },
         tableContainer: {
             display: 'flex',
+            [theme.breakpoints.down('sm')]: {
+                flexDirection: 'column'
+            },
         },
         spinnerContainer: {
             width: '100%',

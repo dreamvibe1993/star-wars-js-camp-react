@@ -45,8 +45,12 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+interface Props {
+    setDrawerState: (isOpen: boolean) => void
+}
+
 /** Sidebar (or drawer) where the people items are displayed */
-export const CharactersSidebar: React.FC = () => {
+export const CharactersSidebar: React.FC<Props> = ({setDrawerState}) => {
     const materialUIStyles = useStyles();
 
     /** Variable to check if there's a person item */
@@ -110,7 +114,7 @@ export const CharactersSidebar: React.FC = () => {
 
     return (
         < >
-            <Sidebar>
+            <Sidebar setDrawerState={setDrawerState}>
                 <div ref={scrollRef} className={styles.drawerContainer}>
                     <List>
                         {listItems}
