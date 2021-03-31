@@ -14,18 +14,30 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     }),
 );
-
+interface Props {
+    error: Error;
+}
 /** Screen to be shown if there was any error caught */
-export const ErrorScreen: React.FC = () => {
+export const ErrorScreen: React.FC<Props> = ({ error }) => {
     const classes = useStyles()
     return (
         <>
             <Paper className={classes.spacing}>
                 <Typography component="h2" variant="h3" gutterBottom>Sorry, something went wrong!</Typography>
                 <Typography variant="body1" gutterBottom>
-                    Contact us immediately! 
+                    Error message:
                 </Typography>
-                    <a href="mailto:fakemail@yoursite.com">Email</a>
+                <hr />
+                <Typography variant="h6" gutterBottom>
+                    "{error.message}"
+                </Typography>
+                <hr />
+                <Typography variant="body1" gutterBottom>
+                    Please, <a href="https://t.me/GEORGIY_APRAKSIN">contact me</a> and cite the message above.
+                </Typography>
+                <Typography variant="h6" gutterBottom>
+                    Thank You!
+                </Typography>
             </Paper>
         </>
     )

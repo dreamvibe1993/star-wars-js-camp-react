@@ -1,0 +1,16 @@
+.tenthWidth {
+    width: 10%;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chip {
+    margin: 2;
+}

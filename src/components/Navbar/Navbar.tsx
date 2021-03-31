@@ -1,32 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFormik } from 'formik';
 
 import {
     makeStyles,
     Theme,
-    createStyles,
-    fade
+    createStyles
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Switch from '@material-ui/core/Switch';
 
-import * as actionCreators from '../../store/action-creators/action-creators'
-import { signOut } from '../../api/services/auth';
-import { searchMovieEntity } from '../../api/services/load-movies-data';
+import { IconButton, useMediaQuery } from '@material-ui/core';
+import { MenuIcon } from '@material-ui/data-grid';
 
-import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
+import { DrawerContext } from '../../App';
+import { Logo } from '../../imgs/logo';
+import { DRAWER_WIDTH } from '../../constants/sizing-constants';
 import styles from './Navbar.module.css'
-import { RootState } from '../../store/store';
-import { UserSignInStatus } from '../../store/reducer';
+import { SearchBar } from '../SearchBar';
+import { RootState } from '../../store/thunks/store';
+
+import { UserSignInStatus, signCurrentUserOut } from '../../store/thunks/auth-thunks';
+import { setThemingMode, setCommonBackdropOn, setCommonBackdropOff } from '../../store/thunks/components-thunks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,49 +38,22 @@ const useStyles = makeStyles((theme: Theme) =>
             }),
             zIndex: theme.zIndex.drawer + 1,
         },
-
-        searchIcon: {
-            padding: theme.spacing(0, 2),
-            height: '100%',
-            position: 'absolute',
-            pointerEvents: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+        appBarShift: {
+            width: `calc(100% - ${DRAWER_WIDTH}px)`,
+            marginLeft: DRAWER_WIDTH,
+            transition: theme.transitions.create(['margin', 'width'], {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
         },
-        search: {
-            position: 'relative',
-            borderRadius: theme.shape.borderRadius,
-            backgroundColor: fade(theme.palette.common.white, 0.15),
-            '&:hover': {
-                backgroundColor: fade(theme.palette.common.white, 0.25),
-            },
-            marginLeft: 0,
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                marginLeft: theme.spacing(1),
-                width: 'auto',
-            },
+        menuButton: {
+            marginRight: theme.spacing(2),
         },
-        inputInput: {
-            padding: theme.spacing(1, 1, 1, 0),
-            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                width: '12ch',
-                '&:focus': {
-                    width: '20ch',
-                },
-            },
+        hide: {
+            display: 'none',
         },
-        inputRoot: {
-            color: 'inherit',
-        }
     }),
 );
-
-const validationSchema = NavbarSearchYupValScheme;
 
 type SliderState = number | boolean
 
@@ -96,27 +70,17 @@ export const Navbar: React.FC<Props> = ({
 }) => {
     const history = useHistory()
     const dispatch = useDispatch();
-    const formik = useFormik({
-        initialValues: {
-            title: '',
-        },
-        validationSchema,
-        onSubmit: (values) => {
-            dispatch(actionCreators.setCommonBackdropOn())
-            searchMovieEntity(values.title).then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        querySnapshot.forEach((querySnapshotItem) => {
-                            history.push(`/films/${querySnapshotItem.id}`)
-                        })
-                    } else {
-                        history.push('/not-found')
-                    }
-                    dispatch(actionCreators.setCommonBackdropOff())
-                })
-        }
-    })
+
     const [value, setValue] = useState<SliderState>(false);
     const location = useLocation();
+
+    const redirectLink = useSelector((state: RootState) => state.moviesStore.redirectLink)
+
+    useEffect(() => {
+        if (redirectLink) {
+            history.push(redirectLink)
+        }
+    }, [redirectLink])
 
     /** Hook that checks an url and sets the slider accordingly */
     useEffect(() => {
@@ -150,56 +114,80 @@ export const Navbar: React.FC<Props> = ({
         };
     }
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn);
-    
 
-    function signUserOut() {
-        signOut()
-            .then(() => {
-                console.log('Signed Out');
-            })
-            .catch((error) => {
-                console.error(error);
-                history.push('/error')
-            })
-    }
+    const [toggler, setToggler] = React.useState<boolean>(true);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setToggler(event.target.checked);
+        dispatch(setThemingMode(event.target.checked))
+    };
+
+    const themingMode = useSelector((state: RootState) => state.componentsState.mode)
+
+    const { open } = useContext(DrawerContext)
+
+    const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
+
+    useEffect(() => {
+        if (open && isMediaQueryMatch375) {
+            dispatch(setCommonBackdropOn())
+        } else {
+            dispatch(setCommonBackdropOff())
+        }
+    }, [open, isMediaQueryMatch375])
+
+    const appbarPersistentMode = clsx(materialUIStyles.appBar, { [materialUIStyles.appBarShift]: open })
+    const appbarPermanentMode = clsx(materialUIStyles.appBar)
 
     return (
         <AppBar
-            className={clsx(materialUIStyles.appBar)}
-            color="primary"
+            className={isMediaQueryMatch375 ? appbarPersistentMode : appbarPermanentMode}
             position="fixed"
         >
             <Toolbar>
-                <Tabs aria-label="simple tabs" onChange={setSliderPosition} value={value}>
-                    <Tab component={NavLink} label="Films" to="/films" {...a11yProps(0)} />
-                    <Tab component={NavLink} label="People" to="/people" {...a11yProps(1)} />
-                    <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
-                </Tabs>
-                <Typography className={styles.title} variant="h6">
-                    <Link className={styles.cancelLinkStyles} to="/">STAR WARS GEEK LAIR</Link>
-                </Typography>
-                <form onSubmit={formik.handleSubmit}>
-                    <div className={materialUIStyles.search}>
-                        <div className={materialUIStyles.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            classes={{
-                                root: materialUIStyles.inputRoot,
-                                input: materialUIStyles.inputInput,
+                {
+                    !isMediaQueryMatch375 ?
+                        <Tabs aria-label="simple tabs" onChange={setSliderPosition} value={value}>
+                            <Tab component={NavLink} label="Films" to="/films" {...a11yProps(0)} />
+                            <Tab component={NavLink} label="Characters" to="/people" {...a11yProps(1)} />
+                            <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
+                        </Tabs>
+                        :
+                        <IconButton
+                            aria-label="open drawer"
+                            className={clsx(materialUIStyles.menuButton, open && materialUIStyles.hide)}
+                            color="inherit"
+                            edge="start"
+                            onClick={() => {
+                                setDrawerState(true)
+                                // history.push('/films') 
                             }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            name="title"
-                            onChange={formik.handleChange}
-                            placeholder="Search…"
-                        />
-                    </div>
-                </form>
-                {isUserSignedIn === UserSignInStatus.Authorised
-                    ? <Button color="inherit" onClick={() => signUserOut()}>Logout</Button>
-                    : <Link className={styles.cancelLinkStyles} to='/login'>
-                        <Button color="inherit">Login</Button>
-                    </Link>}
+                        >
+                            <MenuIcon />
+                            {/* {!location.pathname.includes('/create-film-entry') || !location.pathname.includes('?edit=1')) && } */}
+                        </IconButton>
+                }
+                <Typography className={styles.title} variant="h6">
+                    <Link className={styles.cancelLinkStyles} to="/"><Logo color={themingMode ? '#fff200' : '#fff'} /></Link>
+                </Typography>
+
+                <div>
+                    <Switch
+                        checked={toggler}
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                        name="themingToggler"
+                        onChange={handleChange}
+                    />
+                </div>
+                {!isMediaQueryMatch375 &&
+                    <>
+                        <SearchBar />
+                        {isUserSignedIn === UserSignInStatus.Authorised
+                            ? <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())}>Logout</Button>
+                            : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+                        }
+                    </>
+                }
             </Toolbar>
         </AppBar>
     )

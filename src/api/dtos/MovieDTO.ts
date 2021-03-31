@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /** Movies DTO */
 export interface MoviesDTO {
   fields: {
@@ -22,14 +23,16 @@ export interface MoviesDTO {
     /** Planets taken place in the certain movie */
     planets: number[];
     /** Species taken place in the certain movie */
-    species: [];
+    species: number[];
     /** Starships taken place in the certain movie */
-    starships: [];
+    starships: number[];
     /** Vehicles taken place in the certain movie */
-    vehicles: [];
+    vehicles: number[];
   };
   /** Link to model */
   model: string;
   /** Personal key */
   pk: number;
+  /** Movie's image link */
+  img: string | null;
 }

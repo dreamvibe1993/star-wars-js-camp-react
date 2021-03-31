@@ -1,0 +1,14 @@
+
+.tenthWidth {
+    width: 10%;
+}
+
+.buttonContainer {
+    margin-top: 15px;
+    width: 100%;
+    text-align: right;
+}
+
+.link {
+    text-decoration: none;
+}

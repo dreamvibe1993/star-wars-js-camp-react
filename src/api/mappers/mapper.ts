@@ -1,14 +1,13 @@
 import { Movie } from '../../models/movie';
-import { MovieTransderValueForUpdate, MovieTransferValueEditForm } from '../../models/movie-transfer-value-edit-form';
-import { MovieTransferValueCreateForm } from '../../models/movies-transfer-value-create-form';
-import { Person } from '../../models/person';
+import { Character } from '../../models/character';
 import { Planet } from '../../models/planet';
 import { MoviesDTO } from '../dtos/MovieDTO';
-import { PersonDTO } from '../dtos/PersonDTO';
+import { CharacterDTO } from '../dtos/CharacterDTO';
 import { PlanetDTO } from '../dtos/PlanetDTO';
 
 /**
  * Returns a movie entry to display.
+ *
  * @param payload Data to map from DB
  * @param docID Document ID of the collection
  */
@@ -29,25 +28,12 @@ export const mapMovie = (payload: MoviesDTO, docID: string): Movie => ({
   pk: payload.pk,
   model: payload.model,
   docId: docID,
+  img: payload.img ?? null
 } as Movie);
 
 /**
- * When editing maps and object with specific fields to update to.
- * @param movie Movie entry which is being edited.
- * @param formValues Values from a form.
- */
-export const mapMovieDTOForEdit = (movie: Movie, formValues: MovieTransferValueEditForm): MovieTransderValueForUpdate => ({
-  'fields.title': formValues.title,
-  'fields.opening_crawl': formValues.openingCrawl,
-  'fields.producer': formValues.producer,
-  'fields.release_date': formValues.releaseDate,
-  'fields.director': formValues.director,
-  'fields.created': movie.created ?? new Date().toISOString(),
-  'fields.edited': new Date().toISOString(),
-})
-
-/**
  * Returns a planet entry to display.
+ *
  * @param payload Data to map from DB
  * @param docID Document ID of the collection
  */
@@ -66,14 +52,16 @@ export const mapPlanet = (payload: PlanetDTO, docID: string): Planet => ({
   pk: payload.pk,
   model: payload.model,
   docId: docID,
+  img: payload.img
 } as Planet);
 
 /**
  * Returns a person entry to display.
+ *
  * @param payload Data to map from DB
  * @param docID Document ID of the collection
  */
-export const mapPerson = (payload: PersonDTO, docID: string): Person => ({
+export const mapCharacter = (payload: CharacterDTO, docID: string): Character => ({
   birthYear: payload.fields.birth_year,
   created: payload.fields.created,
   edited: payload.fields.edited,
@@ -82,37 +70,38 @@ export const mapPerson = (payload: PersonDTO, docID: string): Person => ({
   hairColor: payload.fields.hair_color,
   height: payload.fields.height,
   homeworld: payload.fields.homeworld,
-  image: payload.fields.image,
+  image: payload.fields.image ?? null,
   mass: payload.fields.mass,
   name: payload.fields.name,
   skinColor: payload.fields.skin_color,
   pk: payload.pk,
   model: payload.model,
   docId: docID,
-} as Person);
+} as Character);
 
 /**
  * Returns DTO to send it back to DB.
- * ONLY FOR CREATED BY USER ENTRIES.
+ *
  * @param payload Movie's data to map.
  * @param indexNumber Personal key to set.
  */
-export const movieDTOMapper = (payload: MovieTransferValueCreateForm, indexNumber: number): MoviesDTO => ({
+export const movieDTOMapper = (payload: Movie, indexNumber: number): MoviesDTO => ({
   fields: {
     director: payload.director,
     opening_crawl: payload.openingCrawl,
     producer: payload.producer,
     release_date: payload.releaseDate,
     title: payload.title,
-    created: new Date().toISOString(),
+    created: payload.created ?? new Date().toISOString(),
     edited: new Date().toISOString(),
     episode_id: '',
     characters: payload.charactersPKs,
     planets: payload.planetsPKs,
-    species: [],
-    starships: [],
-    vehicles: [],
+    species: payload.speciesPKs ?? [],
+    starships: payload.starshipsPKs ?? [],
+    vehicles: payload.vehiclesPKs ?? [],
   },
+  img: payload.img ?? null,
   pk: indexNumber + 1,
   model: '',
 });

@@ -1,11 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { App } from './App';
-import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import { store } from './store/store';
 import { BrowserRouter } from 'react-router-dom';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import firebase from "firebase/app";
+
+import { App } from './App';
+
+import reportWebVitals from './reportWebVitals';
+import { ErrorScreen } from './components/ErrorScreen';
+import { firebaseApp } from './api/firebase';
+import { store } from './store/thunks/store';
+
+import { signUserIn, setUserEmailString, signUserOut } from './store/thunks/auth-thunks';
+
 
 /** Sidebar state to dispatch to context */
 const sidebar = {
@@ -14,13 +23,34 @@ const sidebar = {
   toggleClose() { this.open = false },
 }
 
+function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  return (
+    <ErrorScreen error={error} />
+  )
+}
+
+/** Checking if user is signed in or out. */
+export const getSignInStatus = (): firebase.Unsubscribe => firebaseApp.auth().onAuthStateChanged((user) => {
+  // the observer is only triggered on sign-in or sign-out.
+  if (user) {
+    store.dispatch(signUserIn());
+    store.dispatch(setUserEmailString(user.email))
+  } else {
+    store.dispatch(signUserOut());
+    store.dispatch(setUserEmailString(null))
+  }
+})
+
+
 export const isDrawerOpen = React.createContext(sidebar);
 ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>,
+  <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </ErrorBoundary>,
   document.getElementById('root')
 );
 

@@ -1,23 +1,29 @@
-import React from 'react';
+/* eslint-disable react/no-unescaped-entities */
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import TextField from '@material-ui/core/TextField';
 import {
     Button,
+    Card,
+    CardActionArea,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Container,
     createStyles,
     makeStyles,
     Paper,
-    Theme
-} from '@material-ui/core';
+    Theme,
+    Typography} from '@material-ui/core';
 
-import { signIn } from '../../api/services/auth';
-
-import * as actionCreators from '../../store/action-creators/action-creators'
-import styles from './LoginPage.module.css'
 import { loginPageYupValScheme } from '../../models/yup-validation-schemas';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
+
+import { signCurrentUserOut, signIn, UserSignInStatus } from '../../store/thunks/auth-thunks';
+import { RootState } from '../../store/thunks/store';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,6 +53,17 @@ const useStyles = makeStyles((theme: Theme) =>
         spacing: {
             margin: theme.spacing(2),
         },
+        media: {
+            height: 400,
+        },
+        flexColumn: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        modalAlike: {
+            width: '295px',
+            margin: '0 auto',
+        }
     }),
 );
 
@@ -55,7 +72,6 @@ const validationSchema = loginPageYupValScheme;
 /** Login page interface */
 export const LoginPage: React.FC = () => {
     const materialUIStyles = useStyles();
-    const history = useHistory();
     const dispatch = useDispatch();
 
     const formik = useFormik({
@@ -65,26 +81,59 @@ export const LoginPage: React.FC = () => {
         },
         validationSchema,
         onSubmit: (values) => {
-            signIn(values.email, values.password)
-                .then(() => {
-                    dispatch(actionCreators.setCommonBackdropOff());
-                    history.push('/');
-                })
-                .catch((error) => {
-                    dispatch(actionCreators.setCommonBackdropOff());
-                    if (error.code === 'auth/user-not-found') {
-                        formik.setFieldError('email', error.message)
-                    } else if (error.code === 'auth/wrong-password') {
-                        formik.setFieldError('password', error.message)
-                    }
-                })
+            dispatch(signIn({ email: values.email, password: values.password }))
         },
     });
 
+    const isUserAuthorized = useSelector((state: RootState) => state.authState.isUserSignedIn)
+    const userEmail = useSelector((state: RootState) => state.authState.userEmail)
+    const passwordErrorMessage = useSelector((state: RootState) => state.authState.passwordErrorCodeMsg)
+    const emailErrorMessage = useSelector((state: RootState) => state.authState.emailErrorCodeMsg)
+
+
+    useEffect(() => {
+        if (passwordErrorMessage) {
+            formik.setFieldError('password', passwordErrorMessage)
+        }
+        if (emailErrorMessage) {
+            formik.setFieldError('email', emailErrorMessage)
+        }
+    }, [passwordErrorMessage, emailErrorMessage])
+
+
+    if (isUserAuthorized === UserSignInStatus.Authorised) {
+        return (
+            <div className={materialUIStyles.modalAlike}>
+                <Card>
+                    <CardActionArea>
+                        <CardMedia
+                            className={materialUIStyles.media}
+                            image='https://i.pinimg.com/736x/66/51/fb/6651fbdbd1891d94bb29ba120c8d315c.jpg'
+                            title="Welcome"
+                        />
+                        <CardContent>
+                            <Typography component="h2" variant="h5" gutterBottom>
+                                Welcome {userEmail}!
+                            </Typography>
+                            <Typography color="textSecondary" component="p" variant="body2">
+                                We are glad to meet you.
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
+                        <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())} size="small">
+                            Log out
+                        </Button>
+                    </CardActions>
+                </Card>
+            </div>
+        )
+    }
+
     return (
-        <div className={styles.fullWidth}>
-            <form className={styles.thirdWidth} onSubmit={formik.handleSubmit}>
-                <Paper className={styles.flexColumn}>
+        <Container>
+            <form className={materialUIStyles.modalAlike} onSubmit={formik.handleSubmit}>
+                <Paper className={materialUIStyles.flexColumn}>
                     <TextField
                         className={materialUIStyles.spacing}
                         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -112,7 +161,12 @@ export const LoginPage: React.FC = () => {
                         Submit
                     </Button>
                 </Paper>
+            <Typography color="textSecondary" variant="subtitle1">
+                Don't have an account yet? <NavLink style={{ color: "red" }} to="/register">Create an account!</NavLink>
+            </Typography>
             </form>
-        </div>
+        </Container>
+
+        // </div>
     )
 }

@@ -26,10 +26,10 @@ export interface Movie {
   starshipsPKs: number[],
   /** Vehicles taken place in the certain movie */
   vehiclesPKs: number[],
-  /** Link to model */
-  model: string;
   /** Personal key */
   pk: number;
   /** Document identificator */
   docId: string;
+  /** Movie's image link */
+  img: string | null;
 }
