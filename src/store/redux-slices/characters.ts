@@ -1,11 +1,14 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CharacterDTO } from "../../api/dtos/CharacterDTO";
 import { mapCharacter } from "../../api/mappers/mapper";
 import { Character } from "../../models/character";
 import * as CharactersDataAPI from '../../api/services/load-characters-data-api'
-import { RootState } from "./store";
+import { RootState, CharactersStore } from "../store-types";
 
+/** Async function to add up entities to loaded char's collection */
 export const lazyloadMoreCharacters = createAsyncThunk(
     'charactersStore/llMoreChars',
     async (threshholdNumber: number) => {
@@ -19,6 +22,7 @@ export const lazyloadMoreCharacters = createAsyncThunk(
     }
 )
 
+/** Async function to load a chosen char entry */
 export const loadCharacterItem = createAsyncThunk(
     'charactersStore/loadCharItem',
     async (newDocId: string) => {
@@ -39,23 +43,7 @@ export const loadCharacterItem = createAsyncThunk(
     }
 )
 
-/** People store */
-export interface CharactersStore {
-    /** Characters that are disp. in the sidebar */
-    characters: Character[];
-    /** Planet item to display */
-    characterItem: Character | null;
-    /** Amount of planets items to display in the sidebar */
-    itemsToDispCharacters: number;
-    /** Threshold of planets to display in the sidebar */
-    numberOfItemsDisplayCharacters: number;
-
-    isCharacterLoadingPending: boolean;
-
-    areCharacterEntitiesLoaded: boolean;    
-}
-
-
+/** Redux slice of characters state */
 export const charactersStoreReducer = createSlice({
     name: 'charactersStore',
     initialState: {
@@ -65,13 +53,11 @@ export const charactersStoreReducer = createSlice({
         itemsToDispCharacters: 1,
         isCharacterLoadingPending: true,
         areCharacterEntitiesLoaded: false,
+        isSidebarLoading: false,
     } as CharactersStore,
     reducers: {
         setCharacters: (state, action: PayloadAction<Character[]>) => {
             state.characters = action.payload;
-        },
-        setCharacterItem: (state, action: PayloadAction<Character>) => {
-            state.characterItem = action.payload
         },
         setNumberOfItemsDisplayCharacters: (state, action: PayloadAction<number>) => {
             state.numberOfItemsDisplayCharacters = action.payload
@@ -85,7 +71,14 @@ export const charactersStoreReducer = createSlice({
     },
     extraReducers: builder => {
         builder
+            .addCase(lazyloadMoreCharacters.pending, (state) => {
+                state.isSidebarLoading = true
+            })
+            .addCase(lazyloadMoreCharacters.rejected, (state) => {
+                state.isSidebarLoading = false
+            })
             .addCase(lazyloadMoreCharacters.fulfilled, (state, action) => {
+                state.isSidebarLoading = false
                 if (action.payload) {
                     state.areCharacterEntitiesLoaded = true;
                     state.characters = action.payload;
@@ -109,7 +102,6 @@ export const charactersStoreReducer = createSlice({
 
 export const {
     setCharacters,
-    setCharacterItem,
     setNumberOfItemsDisplayCharacters,
     discardCharactersItemsAmmount,
     addItemsToDisplayCharacters

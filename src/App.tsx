@@ -1,3 +1,6 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-default-export */
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
@@ -7,7 +10,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Backdrop, CssBaseline, createMuiTheme, ThemeProvider, useMediaQuery } from '@material-ui/core';
 
 import './App.css';
-import { Navbar } from './components/Navbar/Navbar'; 
+import { Navbar } from './components/Navbar/Navbar';
 import { MoviesSidebar } from './components/Movies/MoviesSidebar';
 import { CharactersSidebar } from './components/Characters/CharactersSidebar';
 import { PlanetsSidebar } from './components/Planets/PlanetsSidebar';
@@ -19,10 +22,10 @@ import { DRAWER_WIDTH } from './constants/sizing-constants';
 
 import { RegistrationPage } from './components/RegistrationPage';
 import { Sidebar } from './components/Sidebar';
-import { RootState } from './store/thunks/store';
-import { UserSignInStatus } from './store/thunks/auth-thunks';
+import { UserSignInStatus } from './store/redux-slices/auth';
 
 import { getSignInStatus } from '.';
+import { RootState } from './store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,7 +67,8 @@ const defaultDrawerContext = {
 
 export const DrawerContext = React.createContext(defaultDrawerContext);
 
-export default function App() {
+/** Main app's component */
+export default function App(): JSX.Element {
 
   const materialUIStyles = useStyles();
   const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
@@ -107,10 +111,12 @@ export default function App() {
     },
   });
 
+  /** Mobile's sidebar setting's block */
   const areMoviesLoaded = useSelector((state: RootState) => state.moviesStore.areMovieEntitiesLoaded)
   const areCharactersLoaded = useSelector((state: RootState) => state.charactersStore.areCharacterEntitiesLoaded)
   const arePlanetsLoaded = useSelector((state: RootState) => state.planetsStore.arePlanetEntitiesLoaded)
 
+  /** Giving an allowance to render empty sidebar if conditions below are fulfilled */
   const location = useLocation()
   const addresses = ['/create-film-entry', 'edit=1', '/login', '/register', '/', '/not-found']
   const checkAddress = (): boolean => addresses.includes(location.pathname)
@@ -132,7 +138,6 @@ export default function App() {
 
   return (
     <div className="App">
-
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <DrawerContext.Provider value={drawerContextValue}>
@@ -178,12 +183,8 @@ export default function App() {
             </main>
           </DrawerContext.Provider>
           <Backdrop className={materialUIStyles.backdrop} open={isCommonLoadingBackDropOn} />
-
         </CssBaseline>
-
       </ThemeProvider>
-
-
     </div>
   );
 }

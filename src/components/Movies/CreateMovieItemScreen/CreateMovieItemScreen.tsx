@@ -1,6 +1,9 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import {
@@ -32,10 +35,10 @@ import { Planet } from '../../../models/planet';
 import styles from './CreateMovieItemScreen.module.css';
 import { createMovieItemYupValScheme } from '../../../models/yup-validation-schemas';
 import { Movie } from '../../../models/movie';
-import { RootState } from '../../../store/thunks/store';
 
-import { addMovieEntry, loadDataToAddWhenCreating } from '../../../store/thunks/movies-thunks';
+import { addMovieEntry, loadDataToAddWhenCreating } from '../../../store/redux-slices/movies';
 import { movieDTOMapper } from '../../../api/mappers/mapper';
+import { RootState } from '../../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -113,7 +116,7 @@ export const CreateMovieItemScreen: React.FC = () => {
     const characters = useSelector((state: RootState) => state.charactersStore.characters);
     /** Planets to choose to add into a new movie entry */
     const planets = useSelector((state: RootState) => state.planetsStore.planets);
-
+    /** State to render a spinner if true */
     const areEntitiesLoading = useSelector((state: RootState) => state.moviesStore.areEntitiesLoading)
     /** State for chosen characters to be added */
     const [characterNames, setCharacterNames] = React.useState<string[]>([]);
@@ -166,6 +169,7 @@ export const CreateMovieItemScreen: React.FC = () => {
 
     const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
     
+    /** Redirect if a new movie entity is going to the db */
     if (isEntityBeingAdded) {
         return <Redirect to="/films" />
     }

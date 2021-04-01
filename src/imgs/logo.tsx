@@ -4,6 +4,11 @@ import React from 'react'
 interface LogoTopProps {
     color: string;
 }
+/**
+ * Navbar's SW logo.
+ * @param param0 Color of the logo.
+ * @returns SVG.
+ */
 export const Logo = ({ color }: LogoTopProps): JSX.Element => (
     <svg enableBackground="new 0 0 693.615 419.375" height="50px" id="Layer_1" version="1.0" viewBox="0 0 693.615 419.375" width="100px"
         x="0px" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve"
@@ -100,6 +105,11 @@ interface LogoWelcomeProps {
     width: string;
     height: string;
 }
+/**
+ * Navbar's welcome screen logo.
+ * @param param0 Its width and height.
+ * @returns SVG.
+ */
 export const YellowLogo = ({ width, height }: LogoWelcomeProps): JSX.Element => (
         <svg enableBackground="new 0 0 693.615 419.375"
             height="271.366"

@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
@@ -17,10 +19,10 @@ import { WelcomeScreen } from '../../WelcomeScreen';
 import { Params } from '../../../models/query-params'
 import { Sidebar } from '../../Sidebar';
 import styles from './MoviesSidebar.module.css'
-import { RootState } from '../../../store/thunks/store';
 
-import { UserSignInStatus } from '../../../store/thunks/auth-thunks';
-import { subscribeToMovies } from '../../../store/thunks/movies-thunks';
+import { UserSignInStatus } from '../../../store/redux-slices/auth';
+import { subscribeToMovies } from '../../../store/redux-slices/movies';
+import { RootState } from '../../../store/store-types';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -61,6 +63,7 @@ export const MoviesSidebar: React.FC<Props> = ({setDrawerState}) => {
         dispatch(subscribeToMovies())
     }, [])
     
+    /** Show the 'create a movie' btn if a user is logged in */
     const createEntryButton = (
         <>
             <Divider />

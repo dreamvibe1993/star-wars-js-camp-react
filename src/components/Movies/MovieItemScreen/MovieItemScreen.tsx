@@ -24,11 +24,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { MovieItemEditForm } from './MovieItemEditForm'
 import { Params } from '../../../models/query-params'
-import { RootState } from '../../../store/thunks/store';
 
 import { MovieItemDisplayComponent } from './MovieItemDisplayComponent';
-import { UserSignInStatus } from '../../../store/thunks/auth-thunks';
-import { loadMovieItem } from '../../../store/thunks/movies-thunks';
+import { UserSignInStatus } from '../../../store/redux-slices/auth';
+import { loadMovieItem } from '../../../store/redux-slices/movies';
+import { RootState } from '../../../store/store-types';
 
 
 

@@ -13,7 +13,7 @@ import {
 import { SearchIcon } from '@material-ui/data-grid';
 import { NavbarSearchYupValScheme } from '../../models/yup-validation-schemas';
 
-import { searchMovieEntry } from '../../store/thunks/movies-thunks';
+import { searchMovieEntry } from '../../store/redux-slices/movies';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const validationSchema = NavbarSearchYupValScheme;
 
+/** Little search bar that's built into navbar or sidebar. */
 export const SearchBar: React.FC = () => {
     const materialUIStyles = useStyles();
     const dispatch = useDispatch();

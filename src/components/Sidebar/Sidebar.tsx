@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -27,9 +29,9 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { SearchBar } from '../SearchBar';
 import { DrawerContext } from '../../App';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants'
-import { RootState } from '../../store/thunks/store';
 
-import { signCurrentUserOut, UserSignInStatus } from '../../store/thunks/auth-thunks';
+import { signCurrentUserOut, UserSignInStatus } from '../../store/redux-slices/auth';
+import { RootState } from '../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -60,7 +62,8 @@ interface SidebarProps {
 
 /** 
  * Component that renders THE sidebar. 
- * Children are list of items to render inside.
+ * @param children List of items to render inside.
+ * @param setDrawerState Function to update the state of open sidebar.
  */
 export const Sidebar: React.FC<SidebarProps> = ({ children, setDrawerState }: SidebarProps) => {
     const materialUIStyles = useStyles();

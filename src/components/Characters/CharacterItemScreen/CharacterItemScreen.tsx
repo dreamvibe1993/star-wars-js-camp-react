@@ -1,3 +1,5 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
@@ -20,8 +22,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { Params } from '../../../models/query-params'
 
-import { loadCharacterItem } from '../../../store/thunks/characters-thunks';
-import { RootState } from '../../../store/thunks/store';
+import { loadCharacterItem } from '../../../store/redux-slices/characters';
+import { RootState } from '../../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -83,9 +85,12 @@ export const CharacterItemScreen: React.FC = () => {
 
     const isCharacterLoadingPending = useSelector((state: RootState) => state.charactersStore.isCharacterLoadingPending)
 
+    /** If no character's doc found and loading is over render 'not-found' */
     if (!character && !isCharacterLoadingPending) {
         return <Redirect to="/not-found" />
     }
+
+    /** Spinner while loading */
     if (isCharacterLoadingPending) {
         return (
             <>
@@ -95,6 +100,8 @@ export const CharacterItemScreen: React.FC = () => {
             </>
         )
     }
+
+    /** If there's a match render the data */
     return character && (
             <TableContainer className={materialUIStyles.tableContainer} component={Paper}>
                 <Card className={materialUIStyles.card}>

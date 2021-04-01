@@ -16,8 +16,8 @@ import {
 
 import { Params } from '../../../models/query-params';
 
-import { loadPlanetItem } from '../../../store/thunks/planets-thunks';
-import { RootState } from '../../../store/thunks/store';
+import { loadPlanetItem } from '../../../store/redux-slices/planets';
+import { RootState } from '../../../store/store-types';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -55,7 +55,8 @@ export const PlanetsItemScreen: React.FC = () => {
      }, [queryParam.id])
  
      const isPlanetLoadingPending = useSelector((state: RootState) => state.planetsStore.isPlanetLoadingPending)
- 
+     
+     /** If no planet found - redirect */
      if (!planet && !isPlanetLoadingPending) {
          return <Redirect to="/not-found" />
      }

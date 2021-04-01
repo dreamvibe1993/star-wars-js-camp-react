@@ -1,3 +1,6 @@
+/* eslint-disable import/extensions */
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable import/no-unresolved */
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -33,9 +36,9 @@ import { ITEM_HEIGHT, ITEM_PADDING_TOP } from '../../../../constants/sizing-cons
 import styles from './MovieItemEditForm.module.css'
 
 import { movieDTOMapper } from '../../../../api/mappers/mapper';
-import { editMovieEntry, loadDataToAddWhenCreating, setRelevChars, setRelevPlanets } from '../../../../store/thunks/movies-thunks';
-import { UserSignInStatus } from '../../../../store/thunks/auth-thunks';
-import { RootState } from '../../../../store/thunks/store';
+import { editMovieEntry, loadDataToAddWhenCreating, setRelevChars, setRelevPlanets } from '../../../../store/redux-slices/movies';
+import { UserSignInStatus } from '../../../../store/redux-slices/auth';
+import { RootState } from '../../../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -104,6 +107,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
     const materialUIStyles = useStyles();
     const dispatch = useDispatch();
 
+    /** Block of handling the editing of relevant entries of a movie */
     const [characterNames, setCharacterNames] = React.useState<string[]>([]);
     const [planetsNames, setPlanetsNames] = React.useState<string[]>([]);
 
@@ -152,14 +156,17 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
         },
     })
 
+    /** If a new planet or character is chosen by a user so update the state */
     const handleChangeCharacters = (event: React.ChangeEvent<{ value: unknown }>) => {
         setCharacterNames(event.target.value as string[]);
     };
 
+    /** If a new planet or character is chosen by a user so update the state */
     const handleChangePlanets = (event: React.ChangeEvent<{ value: unknown }>) => {
         setPlanetsNames(event.target.value as string[]);
     };
 
+    /** Once the colletions of entities that are assigned to a movie are loaded set their names */
     useEffect(() => {
         if (relevantCharacters) {
             const names = relevantCharacters.map(char => char.name)
@@ -171,6 +178,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
         }
     }, [relevantCharacters, relevantPlanets])
 
+    /** Extract personal keys and names to set for a movie */
     useEffect(() => {
         const characters = charsCollection && charsCollection.filter((character: Character) => characterNames.find((name: string) => name === character.name))
         const charactersPersonalKeys = characters.map((character: Character) => character.pk)
@@ -182,6 +190,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
         formik.setFieldValue('charactersPKs', charactersPersonalKeys)
     }, [characterNames, charsCollection])
 
+    /** Extract personal keys and names to set for a movie */
     useEffect(() => {
         const planets = planetsCollection && planetsCollection.filter((planet: Planet) => planetsNames.find((name: string) => name === planet.name))
         const planetsPersonalKeys = planets.map((planet: Planet) => planet.pk)
@@ -193,6 +202,7 @@ export const MovieItemEditForm: React.FC<EditFormProps> = ({ movie }) => {
         formik.setFieldValue('planetsPKs', planetsPersonalKeys)
     }, [planetsNames, planetsCollection])
 
+    /** Media query boolean */
     const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
     
     return (

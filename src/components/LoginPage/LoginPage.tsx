@@ -1,3 +1,5 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
@@ -22,8 +24,8 @@ import {
 import { loginPageYupValScheme } from '../../models/yup-validation-schemas';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
 
-import { signCurrentUserOut, signIn, UserSignInStatus } from '../../store/thunks/auth-thunks';
-import { RootState } from '../../store/thunks/store';
+import { signCurrentUserOut, signIn, UserSignInStatus } from '../../store/redux-slices/auth';
+import { RootState } from '../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -101,6 +103,7 @@ export const LoginPage: React.FC = () => {
     }, [passwordErrorMessage, emailErrorMessage])
 
 
+    /** If a user logged in show him a warm welcome */
     if (isUserAuthorized === UserSignInStatus.Authorised) {
         return (
             <div className={materialUIStyles.modalAlike}>
@@ -166,7 +169,5 @@ export const LoginPage: React.FC = () => {
             </Typography>
             </form>
         </Container>
-
-        // </div>
     )
 }

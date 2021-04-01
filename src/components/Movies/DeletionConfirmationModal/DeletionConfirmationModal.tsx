@@ -1,3 +1,6 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -13,10 +16,9 @@ import Fade from '@material-ui/core/Fade';
 import { Button } from '@material-ui/core';
 
 import styles from './DeletionConfirmationModal.module.css'
-import { RootState } from '../../../store/thunks/store';
 
-import { setDeletionModalClose } from '../../../store/thunks/components-thunks';
-import { deleteMovieEntry } from '../../../store/thunks/movies-thunks';
+import { deleteMovieEntry, setDeletionModalClose } from '../../../store/redux-slices/movies';
+import { RootState } from '../../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,11 +40,14 @@ interface DelConfModProps {
 export const DeletionConfirmationModal: React.FC<DelConfModProps> = ({ movieID }: DelConfModProps) => {
     const materialUIStyles = useStyles();
     const dispatch = useDispatch();
+
+    /** State to redirect a user if an entry is being deleted */
     const isEntityBeingDeleted = useSelector((state: RootState) => state.moviesStore.isEntityBeingDeleted)
 
     /** Variable to set opened or closed state of the modal */
-    const open = useSelector((state: RootState) => state.componentsState.isDeletionConfirmationOpen);
+    const open = useSelector((state: RootState) => state.moviesStore.isDeletionConfirmationOpen);
 
+    /** Redirect if an entry is being deleted */
     if (isEntityBeingDeleted) {
         return <Redirect to="/" />
     }

@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
@@ -24,10 +26,10 @@ import { Logo } from '../../imgs/logo';
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
 import styles from './Navbar.module.css'
 import { SearchBar } from '../SearchBar';
-import { RootState } from '../../store/thunks/store';
 
-import { UserSignInStatus, signCurrentUserOut } from '../../store/thunks/auth-thunks';
-import { setThemingMode, setCommonBackdropOn, setCommonBackdropOff } from '../../store/thunks/components-thunks';
+import { UserSignInStatus, signCurrentUserOut } from '../../store/redux-slices/auth';
+import { setThemingMode, setCommonBackdropOn, setCommonBackdropOff } from '../../store/redux-slices/components';
+import { RootState } from '../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -64,6 +66,7 @@ interface Props {
 /** 
  * Component that renders navbar with: films/people/planets tabs, mainlogo, searchinput and login button-link.
  * It also switches the sidebar open and emits the main screen shrinking.
+ * @param setDrawerState Function to change "open" status of the sidebar or 'drawer'
  */
 export const Navbar: React.FC<Props> = ({
     setDrawerState
@@ -74,6 +77,7 @@ export const Navbar: React.FC<Props> = ({
     const [value, setValue] = useState<SliderState>(false);
     const location = useLocation();
 
+    /** If not found or found something - redirect */
     const redirectLink = useSelector((state: RootState) => state.moviesStore.redirectLink)
 
     useEffect(() => {
@@ -113,21 +117,26 @@ export const Navbar: React.FC<Props> = ({
             'aria-controls': `simple-tabpanel-${index}`,
         };
     }
+    /** Check the authorisation status of a user */
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn);
 
+    /** Dark or light theme toggler status */
     const [toggler, setToggler] = React.useState<boolean>(true);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const changeTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
         setToggler(event.target.checked);
         dispatch(setThemingMode(event.target.checked))
     };
 
+    /** Dark or light theme status */
     const themingMode = useSelector((state: RootState) => state.componentsState.mode)
 
+    /** Drawer's openness context */
     const { open } = useContext(DrawerContext)
 
     const isMediaQueryMatch375 = useMediaQuery('(max-width:414px)')
 
+    /** Backdrop if open. Mobile only. */
     useEffect(() => {
         if (open && isMediaQueryMatch375) {
             dispatch(setCommonBackdropOn())
@@ -136,6 +145,7 @@ export const Navbar: React.FC<Props> = ({
         }
     }, [open, isMediaQueryMatch375])
 
+    /** Shift or not to shift content if open */
     const appbarPersistentMode = clsx(materialUIStyles.appBar, { [materialUIStyles.appBarShift]: open })
     const appbarPermanentMode = clsx(materialUIStyles.appBar)
 
@@ -160,11 +170,9 @@ export const Navbar: React.FC<Props> = ({
                             edge="start"
                             onClick={() => {
                                 setDrawerState(true)
-                                // history.push('/films') 
                             }}
                         >
                             <MenuIcon />
-                            {/* {!location.pathname.includes('/create-film-entry') || !location.pathname.includes('?edit=1')) && } */}
                         </IconButton>
                 }
                 <Typography className={styles.title} variant="h6">
@@ -176,7 +184,7 @@ export const Navbar: React.FC<Props> = ({
                         checked={toggler}
                         inputProps={{ 'aria-label': 'secondary checkbox' }}
                         name="themingToggler"
-                        onChange={handleChange}
+                        onChange={changeTheme}
                     />
                 </div>
                 {!isMediaQueryMatch375 &&
