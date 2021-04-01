@@ -7,7 +7,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Backdrop, CssBaseline, createMuiTheme, ThemeProvider, useMediaQuery } from '@material-ui/core';
 
 import './App.css';
-import { Navbar } from './components/Navbar/Navbar';
+import { Navbar } from './components/Navbar/Navbar'; 
 import { MoviesSidebar } from './components/Movies/MoviesSidebar';
 import { CharactersSidebar } from './components/Characters/CharactersSidebar';
 import { PlanetsSidebar } from './components/Planets/PlanetsSidebar';
@@ -64,7 +64,7 @@ const defaultDrawerContext = {
 
 export const DrawerContext = React.createContext(defaultDrawerContext);
 
-export const App: React.FC = () => {
+export default function App() {
 
   const materialUIStyles = useStyles();
   const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)

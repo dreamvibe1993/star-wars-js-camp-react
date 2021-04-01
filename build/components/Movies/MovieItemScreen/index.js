@@ -1,0 +1,1 @@
+export { MovieItemScreen } from './MovieItemScreen';

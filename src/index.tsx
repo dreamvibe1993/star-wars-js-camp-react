@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import firebase from "firebase/app";
 
-import { App } from './App';
+import App from './App';
 
 import reportWebVitals from './reportWebVitals';
 import { ErrorScreen } from './components/ErrorScreen';
