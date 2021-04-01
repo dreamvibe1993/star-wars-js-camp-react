@@ -1,27 +1,18 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as AuthAPI from '../../api/services/auth'
+import { AuthStateRootState, UserCredentials } from "../store-types";
 
-interface UserCredentials {
-    email: string;
-    password: string;
-}
-
-/** Auth state store */
-export interface AuthStateRootState {
-    /** State of a current user's credentials */
-    isUserSignedIn: UserSignInStatus.Pending | UserSignInStatus.Authorised | UserSignInStatus.Unauthorised;
-    passwordErrorCodeMsg: string | null;
-    emailErrorCodeMsg: string | null;
-    userEmail: string | null;
-}
-
+/** User auth statuses */
 export enum UserSignInStatus {
     Pending = 2,
     Authorised = 1,
     Unauthorised = 0,
 }
 
+/** Reducer slice of the user's auth status states */
 export const authStateReducer = createSlice({
     name: 'authState',
     initialState: {
@@ -63,6 +54,7 @@ export const {
     flushAllErrCodes
 } = authStateReducer.actions;
 
+/** Async function to signin a user */
 export const signIn = createAsyncThunk(
     'auth/signIn',
     async ({ email, password }: UserCredentials, thunkAPI) => {
@@ -79,6 +71,7 @@ export const signIn = createAsyncThunk(
 
 )
 
+/** Async function to sign out a user */
 export const signCurrentUserOut = createAsyncThunk(
     'auth/signOut',
     async (id, thunkAPI) => {
@@ -87,6 +80,7 @@ export const signCurrentUserOut = createAsyncThunk(
     }
 )
 
+/** Async function to create a new account */
 export const createUserAccount = createAsyncThunk(
     'auth/create',
     async ({ email, password }: UserCredentials, thunkAPI) => {

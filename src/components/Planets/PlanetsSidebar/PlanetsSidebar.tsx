@@ -20,10 +20,10 @@ import { PlanetsItemScreen } from '../PlanetsItemScreen';
 import { Params } from '../../../models/query-params'
 import styles from './PlanetsSidebar.module.css'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
-import { RootState } from '../../../store/thunks/store';
 
-import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';
-import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, lazyloadMorePlanets, discardPlanetsItemsAmmount } from '../../../store/thunks/planets-thunks';
+import { movieSidebarSnapshotTeardown } from '../../../store/redux-slices/movies';
+import { setNumberOfItemsDisplayPlanets, addItemsToDisplayPlanets, lazyloadMorePlanets, discardPlanetsItemsAmmount } from '../../../store/redux-slices/planets';
+import { RootState } from '../../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,7 +51,7 @@ export const PlanetsSidebar: React.FC<Props> = ({ setDrawerState }) => {
     const planet = useSelector((state: RootState) => state.planetsStore.planetItem)
     /** Variable to check if there's any planets loaded */
     const planets: Planet[] = useSelector((state: RootState) => state.planetsStore.planets)
-    const isSidebarLoading = useSelector((state: RootState) => state.componentsState.isSidebarLoading)
+    const isSidebarLoading = useSelector((state: RootState) => state.planetsStore.isSidebarLoading)
     const numberOfItemsToDisplay = useSelector((state: RootState) => state.planetsStore.itemsToDispPlanets);
 
     const listItems = planets.map((planetItem: Planet) => (
@@ -60,6 +60,7 @@ export const PlanetsSidebar: React.FC<Props> = ({ setDrawerState }) => {
         </ListItem>
     ))
 
+    /** Unsubscribe from movie's sidebar movies observer */
     useEffect(() => {
         if (movieSidebarSnapshotTeardown) {
             movieSidebarSnapshotTeardown()

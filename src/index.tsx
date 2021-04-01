@@ -11,9 +11,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ErrorScreen } from './components/ErrorScreen';
 import { firebaseApp } from './api/firebase';
-import { store } from './store/thunks/store';
+import store from './store/store';
 
-import { signUserIn, setUserEmailString, signUserOut } from './store/thunks/auth-thunks';
+import { signUserIn, setUserEmailString, signUserOut } from './store/redux-slices/auth';
 
 
 /** Sidebar state to dispatch to context */
@@ -23,6 +23,7 @@ const sidebar = {
   toggleClose() { this.open = false },
 }
 
+/** Error handling function */
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <ErrorScreen error={error} />

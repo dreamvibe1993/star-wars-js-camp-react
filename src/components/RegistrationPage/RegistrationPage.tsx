@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,9 +18,9 @@ import {
 import { DRAWER_WIDTH } from '../../constants/sizing-constants';
 import styles from './RegistrationPage.module.css'
 import { accCreateYupValScheme } from '../../models/yup-validation-schemas';
-import { RootState } from '../../store/thunks/store';
 
-import { createUserAccount, UserSignInStatus } from '../../store/thunks/auth-thunks';
+import { createUserAccount, UserSignInStatus } from '../../store/redux-slices/auth';
+import { RootState } from '../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -60,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const validationSchema = accCreateYupValScheme;
 
+/** Component rendering registration's form */
 export const RegistrationPage: React.FC = () => {
     const materialUIStyles = useStyles();
     const dispatch = useDispatch();
@@ -80,11 +83,15 @@ export const RegistrationPage: React.FC = () => {
             }
         },
     });
+
+    /** If there was error set an error */
     useEffect(() => {
         if (emailErrorMessage) {
             formik.setFieldError('email', emailErrorMessage)
         }
     }, [emailErrorMessage])
+    
+    /** If user logged in - redirect */
     if (isUserAuthorized === UserSignInStatus.Authorised) {
         return <Redirect to="/login" />
     }

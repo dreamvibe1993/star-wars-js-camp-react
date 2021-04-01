@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -21,10 +23,10 @@ import {
 import { Movie } from '../../../../models/movie';
 import { DeletionConfirmationModal } from '../../DeletionConfirmationModal';
 import styles from '../MovieItemScreen.module.css'
-import { RootState } from '../../../../store/thunks/store';
 
-import { UserSignInStatus } from '../../../../store/thunks/auth-thunks';
-import { setDeletionModalOpen } from '../../../../store/thunks/components-thunks';
+import { UserSignInStatus } from '../../../../store/redux-slices/auth';
+import { setDeletionModalOpen } from '../../../../store/redux-slices/movies';
+import { RootState } from '../../../../store/store-types';
 
 interface Props {
     movie: Movie;

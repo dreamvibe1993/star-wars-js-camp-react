@@ -47,11 +47,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export const WelcomeScreen: React.FC = () => {
     const [open, setOpen] = React.useState(false);
     const materialUIStyles = useStyles()
-    const handleOpen = () => {
+
+    const handleInfoModalOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleInfoModalClose = () => {
         setOpen(false);
     };
 
@@ -68,7 +69,7 @@ export const WelcomeScreen: React.FC = () => {
                         timeout: 500,
                     }}
                     className={materialUIStyles.modal}
-                    onClose={handleClose}
+                    onClose={handleInfoModalClose}
                     open={open}
                     closeAfterTransition
                 >
@@ -135,7 +136,7 @@ export const WelcomeScreen: React.FC = () => {
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
-                    <Button color="inherit" onClick={handleOpen} size="small">
+                    <Button color="inherit" onClick={handleInfoModalOpen} size="small">
                         About
                     </Button>
                 </CardActions>

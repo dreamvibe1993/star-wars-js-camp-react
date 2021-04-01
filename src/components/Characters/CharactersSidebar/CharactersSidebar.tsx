@@ -1,3 +1,5 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
@@ -20,9 +22,9 @@ import { CharacterItemScreen } from '../CharacterItemScreen';
 import { Params } from '../../../models/query-params'
 import { NAVBAR_HEIGHT, ITEM_HEIGHT } from '../../../constants/sizing-constants';
 
-import { addItemsToDisplayCharacters, discardCharactersItemsAmmount, lazyloadMoreCharacters, setNumberOfItemsDisplayCharacters } from '../../../store/thunks/characters-thunks'
-import { movieSidebarSnapshotTeardown } from '../../../store/thunks/movies-thunks';
-import { RootState } from '../../../store/thunks/store';
+import { addItemsToDisplayCharacters, discardCharactersItemsAmmount, lazyloadMoreCharacters, setNumberOfItemsDisplayCharacters } from '../../../store/redux-slices/characters'
+import { movieSidebarSnapshotTeardown } from '../../../store/redux-slices/movies';
+import { RootState } from '../../../store/store-types';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,12 +55,13 @@ export const CharactersSidebar: React.FC<Props> = ({setDrawerState}) => {
 
     /** Variable to check if there's any people loaded */
     const characters: Character[] = useSelector((state: RootState) => state.charactersStore.characters)
-    const isSidebarLoading = useSelector((state: RootState) => state.componentsState.isSidebarLoading)
+    const isSidebarLoading = useSelector((state: RootState) => state.charactersStore.isSidebarLoading)
     const numberOfItemsToDisplay = useSelector((state: RootState) => state.charactersStore.itemsToDispCharacters);
     const queryParams = useParams<Params>();
 
     const dispatch = useDispatch();
 
+    /** Unsubscribe from movies updates in the movie's sidebar */
     useEffect(() => {
         if (movieSidebarSnapshotTeardown) {
             movieSidebarSnapshotTeardown()

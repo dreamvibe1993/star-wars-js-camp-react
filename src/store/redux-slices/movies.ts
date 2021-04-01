@@ -1,3 +1,6 @@
+/* eslint-disable import/no-mutable-exports */
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CharacterDTO } from "../../api/dtos/CharacterDTO";
@@ -11,40 +14,14 @@ import * as CharactersDataAPI from '../../api/services/load-characters-data-api'
 import * as PlanetsDataAPI from '../../api/services/load-planets-data-api'
 
 import { Movie } from "../../models/movie";
-import { setCharacters } from "./characters-thunks";
-import { setPlanets } from "./planets-thunks";
-import { RootState } from "./store";
+import { setCharacters } from "./characters";
+import { setPlanets } from "./planets";
+import { RootState, MoviesStore } from "../store-types";
 
-
-/** Movies store */
-export interface MoviesStore {
-    /** Movies that are disp. in the sidebar */
-    movies: Movie[];
-    /** Rel. charaters of a movie item */
-    relevantCharacters: Character[] | null;
-    /** Rel. planets of a movie item */
-    relevantPlanets: Planet[] | null;
-    /** Movie item to display */
-    movieItem: Movie | null;
-
-    isMovieLoadingPending: boolean;
-
-    areEntitiesLoading: boolean;
-
-    isEntityBeingAdded: boolean;
-
-    isEntityBeingDeleted: boolean;
-
-    redirectLink: string | null;
-
-    areMovieEntitiesLoaded: boolean;
-}
-
-// eslint-disable-next-line import/no-mutable-exports
+/** Subscription teardown function */
 export let movieSidebarSnapshotTeardown: null | (() => void);
 
-
-
+/** Async function to load one movie to display */
 export const loadMovieItem = createAsyncThunk(
     'movies/loadMovItem',
     async (docId: string) => {
@@ -66,6 +43,7 @@ export const loadMovieItem = createAsyncThunk(
     }
 )
 
+/** Async function to load assigned planets and characters data to create a new entry */
 export const loadDataToAddWhenCreating = createAsyncThunk(
     'movies/loadDataToAdd',
     async (id, thunkAPI) => {
@@ -83,6 +61,7 @@ export const loadDataToAddWhenCreating = createAsyncThunk(
     }
 )
 
+/** Async function to add a new movie to the db */
 export const addMovieEntry = createAsyncThunk(
     'movies/addToDb',
     async (MovieDTO: MoviesDTO) => {
@@ -95,6 +74,7 @@ export const addMovieEntry = createAsyncThunk(
 
 interface editionArgsProps { MovieDTO: MoviesDTO, docID: string }
 
+/** Async function to save edited movie to the db */
 export const editMovieEntry = createAsyncThunk(
     'movies/edit',
     async ({ MovieDTO, docID }: editionArgsProps) => {
@@ -104,11 +84,13 @@ export const editMovieEntry = createAsyncThunk(
 )
 
 
+/** Async function to delete a movie entry */
 export const deleteMovieEntry = createAsyncThunk(
     'movies/delete',
     async (docId: string) => MoviesDataAPI.getMoviesCollection().doc(docId).delete()
 )
 
+/** Async function to search movie in the db */
 export const searchMovieEntry = createAsyncThunk(
     'movies/search',
     async (title: string) => {
@@ -120,6 +102,7 @@ export const searchMovieEntry = createAsyncThunk(
     }
 )
 
+/** Slice of state with movies */
 export const moviesStoreReducer = createSlice({
     name: 'moviesStore',
     initialState: {
@@ -133,6 +116,7 @@ export const moviesStoreReducer = createSlice({
         isEntityBeingDeleted: false,
         redirectLink: null,
         areMovieEntitiesLoaded: false,
+        isDeletionConfirmationOpen: false,
     } as MoviesStore,
     reducers: {
         setMovies: (state, action: PayloadAction<Movie[]>) => {
@@ -140,7 +124,6 @@ export const moviesStoreReducer = createSlice({
                 state.movies = action.payload;
                 state.areMovieEntitiesLoaded = true;
             }
-            
         },
         setRelevChars: (state, action: PayloadAction<Character[] | null>) => {
             state.relevantCharacters = action.payload;
@@ -148,15 +131,18 @@ export const moviesStoreReducer = createSlice({
         setRelevPlanets: (state, action: PayloadAction<Planet[] | null>) => {
             state.relevantPlanets = action.payload;
         },
-        setMovieItem: (state, action: PayloadAction<Movie>) => {
-            state.movieItem = action.payload
-        },
         flushMovieItem: state => {
             state.movieItem = null
         },
         setMovieLoadingPending: (state, action) => {
             state.isMovieLoadingPending = action.payload
-        }
+        },
+        setDeletionModalOpen: (state) => {
+            state.isDeletionConfirmationOpen = true
+        },
+        setDeletionModalClose: (state) => {
+            state.isDeletionConfirmationOpen = false
+        },
     },
     extraReducers: builder => {
         builder
@@ -187,6 +173,7 @@ export const moviesStoreReducer = createSlice({
                 state.movieItem = action.payload
             })
             .addCase(deleteMovieEntry.pending, (state) => {
+                state.isDeletionConfirmationOpen = false
                 state.isEntityBeingDeleted = true
             })
             .addCase(deleteMovieEntry.fulfilled, (state) => {
@@ -208,8 +195,17 @@ export const moviesStoreReducer = createSlice({
 
 })
 
-export const { setMovies, setRelevChars, setRelevPlanets, setMovieItem, flushMovieItem, setMovieLoadingPending } = moviesStoreReducer.actions
+export const { 
+    setMovies, 
+    setRelevChars, 
+    setRelevPlanets, 
+    flushMovieItem, 
+    setMovieLoadingPending, 
+    setDeletionModalOpen, 
+    setDeletionModalClose 
+} = moviesStoreReducer.actions
 
+/** Async function that's getting a subscription. */
 export const subscribeToMovies = createAsyncThunk(
     'movies/loadMovs',
     async (id, thunkAPI) => {

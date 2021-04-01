@@ -30,6 +30,11 @@ export const getPlanetItemDoc = (docID: string): Promise<firebase.firestore.Docu
     .doc(docID)
     .get()
 
+/**
+ * API to get 10 doc from planets collection
+ * @param planetsPKsTen Slice of planets array.
+ * @returns Promise with docs.
+ */
 export function getRelevantPlanetsCollection(planetsPKsTen: number[]): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> {
     return DBRef.collection('planets')
         .where('pk', 'in', planetsPKsTen)

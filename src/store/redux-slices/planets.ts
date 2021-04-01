@@ -1,12 +1,14 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PlanetDTO } from "../../api/dtos/PlanetDTO";
 import { mapPlanet } from "../../api/mappers/mapper";
 import { Planet } from "../../models/planet";
 import * as PlanetsDataAPI from '../../api/services/load-planets-data-api'
-import { RootState } from "./store";
+import { RootState, PlanetsStore } from "../store-types";
 
-
+/** Async function to lazyload more items into sidebar */
 export const lazyloadMorePlanets = createAsyncThunk(
     'planetsStore/llMorePlanets',
     async (threshholdNumber: number) => {
@@ -20,6 +22,7 @@ export const lazyloadMorePlanets = createAsyncThunk(
     }
 )
 
+/** Async function to load one planet information */
 export const loadPlanetItem = createAsyncThunk(
     'planetsStore/loadPlanetItem',
     async (newDocId: string) => {
@@ -40,22 +43,7 @@ export const loadPlanetItem = createAsyncThunk(
     }
 )
 
-/** Planets store */
-export interface PlanetsStore {
-    /** Planets that are disp. in the sidebar */
-    planets: Planet[];
-    /** Planet item to display */
-    planetItem: Planet | null;
-    /** Amount of planets items to display in the sidebar */
-    itemsToDispPlanets: number;
-    /** Threshold of planets to display in the sidebar */
-    numberOfItemsDisplayPlanets: number;
-
-    isPlanetLoadingPending: boolean;
-
-    arePlanetEntitiesLoaded: boolean;
-}
-
+/** Planets' reducer state */
 export const planetsStoreReducer = createSlice({
     name: 'planetsStore',
     initialState: {
@@ -65,13 +53,11 @@ export const planetsStoreReducer = createSlice({
         itemsToDispPlanets: 1,
         isPlanetLoadingPending: true,
         arePlanetEntitiesLoaded: false,
+        isSidebarLoading: false,
     } as PlanetsStore,
     reducers: {
         setPlanets: (state, action: PayloadAction<Planet[]>) => {
             state.planets = action.payload;
-        },
-        setPlanetItem: (state, action: PayloadAction<Planet>) => {
-            state.planetItem = action.payload
         },
         setNumberOfItemsDisplayPlanets: (state, action: PayloadAction<number>) => {
             state.numberOfItemsDisplayPlanets = action.payload
@@ -85,7 +71,14 @@ export const planetsStoreReducer = createSlice({
     },
     extraReducers: builder => {
         builder
+            .addCase(lazyloadMorePlanets.pending, (state) => {
+                state.isSidebarLoading = true
+            })
+            .addCase(lazyloadMorePlanets.rejected, (state) => {
+                state.isSidebarLoading = false
+            })
             .addCase(lazyloadMorePlanets.fulfilled, (state, action) => {
+                state.isSidebarLoading = false
                 if (action.payload) {
                     state.arePlanetEntitiesLoaded = true;
                     state.planets = action.payload;
@@ -108,7 +101,6 @@ export const planetsStoreReducer = createSlice({
 
 export const {
     setPlanets,
-    setPlanetItem,
     setNumberOfItemsDisplayPlanets,
     discardPlanetsItemsAmmount,
     addItemsToDisplayPlanets

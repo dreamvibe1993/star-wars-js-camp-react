@@ -12,7 +12,7 @@ import {
     Typography
 } from '@material-ui/core';
 
-import { setMovieLoadingPending } from '../../store/thunks/movies-thunks';
+import { setMovieLoadingPending } from '../../store/redux-slices/movies';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
