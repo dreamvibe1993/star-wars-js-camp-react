@@ -165,7 +165,7 @@ export const LoginPage: React.FC = () => {
                     </Button>
                 </Paper>
             <Typography color="textSecondary" variant="subtitle1">
-                Don't have an account yet? <NavLink style={{ color: "red" }} to="/register">Create an account!</NavLink>
+                Don't have an account yet? <NavLink style={{ color: "red" }} to="/star-wars-react/register">Create an account!</NavLink>
             </Typography>
             </form>
         </Container>

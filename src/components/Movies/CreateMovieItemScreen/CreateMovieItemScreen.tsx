@@ -171,7 +171,7 @@ export const CreateMovieItemScreen: React.FC = () => {
     
     /** Redirect if a new movie entity is going to the db */
     if (isEntityBeingAdded) {
-        return <Redirect to="/films" />
+        return <Redirect to="/star-wars-react/films" />
     }
     
     return (
@@ -332,7 +332,7 @@ export const CreateMovieItemScreen: React.FC = () => {
                                 <TableRow >
                                     <TableCell align="left" />
                                     <TableCell align="right">
-                                            <Link className={styles.link} to="/films">
+                                            <Link className={styles.link} to="/star-wars-react/films">
                                                 <Button
                                                     className={materialUIStyles.cancelButton}
                                                     color="primary"

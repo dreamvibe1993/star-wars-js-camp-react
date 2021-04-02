@@ -49,7 +49,7 @@ export const PlanetsItemScreen: React.FC = () => {
      /**  Hook that triggers planet's entry loading if there's one existing. */
      useEffect(() => {
          if (planet && !queryParam.id) {
-             history.replace(`/planets/${planet.docId}`)
+             history.replace(`/star-wars-react/planets/${planet.docId}`)
          }
          dispatch(loadPlanetItem(queryParam.id))
      }, [queryParam.id])
@@ -58,7 +58,7 @@ export const PlanetsItemScreen: React.FC = () => {
      
      /** If no planet found - redirect */
      if (!planet && !isPlanetLoadingPending) {
-         return <Redirect to="/not-found" />
+         return <Redirect to="/star-wars-react/not-found" />
      }
      if (isPlanetLoadingPending) {
          return (

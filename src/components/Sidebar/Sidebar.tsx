@@ -93,15 +93,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ children, setDrawerState }: Si
                     </div>
                     <Divider />
                     <List>
-                        <ListItem activeClassName={materialUIStyles.activeLink} component={NavLink} to="/films" button>
+                        <ListItem activeClassName={materialUIStyles.activeLink} component={NavLink} to="/star-wars-react/films" button>
                             <ListItemIcon><MovieIcon /></ListItemIcon>
                             <ListItemText primary='Movies' />
                         </ListItem>
-                        <ListItem activeClassName={materialUIStyles.activeLink} component={NavLink} to="/people" button>
+                        <ListItem activeClassName={materialUIStyles.activeLink} component={NavLink} to="/star-wars-react/people" button>
                             <ListItemIcon><FaceIcon /></ListItemIcon>
                             <ListItemText primary='Characters' />
                         </ListItem>
-                        <ListItem activeClassName={materialUIStyles.activeLink} component={NavLink} to="/planets" button>
+                        <ListItem activeClassName={materialUIStyles.activeLink} component={NavLink} to="/star-wars-react/planets" button>
                             <ListItemIcon><PublicIcon /></ListItemIcon>
                             <ListItemText primary='Planets' />
                         </ListItem>
@@ -113,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children, setDrawerState }: Si
                                 <ListItemText onClick={() => dispatch(signCurrentUserOut())} primary='Log out'  />
                             </ListItem>
                             :
-                            <ListItem component={NavLink} to="/login" button> 
+                            <ListItem component={NavLink} to="/star-wars-react/login" button> 
                                 <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                                 <ListItemText primary='Log in' />
                             </ListItem>

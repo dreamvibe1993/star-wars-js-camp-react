@@ -83,7 +83,7 @@ export const MovieItemDisplayComponent: React.FC<Props> = ({ movie, relevantEnti
     /** If a user decides to edit an entry pastes an ID of an entry to edit */
     function pushEditQueryToURL() {
         history.push({
-            pathname: `/films/${movie.docId}`,
+            pathname: `/star-wars-react/films/${movie.docId}`,
             search: `edit=1`,
         })
     }

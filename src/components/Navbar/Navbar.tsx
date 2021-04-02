@@ -88,13 +88,13 @@ export const Navbar: React.FC<Props> = ({
 
     /** Hook that checks an url and sets the slider accordingly */
     useEffect(() => {
-        if (location.pathname.includes('/films')) {
+        if (location.pathname.includes('/star-wars-react/films')) {
             setValue(0)
             setDrawerState(true)
-        } else if (location.pathname.includes('/people')) {
+        } else if (location.pathname.includes('/star-wars-react/people')) {
             setValue(1)
             setDrawerState(true)
-        } else if (location.pathname.includes('/planets')) {
+        } else if (location.pathname.includes('/star-wars-react/planets')) {
             setValue(2)
             setDrawerState(true)
         } else {
@@ -158,9 +158,9 @@ export const Navbar: React.FC<Props> = ({
                 {
                     !isMediaQueryMatch375 ?
                         <Tabs aria-label="simple tabs" onChange={setSliderPosition} value={value}>
-                            <Tab component={NavLink} label="Films" to="/films" {...a11yProps(0)} />
-                            <Tab component={NavLink} label="Characters" to="/people" {...a11yProps(1)} />
-                            <Tab component={NavLink} label="Planets" to="/planets" {...a11yProps(2)} />
+                            <Tab component={NavLink} label="Films" to="/star-wars-react/films" {...a11yProps(0)} />
+                            <Tab component={NavLink} label="Characters" to="/star-wars-react/people" {...a11yProps(1)} />
+                            <Tab component={NavLink} label="Planets" to="/star-wars-react/planets" {...a11yProps(2)} />
                         </Tabs>
                         :
                         <IconButton
@@ -176,7 +176,7 @@ export const Navbar: React.FC<Props> = ({
                         </IconButton>
                 }
                 <Typography className={styles.title} variant="h6">
-                    <Link className={styles.cancelLinkStyles} to="/"><Logo color={themingMode ? '#fff200' : '#fff'} /></Link>
+                    <Link className={styles.cancelLinkStyles} to="/star-wars-react/"><Logo color={themingMode ? '#fff200' : '#fff'} /></Link>
                 </Typography>
 
                 <div>
@@ -192,7 +192,7 @@ export const Navbar: React.FC<Props> = ({
                         <SearchBar />
                         {isUserSignedIn === UserSignInStatus.Authorised
                             ? <Button color="inherit" onClick={() => dispatch(signCurrentUserOut())}>Logout</Button>
-                            : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+                            : <Button color="inherit" onClick={() => history.push('/star-wars-react/login')}>Login</Button>
                         }
                     </>
                 }

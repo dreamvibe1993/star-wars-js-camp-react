@@ -109,7 +109,7 @@ export const MovieItemScreen: React.FC = () => {
     /** If a user got back from another tab pastes an ID of a current entry */
     useEffect(() => {
         if (movie && movie.docId && !queryParam.id) {
-            history.replace(`/films/${movie.docId}`)
+            history.replace(`/star-wars-react/films/${movie.docId}`)
         }
         dispatch(loadMovieItem(queryParam.id))
     }, [queryParam.id])
@@ -126,16 +126,16 @@ export const MovieItemScreen: React.FC = () => {
 
     /** if there's no movie item show nothing */
     if (!movie && !isMovieLoadingPending) {
-        return <Redirect to="/not-found" />
+        return <Redirect to="/star-wars-react/not-found" />
     }
 
     /** If a user decides to see an info about a relevant character pastes a link of such */
     function renderCharacInfo(charID: string) {
-        history.push(`/people/${charID}`);
+        history.push(`/star-wars-react/people/${charID}`);
     }
     /** If a user decides to see an info about a relevant planet pastes a link of such */
     function renderPlanetInfo(planetID: string) {
-        history.push(`/planets/${planetID}`);
+        history.push(`/star-wars-react/planets/${planetID}`);
     }
 
     const relevantCharactersJSX = (
@@ -233,7 +233,7 @@ export const MovieItemScreen: React.FC = () => {
         return (
             <>
                 <h3>Only logged users can edit entries</h3>
-                <Link style={{ color: 'red' }} to="/login">Login</Link>
+                <Link style={{ color: 'red' }} to="/star-wars-react/login">Login</Link>
             </>
         )
     }

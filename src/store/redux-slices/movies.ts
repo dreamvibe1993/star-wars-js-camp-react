@@ -96,9 +96,9 @@ export const searchMovieEntry = createAsyncThunk(
     async (title: string) => {
         const movieDocs = await MoviesDataAPI.searchMovieEntity(title)
         if (!movieDocs.empty) {
-            return `/films/${movieDocs.docs[movieDocs.docs.length - 1].id}`
+            return `/star-wars-react/films/${movieDocs.docs[movieDocs.docs.length - 1].id}`
         } 
-            return '/not-found'
+            return '/star-wars-react/not-found'
     }
 )
 
@@ -188,7 +188,7 @@ export const moviesStoreReducer = createSlice({
                 state.redirectLink = action.payload
             })
             .addCase(searchMovieEntry.rejected, (state) => {
-                state.redirectLink = `/not-found`
+                state.redirectLink = `/star-wars-react/not-found`
             })
     }
 

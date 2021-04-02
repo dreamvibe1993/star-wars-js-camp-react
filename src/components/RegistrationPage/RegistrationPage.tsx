@@ -93,7 +93,7 @@ export const RegistrationPage: React.FC = () => {
     
     /** If user logged in - redirect */
     if (isUserAuthorized === UserSignInStatus.Authorised) {
-        return <Redirect to="/login" />
+        return <Redirect to="/star-wars-react/login" />
     }
     return (
         <form className={materialUIStyles.modalAlike} onSubmit={formik.handleSubmit}>
@@ -139,7 +139,7 @@ export const RegistrationPage: React.FC = () => {
                 </Button>
             </Paper>
             <Typography color="textSecondary" variant="subtitle1">
-                Already have an account? <NavLink style={{ color: "red" }} to="/login">Log in!</NavLink>
+                Already have an account? <NavLink style={{ color: "red" }} to="/star-wars-react/login">Log in!</NavLink>
             </Typography>
         </form>
     )

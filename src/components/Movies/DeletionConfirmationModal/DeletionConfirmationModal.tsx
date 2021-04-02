@@ -49,7 +49,7 @@ export const DeletionConfirmationModal: React.FC<DelConfModProps> = ({ movieID }
 
     /** Redirect if an entry is being deleted */
     if (isEntityBeingDeleted) {
-        return <Redirect to="/" />
+        return <Redirect to="/star-wars-react/" />
     }
 
     return (

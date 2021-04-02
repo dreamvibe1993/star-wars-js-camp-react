@@ -1,1 +1,0 @@
-export { MovieItemDisplayComponent } from './MovieItemDisplayComponent';

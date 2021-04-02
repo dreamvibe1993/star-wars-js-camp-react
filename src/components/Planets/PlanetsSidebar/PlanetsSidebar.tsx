@@ -55,7 +55,7 @@ export const PlanetsSidebar: React.FC<Props> = ({ setDrawerState }) => {
     const numberOfItemsToDisplay = useSelector((state: RootState) => state.planetsStore.itemsToDispPlanets);
 
     const listItems = planets.map((planetItem: Planet) => (
-        <ListItem key={planetItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/planets/${planetItem.docId}`} button>
+        <ListItem key={planetItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/star-wars-react/planets/${planetItem.docId}`} button>
             <ListItemText primary={planetItem.name} />
         </ListItem>
     ))

@@ -69,7 +69,7 @@ export const CharactersSidebar: React.FC<Props> = ({setDrawerState}) => {
     }, [movieSidebarSnapshotTeardown])
 
     const listItems = useMemo(() => characters.map((characterItem: Character) => (
-        <ListItem key={characterItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/people/${characterItem.docId}`} button >
+        <ListItem key={characterItem.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/star-wars-react/people/${characterItem.docId}`} button >
             <ListItemText primary={characterItem.name} />
         </ListItem>
     )), [characters])

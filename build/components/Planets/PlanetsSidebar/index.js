@@ -1,1 +1,0 @@
-export { PlanetsSidebar } from './PlanetsSidebar';

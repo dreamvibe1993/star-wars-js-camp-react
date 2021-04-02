@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Backdrop, CssBaseline, createMuiTheme, ThemeProvider, useMediaQuery } from '@material-ui/core';
@@ -73,6 +73,7 @@ export default function App(): JSX.Element {
   const materialUIStyles = useStyles();
   const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
   const isCommonLoadingBackDropOn = useSelector((state: RootState) => state.componentsState.isCommonLoadingBckDropOn)
+  const dispatch = useDispatch()
 
   /** Drawer (=== Sidebar) state context block */
   const [drawerContextValue, setDrawerContext] = useState(defaultDrawerContext)
@@ -118,7 +119,7 @@ export default function App(): JSX.Element {
 
   /** Giving an allowance to render empty sidebar if conditions below are fulfilled */
   const location = useLocation()
-  const addresses = ['/create-film-entry', 'edit=1', '/login', '/register', '/', '/not-found']
+  const addresses = ['/star-wars-react/create-film-entry', 'edit=1', '/star-wars-react/login', '/star-wars-react/register', '/star-wars-react/', '/star-wars-react/not-found']
   const checkAddress = (): boolean => addresses.includes(location.pathname)
   const checkStatus = (): boolean => {
     if (!(areMoviesLoaded || areCharactersLoaded || arePlanetsLoaded)) {
@@ -151,38 +152,38 @@ export default function App(): JSX.Element {
               <div className={materialUIStyles.drawerHeader} />
               <React.Fragment>
                 <Switch>
-                  <Route path="/" exact>
+                  <Route path="/star-wars-react/" exact>
                     <WelcomeScreen />
                   </Route>
-                  <Route path="/films/:id?">
+                  <Route path="/star-wars-react/films/:id?">
                     <MoviesSidebar setDrawerState={changeDrawerState} />
                   </Route>
-                  <Route path="/people/:id?">
+                  <Route path="/star-wars-react/people/:id?">
                     <CharactersSidebar setDrawerState={changeDrawerState} />
                   </Route>
-                  <Route path="/planets/:id?">
+                  <Route path="/star-wars-react/planets/:id?">
                     <PlanetsSidebar setDrawerState={changeDrawerState} />
                   </Route>
-                  <Route path="/login">
+                  <Route path="/star-wars-react/login">
                     <LoginPage />
                   </Route>
-                  <Route path="/create-film-entry">
-                    {isUserSignedIn !== Pending && (isUserSignedIn === Authorised ? <CreateMovieItemScreen /> : <Redirect to="/login" />)}
+                  <Route path="/star-wars-react/create-film-entry">
+                    {isUserSignedIn !== Pending && (isUserSignedIn === Authorised ? <CreateMovieItemScreen /> : <Redirect to="/star-wars-react/login" />)}
                   </Route>
-                  <Route path="/not-found">
+                  <Route path="/star-wars-react/not-found">
                     <NotFoundScreen />
                   </Route>
-                  <Route path="/register">
+                  <Route path="/star-wars-react/register">
                     <RegistrationPage />
                   </Route>
                   <Route path="*">
-                    <Redirect to="/not-found" />
+                    <Redirect to="/star-wars-react/not-found" />
                   </Route>
                 </Switch>
               </React.Fragment>
             </main>
           </DrawerContext.Provider>
-          <Backdrop className={materialUIStyles.backdrop} open={isCommonLoadingBackDropOn} />
+          <Backdrop className={materialUIStyles.backdrop} onClick={() => changeDrawerState(false)} open={isCommonLoadingBackDropOn}/>
         </CssBaseline>
       </ThemeProvider>
     </div>

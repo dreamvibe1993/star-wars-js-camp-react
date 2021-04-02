@@ -53,7 +53,7 @@ export const MoviesSidebar: React.FC<Props> = ({setDrawerState}) => {
     const isUserSignedIn = useSelector((state: RootState) => state.authState.isUserSignedIn)
 
     const listItems = movies.map((movie: Movie) => (
-        <ListItem key={movie.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/films/${movie.docId}`} button>
+        <ListItem key={movie.docId} activeClassName={materialUIStyles.activeLink} component={NavLink} to={`/star-wars-react/films/${movie.docId}`} button>
             <ListItemText primary={movie.title} />
         </ListItem>
     ))
@@ -67,7 +67,7 @@ export const MoviesSidebar: React.FC<Props> = ({setDrawerState}) => {
     const createEntryButton = (
         <>
             <Divider />
-            <ListItem component={NavLink} to="/create-film-entry" button divider>
+            <ListItem component={NavLink} to="/star-wars-react/create-film-entry" button divider>
                 <ListItemText primary="Create an entry" />
             </ListItem>
         </>

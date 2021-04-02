@@ -78,7 +78,7 @@ export const CharacterItemScreen: React.FC = () => {
     /**  Hook that triggers person's entry loading if there's one existing. */
     useEffect(() => {
         if (character && !queryParam.id) {
-            history.replace(`/people/${character.docId}`)
+            history.replace(`/star-wars-react/people/${character.docId}`)
         }
         dispatch(loadCharacterItem(queryParam.id))
     }, [queryParam.id])
@@ -87,7 +87,7 @@ export const CharacterItemScreen: React.FC = () => {
 
     /** If no character's doc found and loading is over render 'not-found' */
     if (!character && !isCharacterLoadingPending) {
-        return <Redirect to="/not-found" />
+        return <Redirect to="/star-wars-react/not-found" />
     }
 
     /** Spinner while loading */
